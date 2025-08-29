@@ -7,7 +7,6 @@ public class AppDbContext : DbContext {
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<User> Users { get; set; }
     public DbSet<Class> Classes { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Professor> Professors { get; set; }
@@ -40,20 +39,6 @@ public class AppDbContext : DbContext {
             .HasOne(cs => cs.Subject)
             .WithMany(s => s.Classes)
             .HasForeignKey(cs => cs.SubjectId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // Class - User
-        modelBuilder.Entity<User>()
-            .HasOne(u => u.Class)
-            .WithOne(c => c.User)
-            .HasForeignKey<User>(u => u.ClassId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // Professor - User
-        modelBuilder.Entity<User>()
-            .HasOne(u => u.Professor)
-            .WithOne(p => p.User)
-            .HasForeignKey<User>(u => u.ProfessorId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Class - Student
