@@ -52,4 +52,18 @@ public class AdminService : IAdminService {
         await _adminRepository.Create(newAdmin);
         return ServiceResult<bool>.Success(true);
     }
+
+    public async Task<ServiceResult<AdminDto>> GetAdminById(int id) {
+        var user = await _adminRepository.GetAdminById(id);
+
+        if (user == null) {
+            return ServiceResult<AdminDto>.Error(ServiceResultStatus.NotFound, "Admin not found!");
+        }
+
+        return ServiceResult<AdminDto>.Success(new AdminDto {
+            Id = user.Id,
+            Name = user.Name,
+            Username = user.Username
+        });
+    }
 }
