@@ -1,3 +1,4 @@
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Interfaces.Admin;
@@ -9,6 +10,9 @@ namespace Server;
 
 public class Program {
     public static void Main(string[] args) {
+        // Load .env file
+        Env.Load();
+        
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
@@ -16,8 +20,11 @@ public class Program {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Dependency Injection
         builder.Services.AddScoped<IAdminRepository, AdminRepository>();
         builder.Services.AddScoped<IAdminService, AdminService>();
+
+        builder.Services.AddScoped<TokenService>();
 
         var app = builder.Build();
 

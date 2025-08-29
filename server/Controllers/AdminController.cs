@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.Interfaces.Admin;
+using Server.Models;
 using Server.Results;
+using Server.Services;
 
 namespace Server.Controllers;
 
@@ -9,9 +12,11 @@ namespace Server.Controllers;
 [Route("api/[controller]")]
 public class AdminController : ControllerBase {
     private readonly IAdminService _adminService;
+    private readonly TokenService _tokenService;
 
-    public AdminController(IAdminService adminService) {
+    public AdminController(IAdminService adminService, TokenService tokenService) {
         _adminService = adminService;
+        _tokenService = tokenService;
     }
 
     [HttpPost("register")]
@@ -36,6 +41,19 @@ public class AdminController : ControllerBase {
         }
 
         ServiceResult<AdminDto> result = await _adminService.Login(loginDto);
+
+        // Generate token
+        string token = _tokenService.GenerateToken(new UserAuthDto { Id = result.Data.Id, Username = result.Data.Username, Role = Role.Admin });
+
+        // Set cookie
+        Response.Cookies.Append("token", token,
+            new CookieOptions {
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.Now.AddDays(1),
+                SameSite = SameSiteMode.None
+            }
+        );
 
         return result.Status switch {
             ServiceResultStatus.Success => Ok(result.Data),
