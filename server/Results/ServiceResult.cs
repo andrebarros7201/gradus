@@ -5,9 +5,9 @@ public class ServiceResult<T> {
     public T? Data { get; set; }
     public string? Message { get; set; }
 
-    public static ServiceResult<T> Ok(T data) {
+    public static ServiceResult<T> Success(T data) {
         return new ServiceResult<T> {
-            Status = ServiceResultStatus.Ok,
+            Status = ServiceResultStatus.Success,
             Data = data
         };
     }
