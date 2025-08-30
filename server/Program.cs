@@ -1,5 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Server.Data;
 using Server.Interfaces.Admin;
 using Server.Interfaces.Repositories;
@@ -23,8 +27,28 @@ public class Program {
         // Dependency Injection
         builder.Services.AddScoped<IAdminRepository, AdminRepository>();
         builder.Services.AddScoped<IAdminService, AdminService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
 
         builder.Services.AddScoped<TokenService>();
+
+        // JWT Authentication
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+            options.Events = new JwtBearerEvents {
+                OnMessageReceived = context => {
+                    context.Token = context.Request.Cookies["token"];
+                    return Task.CompletedTask;
+                }
+            };
+            options.TokenValidationParameters = new TokenValidationParameters {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.ASCII.GetBytes(Configuration.JWT_SECRET)
+                )
+            };
+        });
 
         var app = builder.Build();
 
@@ -34,8 +58,8 @@ public class Program {
         }
 
         app.UseHttpsRedirection();
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
         app.MapControllers();
 
         app.Run();
