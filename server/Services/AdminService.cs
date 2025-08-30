@@ -1,3 +1,4 @@
+using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.Interfaces.Admin;
 using Server.Interfaces.Repositories;
@@ -13,25 +14,26 @@ public class AdminService : IAdminService {
         _adminRepository = adminRepository;
     }
 
-    public async Task<ServiceResult<AdminDto>> Login(AdminLoginDto dto) {
+    public async Task<ServiceResult<UserDto>> Login(AdminLoginDto dto) {
         var user = await _adminRepository.GetAdminByUsername(dto.Username);
 
         // User not found
         if (user == null) {
-            return ServiceResult<AdminDto>.Error(ServiceResultStatus.NotFound, "Admin not found!");
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "Admin not found!");
         }
 
         // Check password
         bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
 
         if (!isPasswordValid) {
-            return ServiceResult<AdminDto>.Error(ServiceResultStatus.Unauthorized, "Invalid credentials!");
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.Unauthorized, "Invalid credentials!");
         }
 
-        return ServiceResult<AdminDto>.Success(new AdminDto {
+        return ServiceResult<UserDto>.Success(new UserDto {
             Id = user.Id,
             Name = user.Name,
-            Username = user.Username
+            Username = user.Username,
+            Role = Role.Admin
         });
     }
 
@@ -53,17 +55,18 @@ public class AdminService : IAdminService {
         return ServiceResult<bool>.Success(true);
     }
 
-    public async Task<ServiceResult<AdminDto>> GetAdminById(int id) {
+    public async Task<ServiceResult<UserDto>> GetAdminById(int id) {
         var user = await _adminRepository.GetAdminById(id);
 
         if (user == null) {
-            return ServiceResult<AdminDto>.Error(ServiceResultStatus.NotFound, "Admin not found!");
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "Admin not found!");
         }
 
-        return ServiceResult<AdminDto>.Success(new AdminDto {
+        return ServiceResult<UserDto>.Success(new UserDto {
             Id = user.Id,
             Name = user.Name,
-            Username = user.Username
+            Username = user.Username,
+            Role = Role.Admin
         });
     }
 }
