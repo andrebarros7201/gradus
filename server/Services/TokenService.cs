@@ -8,12 +8,12 @@ namespace Server.Services;
 
 // Creates a JWT token
 public class TokenService {
-    public string GenerateToken(UserAuthDto userAuthDto) {
+    public string GenerateToken(UserDto userDto) {
         var handler = new JwtSecurityTokenHandler();
         byte[] key = Encoding.ASCII.GetBytes(Configuration.JWT_SECRET);
         var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
         var tokenDescriptor = new SecurityTokenDescriptor {
-            Subject = GenerateClaimsIdentity(userAuthDto),
+            Subject = GenerateClaimsIdentity(userDto),
             SigningCredentials = credentials,
             Expires = DateTime.UtcNow.AddDays(7)
         };
@@ -23,11 +23,12 @@ public class TokenService {
         return handler.WriteToken(token);
     }
 
-    private static ClaimsIdentity GenerateClaimsIdentity(UserAuthDto userAuthDto) {
+    private static ClaimsIdentity GenerateClaimsIdentity(UserDto userDto) {
         var ci = new ClaimsIdentity();
-        ci.AddClaim(new Claim(ClaimTypes.NameIdentifier, userAuthDto.Id.ToString()));
-        ci.AddClaim(new Claim(ClaimTypes.Name, userAuthDto.Username));
-        ci.AddClaim(new Claim(ClaimTypes.Role, userAuthDto.Role.ToString()));
+        ci.AddClaim(new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()));
+        ci.AddClaim(new Claim(ClaimTypes.Name, userDto.Name));
+        ci.AddClaim(new Claim("username", userDto.Username));
+        ci.AddClaim(new Claim(ClaimTypes.Role, userDto.Role.ToString()));
         return ci;
     }
 }
