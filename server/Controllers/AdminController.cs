@@ -40,10 +40,15 @@ public class AdminController : ControllerBase {
             return BadRequest(ModelState);
         }
 
-        ServiceResult<AdminDto> result = await _adminService.Login(loginDto);
+        ServiceResult<UserDto> result = await _adminService.Login(loginDto);
 
         // Generate token
-        string token = _tokenService.GenerateToken(new UserAuthDto { Id = result.Data.Id, Username = result.Data.Username, Role = Role.Admin });
+        string token = _tokenService.GenerateToken(new UserDto {
+            Id = result.Data.Id,
+            Name = result.Data.Name,
+            Username = result.Data.Username,
+            Role = Role.Admin
+        });
 
         // Set cookie
         Response.Cookies.Append("token", token,
