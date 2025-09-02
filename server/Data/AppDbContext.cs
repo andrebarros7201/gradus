@@ -4,9 +4,9 @@ using Server.Models;
 namespace Server.Data;
 
 public class AppDbContext : DbContext {
-
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+    public DbSet<User> Users { get; set; }
     public DbSet<Class> Classes { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Professor> Professors { get; set; }
@@ -15,7 +15,6 @@ public class AppDbContext : DbContext {
     public DbSet<ClassSubject> ClassSubjects { get; set; }
     public DbSet<ClassStudents> ClassStudents { get; set; }
     public DbSet<Admin> Admins { get; set; }
-    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
@@ -30,16 +29,15 @@ public class AppDbContext : DbContext {
         // User - Professor
         modelBuilder.Entity<User>()
             .HasOne(u => u.Professor)
-            .WithOne(a => a.User)
-            .HasForeignKey<Admin>(a => a.UserId)
+            .WithOne(p => p.User)
+            .HasForeignKey<Professor>(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
 
         // User - Class
         modelBuilder.Entity<User>()
             .HasOne(u => u.Class)
-            .WithOne(a => a.User)
-            .HasForeignKey<Admin>(a => a.UserId)
+            .WithOne(c => c.User)
+            .HasForeignKey<Class>(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         
         // Professor - Subject
@@ -47,7 +45,7 @@ public class AppDbContext : DbContext {
             .HasMany(p => p.Subjects)
             .WithOne(s => s.Professor)
             .HasForeignKey(s => s.ProfessorId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Class - Subject
         modelBuilder.Entity<ClassSubject>()
@@ -86,15 +84,13 @@ public class AppDbContext : DbContext {
             .HasOne(g => g.Student)
             .WithMany(s => s.Grades)
             .HasForeignKey(g => g.StudentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Grade - Subject
         modelBuilder.Entity<Grade>()
             .HasOne(g => g.Subject)
             .WithMany(s => s.Grades)
             .HasForeignKey(g => g.SubjectId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
-
-
 }
