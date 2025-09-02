@@ -1,39 +1,42 @@
-using Server.Data;
 using Server.DTOs;
-using Server.Interfaces.Admin;
+using Server.DTOs.Admin;
 using Server.Interfaces.Repositories;
+using Server.Interfaces.Services;
 using Server.Models;
-using Server.Repositories;
 using Server.Results;
 
 namespace Server.Services;
 
 public class AuthService : IAuthService {
-    private readonly IAdminRepository _adminRepository;
+    private readonly IUserRepository _userRepository;
 
-    public AuthService(IAdminRepository adminRepository) {
-        _adminRepository = adminRepository;
+    public AuthService(IUserRepository userRepository) {
+        _userRepository = userRepository;
     }
 
-    public async Task<ServiceResult<UserDto>> GetUserData(int Id, Role role) {
-        if (Id == null || role == null) {
-            return ServiceResult<UserDto>.Error(ServiceResultStatus.BadRequest, "Invalid parameters!");
-        }
-
-        var user = role switch {
-            Role.Admin => await _adminRepository.GetAdminById(Id),
-            _ => null
-        };
+    public async Task<ServiceResult<UserDto>> Login(UserLoginDto dto) {
+        var user = await _userRepository.GetUserByUsername(dto.Username);
 
         if (user == null) {
-            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found!");
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found");
         }
 
-        return ServiceResult<UserDto>.Success(new UserDto {
-            Id = user.Id,
-            Name = user.Name,
-            Username = user.Username,
-            Role = role
-        });
+        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
+
+        if (!isPasswordValid) {
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.Unauthorized, "Invalid credentials");
+        }
+
+        return user.Role switch {
+            Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Admin = new AdminDto {
+                    Id = user.Admin.Id,
+                    Name = user.Admin.Name
+                }
+            })
+        };
     }
 }
