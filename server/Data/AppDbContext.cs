@@ -15,10 +15,33 @@ public class AppDbContext : DbContext {
     public DbSet<ClassSubject> ClassSubjects { get; set; }
     public DbSet<ClassStudents> ClassStudents { get; set; }
     public DbSet<Admin> Admins { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
+        // User - Admin
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Admin)
+            .WithOne(a => a.User)
+            .HasForeignKey<Admin>(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // User - Professor
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Professor)
+            .WithOne(a => a.User)
+            .HasForeignKey<Admin>(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        // User - Class
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Class)
+            .WithOne(a => a.User)
+            .HasForeignKey<Admin>(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         // Professor - Subject
         modelBuilder.Entity<Professor>()
             .HasMany(p => p.Subjects)
