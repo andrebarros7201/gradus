@@ -12,11 +12,9 @@ namespace Server.Controllers;
 [Route("api/[controller]")]
 public class AdminController : ControllerBase {
     private readonly IAdminService _adminService;
-    private readonly TokenService _tokenService;
 
-    public AdminController(IAdminService adminService, TokenService tokenService) {
+    public AdminController(IAdminService adminService) {
         _adminService = adminService;
-        _tokenService = tokenService;
     }
 
     [HttpPost("register")]
@@ -33,39 +31,5 @@ public class AdminController : ControllerBase {
             _ => BadRequest(result.Message)
         };
     }
-
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] AdminLoginDto loginDto) {
-        if (!ModelState.IsValid) {
-            return BadRequest(ModelState);
-        }
-
-        ServiceResult<UserDto> result = await _adminService.Login(loginDto);
-
-        // Generate token
-        string token = _tokenService.GenerateToken(new UserDto {
-            Id = result.Data.Id,
-            Name = result.Data.Name,
-            Username = result.Data.Username,
-            Role = Role.Admin
-        });
-
-        // Set cookie
-        Response.Cookies.Append("token", token,
-            new CookieOptions {
-                HttpOnly = true,
-                Secure = true,
-                Expires = DateTime.Now.AddDays(1),
-                SameSite = SameSiteMode.None
-            }
-        );
-
-        return result.Status switch {
-            ServiceResultStatus.Success => Ok(result.Data),
-            ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
-            _ => BadRequest(result.Message)
-        };
-    }
-
 
 }

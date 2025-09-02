@@ -4,36 +4,55 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
 using Server.Interfaces.Admin;
+using Server.Interfaces.Services;
 using Server.Models;
 using Server.Results;
+using Server.Services;
 
 namespace Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase {
-    private readonly IAuthService _auth;
+    private readonly IAuthService _authService;
+    private readonly TokenService _tokenService;
 
-    public AuthController(IAuthService authService) {
-        _auth = authService;
+    public AuthController(IAuthService authServiceService, TokenService tokenService) {
+        _authService = authServiceService;
+        _tokenService = tokenService;
     }
 
-    [Authorize]
-    [HttpGet("verify")]
-    public async Task<IActionResult> Verify() {
-        IEnumerable<Claim> claims = User.Claims;
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UserLoginDto dto) {
+        // Validate model
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
 
-        // Convert to Lookup
-        ILookup<string, string> claimsLookup = claims.ToLookup(c => c.Type, c => c.Value);
+        ServiceResult<UserDto> result = await _authService.Login(dto);
 
-        ServiceResult<UserDto> result = await _auth.GetUserData(
-            int.Parse(claimsLookup[ClaimTypes.NameIdentifier].FirstOrDefault()),
-            Enum.Parse<Role>(claimsLookup[ClaimTypes.Role].FirstOrDefault())
-        );
+        if (result.Status != ServiceResultStatus.Success) {
+            return result.Status switch {
+                ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+                ServiceResultStatus.NotFound => NotFound(result.Message),
+                _ => BadRequest(result.Message)
+            };
+        }
 
-        return result.Status switch {
-            ServiceResultStatus.Success => Ok(result.Data),
-            _ => BadRequest(result.Message)
-        };
+        string token = _tokenService.GenerateToken(new TokenDataDto {
+            Id = result.Data.Id,
+            Username = result.Data.Username,
+            Name = result.Data.Admin.Name,
+            Role = result.Data.Role
+        });
+
+        Response.Cookies.Append("token", token, new CookieOptions {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTime.UtcNow.AddDays(7)
+        });
+
+        return Ok(result.Data);
     }
 }
