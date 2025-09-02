@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Server.Data;
 using Server.Interfaces.Admin;
 using Server.Interfaces.Repositories;
+using Server.Interfaces.Services;
 using Server.Repositories;
 using Server.Services;
 
@@ -28,6 +29,7 @@ public class Program {
         builder.Services.AddScoped<IAdminRepository, AdminRepository>();
         builder.Services.AddScoped<IAdminService, AdminService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
 
         builder.Services.AddScoped<TokenService>();
 
