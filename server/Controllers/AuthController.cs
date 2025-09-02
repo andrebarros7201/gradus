@@ -55,4 +55,11 @@ public class AuthController : ControllerBase {
 
         return Ok(result.Data);
     }
+
+    [Authorize]
+    [HttpGet("logout")]
+    public async Task<IActionResult> Logout() {
+        Response.Cookies.Delete("token");
+        return Ok();
+    }
 }
