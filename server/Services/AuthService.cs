@@ -39,4 +39,21 @@ public class AuthService : IAuthService {
             })
         };
     }
+
+    public async Task<ServiceResult<UserDto>> FetchUser(int id) {
+        var user = await _userRepository.GetUserById(id);
+        if (user == null) {
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
+
+        return ServiceResult<UserDto>.Success(new UserDto {
+            Id = user.Id,
+            Username = user.Username,
+            Role = user.Role,
+            Admin = new AdminDto {
+                Id = user.Admin.Id,
+                Name = user.Admin.Name
+            }
+        });
+    }
 }

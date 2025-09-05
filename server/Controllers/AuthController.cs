@@ -57,8 +57,24 @@ public class AuthController : ControllerBase {
     }
 
     [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> FetchUser() {
+        string? userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) {
+            return Unauthorized();
+        }
+
+        ServiceResult<UserDto> result = await _authService.FetchUser(int.Parse(userId));
+        return result.Status switch {
+            ServiceResultStatus.Success => Ok(result.Data),
+            ServiceResultStatus.NotFound => NotFound(result.Message),
+            _ => BadRequest(result.Message)
+        };
+    }
+
+    [Authorize]
     [HttpGet("logout")]
-    public async Task<IActionResult> Logout() {
+    public IActionResult Logout() {
         Response.Cookies.Delete("token");
         return Ok();
     }
