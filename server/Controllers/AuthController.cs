@@ -42,7 +42,7 @@ public class AuthController : ControllerBase {
         string token = _tokenService.GenerateToken(new TokenDataDto {
             Id = result.Data.Id,
             Username = result.Data.Username,
-            Name = result.Data.Admin.Name,
+            Name = result.Data.Admin?.Name ?? result.Data.Class?.Name,
             Role = result.Data.Role
         });
 
