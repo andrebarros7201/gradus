@@ -7,7 +7,6 @@ public class Class {
     public bool IsActive { get; set; } = true;
 
     public User User { get; set; }
-    public int UserId { get; set; }
 
     public List<ClassStudents> Students { get; set; } = [];
     public List<ClassSubject> Subjects { get; set; } = [];
