@@ -1,5 +1,6 @@
 using Server.DTOs;
 using Server.DTOs.Admin;
+using Server.DTOs.Class;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
 using Server.Models;
@@ -36,6 +37,17 @@ public class AuthService : IAuthService {
                     Id = user.Admin.Id,
                     Name = user.Admin.Name
                 }
+            }),
+            Role.Class => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Class = new ClassDto {
+                    Id = user.Class.Id,
+                    Name = user.Class.Name,
+                    SchoolYear = user.Class.SchoolYear,
+                    IsActive = user.Class.IsActive
+                }
             })
         };
     }
@@ -46,14 +58,18 @@ public class AuthService : IAuthService {
             return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found");
         }
 
-        return ServiceResult<UserDto>.Success(new UserDto {
-            Id = user.Id,
-            Username = user.Username,
-            Role = user.Role,
-            Admin = new AdminDto {
-                Id = user.Admin.Id,
-                Name = user.Admin.Name
-            }
-        });
+        return user.Role switch {
+            Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id, Username = user.Username, Role = user.Role, Admin = new AdminDto { Id = user.Admin.Id, Name = user.Admin.Name }
+            }),
+            Role.Class => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Class = new ClassDto
+                    { Id = user.Class.Id, Name = user.Class.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+            }),
+            _ => ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found")
+        };
     }
 }
