@@ -23,21 +23,21 @@ public class AppDbContext : DbContext {
         modelBuilder.Entity<User>()
             .HasOne(u => u.Admin)
             .WithOne(a => a.User)
-            .HasForeignKey<Admin>(a => a.UserId)
+            .HasForeignKey<User>(a => a.AdminId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // User - Professor
         modelBuilder.Entity<User>()
             .HasOne(u => u.Professor)
             .WithOne(p => p.User)
-            .HasForeignKey<Professor>(p => p.UserId)
+            .HasForeignKey<User>(p => p.ProfessorId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // User - Class
         modelBuilder.Entity<User>()
             .HasOne(u => u.Class)
             .WithOne(c => c.User)
-            .HasForeignKey<Class>(c => c.UserId)
+            .HasForeignKey<User>(c => c.ClassId)
             .OnDelete(DeleteBehavior.Cascade);
         
         // Professor - Subject
