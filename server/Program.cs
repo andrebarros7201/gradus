@@ -26,9 +26,7 @@ public class Program {
         builder.Services.AddSwaggerGen();
 
         // Dependency Injection
-        builder.Services.AddScoped<IAdminRepository, AdminRepository>();
         builder.Services.AddScoped<IClassService, ClassService>();
-        builder.Services.AddScoped<IClassRepository, ClassRepository>();
         builder.Services.AddScoped<IAdminService, AdminService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
