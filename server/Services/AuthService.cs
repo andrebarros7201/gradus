@@ -33,19 +33,19 @@ public class AuthService : IAuthService {
             Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
                 Username = user.Username,
+                Name = user.Name,
                 Role = user.Role,
                 Admin = new AdminDto {
                     Id = user.Admin.Id,
-                    Name = user.Admin.Name
                 }
             }),
             Role.Class => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
                 Username = user.Username,
+                Name = user.Name,
                 Role = user.Role,
                 Class = new ClassDto {
                     Id = user.Class.Id,
-                    Name = user.Class.Name,
                     SchoolYear = user.Class.SchoolYear,
                     IsActive = user.Class.IsActive
                 }
@@ -53,10 +53,10 @@ public class AuthService : IAuthService {
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
                 Username = user.Username,
+                Name = user.Name,
                 Role = user.Role,
                 Professor = new ProfessorDto {
                     Id = user.Professor.Id,
-                    Name = user.Professor.Name,
                     Subjects = user.Professor.Subjects
                 }
             })
@@ -71,22 +71,23 @@ public class AuthService : IAuthService {
 
         return user.Role switch {
             Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
-                Id = user.Id, Username = user.Username, Role = user.Role, Admin = new AdminDto { Id = user.Admin.Id, Name = user.Admin.Name }
+                Id = user.Id, Name = user.Name, Username = user.Username, Role = user.Role, Admin = new AdminDto { Id = user.Admin.Id }
             }),
             Role.Class => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
                 Username = user.Username,
                 Role = user.Role,
+                Name = user.Name,
                 Class = new ClassDto
-                    { Id = user.Class.Id, Name = user.Class.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+                    { Id = user.Class.Id, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
                 Username = user.Username,
                 Role = user.Role,
+                Name = user.Name,
                 Professor = new ProfessorDto {
                     Id = user.Professor.Id,
-                    Name = user.Professor.Name,
                     Subjects = user.Professor.Subjects
                 }
             }),

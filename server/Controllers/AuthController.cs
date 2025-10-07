@@ -3,7 +3,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
-using Server.Interfaces.Admin;
 using Server.Interfaces.Services;
 using Server.Models;
 using Server.Results;
@@ -42,7 +41,7 @@ public class AuthController : ControllerBase {
         string token = _tokenService.GenerateToken(new TokenDataDto {
             Id = result.Data.Id,
             Username = result.Data.Username,
-            Name = result.Data.Admin?.Name ?? result.Data.Class?.Name ?? result.Data.Professor?.Name ?? string.Empty,
+            Name = result.Data.Name,
             Role = result.Data.Role
         });
 
