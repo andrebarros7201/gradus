@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
+using Server.DTOs.Professor;
 using Server.Models;
 
 namespace Server.DTOs;
@@ -15,5 +16,8 @@ public class UserDto {
     public AdminDto? Admin { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ClassDto? Class { get; set; } 
+    public ClassDto? Class { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ProfessorDto? Professor { get; set; }
 }
