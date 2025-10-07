@@ -1,11 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Server.Data;
-using Server.Interfaces.Admin;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
 using Server.Repositories;
@@ -26,10 +24,8 @@ public class Program {
         builder.Services.AddSwaggerGen();
 
         // Dependency Injection
-        builder.Services.AddScoped<IProfessorService, ProfessorService>();
-        builder.Services.AddScoped<IClassService, ClassService>();
-        builder.Services.AddScoped<IAdminService, AdminService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
 
         builder.Services.AddScoped<TokenService>();
