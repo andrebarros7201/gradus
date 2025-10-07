@@ -1,6 +1,7 @@
 using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
+using Server.DTOs.Professor;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
 using Server.Models;
@@ -48,6 +49,16 @@ public class AuthService : IAuthService {
                     SchoolYear = user.Class.SchoolYear,
                     IsActive = user.Class.IsActive
                 }
+            }),
+            Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Professor = new ProfessorDto {
+                    Id = user.Professor.Id,
+                    Name = user.Professor.Name,
+                    Subjects = user.Professor.Subjects
+                }
             })
         };
     }
@@ -68,6 +79,16 @@ public class AuthService : IAuthService {
                 Role = user.Role,
                 Class = new ClassDto
                     { Id = user.Class.Id, Name = user.Class.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+            }),
+            Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Professor = new ProfessorDto {
+                    Id = user.Professor.Id,
+                    Name = user.Professor.Name,
+                    Subjects = user.Professor.Subjects
+                }
             }),
             _ => ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found")
         };
