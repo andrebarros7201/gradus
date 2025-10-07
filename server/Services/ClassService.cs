@@ -7,11 +7,9 @@ using Server.Results;
 namespace Server.Services;
 
 public class ClassService : IClassService {
-    private readonly IClassRepository _classRepository;
     private readonly IUserRepository _userRepository;
 
-    public ClassService(IClassRepository classRepository, IUserRepository userRepository) {
-        _classRepository = classRepository;
+    public ClassService(IUserRepository userRepository) {
         _userRepository = userRepository;
     }
 

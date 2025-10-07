@@ -8,11 +8,9 @@ using Server.Results;
 namespace Server.Services;
 
 public class AdminService : IAdminService {
-    private readonly IAdminRepository _adminRepository;
     private readonly IUserRepository _userRepository;
 
-    public AdminService(IAdminRepository adminRepository, IUserRepository userRepository) {
-        _adminRepository = adminRepository;
+    public AdminService(IUserRepository userRepository) {
         _userRepository = userRepository;
     }
 
