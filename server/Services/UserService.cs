@@ -19,7 +19,7 @@ public class UserService : IUserService {
     // Logic for creating a user
     // If it's a new admin, no need to check for userId and validate it
     // If it's not an admin, check the userId and validate it (see if it exists and is an admin)
-    public async Task<ServiceResult<bool>> Create(UserCreateDto dto, int? userId) {
+    public async Task<ServiceResult<bool>> Create(UserRegisterDto dto, int? userId) {
         var existingUser = await _userRepository.GetUserByUsername(dto.Username);
 
         if (existingUser != null) {

@@ -19,7 +19,7 @@ public class UserController : ControllerBase {
 
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserCreateDto dto) {
+    public async Task<IActionResult> Register([FromBody] UserRegisterDto dto) {
         
         // Validate Model
         if (!ModelState.IsValid) {
