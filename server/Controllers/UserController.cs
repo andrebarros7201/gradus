@@ -44,4 +44,23 @@ public class UserController : ControllerBase {
             _ => BadRequest(result.Message)
         };
     }
+
+    [Authorize]
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id) {
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId == null) {
+            return Unauthorized();
+        }
+
+        ServiceResult<bool> result = await _userService.Delete(id, int.Parse(currentUserId));
+
+        return result.Status switch {
+            ServiceResultStatus.Success => Ok(),
+            ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+            ServiceResultStatus.NotFound => NotFound(result.Message),
+            _ => BadRequest(result.Message)
+        };
+    }
 }

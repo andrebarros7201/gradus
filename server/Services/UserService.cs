@@ -70,4 +70,26 @@ public class UserService : IUserService {
 
         return ServiceResult<bool>.Success(true);
     }
+
+    public async Task<ServiceResult<bool>> Delete(int id, int currentUserId) {
+        var currentUser = await _userRepository.GetUserById(currentUserId);
+
+        if (currentUser == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
+        }
+
+        if (currentUser.Role != Role.Admin) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+        }
+
+        var targetUser = await _userRepository.GetUserById(id);
+
+        if (targetUser == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Target user not found");
+        }
+
+        await _userRepository.Delete(targetUser);
+
+        return ServiceResult<bool>.Success(true);
+    }
 }
