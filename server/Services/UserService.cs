@@ -67,55 +67,5 @@ public class UserService : IUserService {
         await _userRepository.Create(newUser);
 
         return ServiceResult<bool>.Success(true);
-        /*
-        var user = await _userRepository.GetUserById(userId);
-
-        // If the new user is not an admin
-        if (dto.Role != Role.Admin) {
-            if (userId == null) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
-            }
-
-            if (user == null) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "User not found");
-            }
-        }
-
-        // If the current user is not an admin
-        if (dto.Role != Role.Admin && user.Role != Role.Admin) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "User is not admin");
-        }
-
-        var existingUser = await _userRepository.GetUserByUsername(dto.Username);
-
-        if (existingUser != null) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Conflict, "Username already exists");
-        }
-
-        var newUser = new User {
-            Username = dto.Username,
-            Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Role = Role.Admin,
-            Name = dto.Name
-        };
-
-        switch (user.Role) {
-            case Role.Admin:
-                newUser.Admin = new Admin { };
-                break;
-
-            case Role.Class:
-                newUser.Class = new Class { };
-                break;
-
-            case Role.Professor:
-                newUser.Professor = new Professor { };
-                break;
-        }
-
-        await _userRepository.Create(newUser);
-        return ServiceResult<bool>.Success(true);
-        */
     }
-
 }
