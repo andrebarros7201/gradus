@@ -6,4 +6,5 @@ namespace Server.Interfaces.Services;
 
 public interface IUserService {
     public Task<ServiceResult<bool>> Create(UserRegisterDto dto, int? userId);
+    public Task<ServiceResult<bool>> Delete(int id, int currentUserId);
 }
