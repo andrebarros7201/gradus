@@ -1,8 +1,7 @@
-using System.Runtime.InteropServices;
 using Server.DTOs.Class;
 using Server.Models;
 
-namespace Server.DTOs;
+namespace Server.DTOs.User;
 
 public class UserCreateDto {
     public string Name { get; set; } = string.Empty;

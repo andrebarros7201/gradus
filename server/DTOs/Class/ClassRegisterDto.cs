@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace Server.DTOs.Class;
 
 public class ClassRegisterDto {
-    [Required] public string SchoolYear { get; set; } = string.Empty;
+    public string SchoolYear { get; set; } = string.Empty;
 }
