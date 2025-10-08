@@ -40,7 +40,9 @@ public class UserService : IUserService {
 
             case Role.Class:
                 newUser.Role = Role.Class;
-                newUser.Class = new Class { };
+                newUser.Class = new Class {
+                    SchoolYear = dto.Class.SchoolYear
+                };
                 break;
 
             case Role.Professor:
