@@ -29,20 +29,22 @@ public class UserService : IUserService {
         var newUser = new User {
             Username = dto.Username,
             Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Role = Role.Admin,
             Name = dto.Name
         };
 
         switch (dto.Role) {
             case Role.Admin:
+                newUser.Role = Role.Admin;
                 newUser.Admin = new Admin { };
                 break;
 
             case Role.Class:
+                newUser.Role = Role.Class;
                 newUser.Class = new Class { };
                 break;
 
             case Role.Professor:
+                newUser.Role = Role.Professor;
                 newUser.Professor = new Professor { };
                 break;
             default:
