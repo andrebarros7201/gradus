@@ -37,4 +37,9 @@ public class UserRepository : IUserRepository {
         _db.Users.Remove(user);
         await _db.SaveChangesAsync();
     }
+
+    public async Task Update(User user) {
+        _db.Users.Update(user);
+        await _db.SaveChangesAsync();
+    }
 }
