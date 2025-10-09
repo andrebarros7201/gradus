@@ -38,11 +38,11 @@ public class UserController : ControllerBase {
         ServiceResult<bool> result = await _userService.Create(dto, dto.Role != Role.Admin ? int.Parse(userId) : null);
 
         return result.Status switch {
-            ServiceResultStatus.Success => Created(),
-            ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+            ServiceResultStatus.Success => Ok(),
+            ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
             ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
-            ServiceResultStatus.Conflict => Conflict(result.Message),
-            _ => BadRequest(result.Message)
+            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
+            _ => BadRequest(new { message = result.Message })
         };
     }
 
@@ -59,10 +59,10 @@ public class UserController : ControllerBase {
 
         return result.Status switch {
             ServiceResultStatus.Success => Ok(),
-            ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+            ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
             ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
-            ServiceResultStatus.NotFound => NotFound(result.Message),
-            _ => BadRequest(result.Message)
+            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
+            _ => BadRequest(new { message = result.Message })
         };
     }
 
@@ -83,11 +83,11 @@ public class UserController : ControllerBase {
         ServiceResult<UserDto> result = await _userService.Update(targetUserId, int.Parse(currentUserId), dto);
 
         return result.Status switch {
-            ServiceResultStatus.Success => Ok(result.Data),
-            ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
-            ServiceResultStatus.Conflict => Conflict(result.Message),
+            ServiceResultStatus.Success => Created(),
+            ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
             ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
-            ServiceResultStatus.NotFound => NotFound(result.Message),
+            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
+            ServiceResultStatus.Conflict => Conflict(new { message = result.Message }),
             _ => BadRequest(result.Message)
         };
     }
