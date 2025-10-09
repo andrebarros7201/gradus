@@ -1,5 +1,8 @@
 using System.Diagnostics;
 using Server.DTOs;
+using Server.DTOs.Admin;
+using Server.DTOs.Class;
+using Server.DTOs.Professor;
 using Server.DTOs.User;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
@@ -91,5 +94,71 @@ public class UserService : IUserService {
         await _userRepository.Delete(targetUser);
 
         return ServiceResult<bool>.Success(true);
+    }
+
+    public async Task<ServiceResult<UserDto>> Update(int targetUserId, int currentUserId, UserPatchDto dto) {
+        var currentUser = await _userRepository.GetUserById(currentUserId);
+
+        // Ensure the current user exists
+        if (currentUser == null) {
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
+
+        // Check if the user is an admin or the user to be updated is the same as the current user
+        if (currentUser.Role != Role.Admin && currentUserId != targetUserId) {
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+        }
+
+        // Check if the username is already in use
+        var existingUserWithSameUsername = await _userRepository.GetUserByUsername(dto.Username);
+
+        if (existingUserWithSameUsername != null && existingUserWithSameUsername.Id != targetUserId) {
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.Conflict, "Username already exists");
+        }
+
+        // Get the target user
+        var targetUser = await _userRepository.GetUserById(targetUserId);
+
+        // Ensure the target user exists
+        if (targetUser == null) {
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "Target user not found");
+        }
+
+        // Update the user
+        targetUser.Name = dto.Name;
+        targetUser.Username = dto.Username;
+        targetUser.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+        // Update the user in the database
+        await _userRepository.Update(targetUser);
+
+        // Return the updated user based on the role
+        return ServiceResult<UserDto>.Success(new UserDto {
+                Id = targetUser.Id,
+                Name = targetUser.Name,
+                Username = targetUser.Username,
+                Role = targetUser.Role,
+                Class = targetUser.Role switch {
+                    Role.Class => new ClassDto {
+                        Id = targetUser.Class.Id,
+                        SchoolYear = targetUser.Class.SchoolYear,
+                        IsActive = targetUser.Class.IsActive
+                    },
+                    _ => null
+                },
+                Admin = targetUser.Role switch {
+                    Role.Admin => new AdminDto {
+                        Id = targetUser.Admin.Id
+                    },
+                    _ => null
+                },
+                Professor = targetUser.Role switch {
+                    Role.Professor => new ProfessorDto {
+                        Id = targetUser.Professor.Id
+                    },
+                    _ => null
+                }
+            }
+        );
     }
 }
