@@ -58,7 +58,7 @@ public class UserService : IUserService {
 
         if (dto.Role != Role.Admin) {
             if (userId == null) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+                return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this user");
             }
 
             // Need to use .Value because the user id is an int?
