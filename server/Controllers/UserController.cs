@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Server.DTOs;
 using Server.DTOs.User;
 using Server.Interfaces.Services;
 using Server.Models;
@@ -20,7 +21,6 @@ public class UserController : ControllerBase {
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto dto) {
-        
         // Validate Model
         if (!ModelState.IsValid) {
             return BadRequest(ModelState);
@@ -58,6 +58,30 @@ public class UserController : ControllerBase {
 
         return result.Status switch {
             ServiceResultStatus.Success => Ok(),
+            ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+            ServiceResultStatus.NotFound => NotFound(result.Message),
+            _ => BadRequest(result.Message)
+        };
+    }
+
+    [Authorize]
+    [HttpPatch("{targetUserId:int}")]
+    public async Task<IActionResult> Update([FromRoute] int targetUserId, [FromBody] UserPatchDto dto) {
+        // Validate Model
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (currentUserId == null) {
+            return Unauthorized();
+        }
+
+        ServiceResult<UserDto> result = await _userService.Update(targetUserId, int.Parse(currentUserId), dto);
+
+        return result.Status switch {
+            ServiceResultStatus.Success => Ok(result.Data),
             ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
             ServiceResultStatus.NotFound => NotFound(result.Message),
             _ => BadRequest(result.Message)
