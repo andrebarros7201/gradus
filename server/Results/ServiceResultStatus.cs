@@ -7,5 +7,6 @@ public enum ServiceResultStatus {
     Error,
     Unauthorized,
     BadRequest,
-    Conflict
+    Conflict,
+    Forbidden
 }
