@@ -26,7 +26,7 @@ public class AuthService : IAuthService {
         bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
 
         if (!isPasswordValid) {
-            return ServiceResult<UserDto>.Error(ServiceResultStatus.Unauthorized, "Invalid credentials");
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.BadRequest, "Invalid credentials");
         }
 
         return user.Role switch {

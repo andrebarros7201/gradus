@@ -32,8 +32,9 @@ public class AuthController : ControllerBase {
 
         if (result.Status != ServiceResultStatus.Success) {
             return result.Status switch {
-                ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
-                ServiceResultStatus.NotFound => NotFound(result.Message),
+                ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
+                ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
+                ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
                 _ => BadRequest(result.Message)
             };
         }
@@ -52,7 +53,7 @@ public class AuthController : ControllerBase {
             Expires = DateTime.UtcNow.AddDays(7)
         });
 
-        return Ok(result.Data);
+        return Ok(new { data = result.Data });
     }
 
     [Authorize]
@@ -65,8 +66,8 @@ public class AuthController : ControllerBase {
 
         ServiceResult<UserDto> result = await _authService.FetchUser(int.Parse(userId));
         return result.Status switch {
-            ServiceResultStatus.Success => Ok(result.Data),
-            ServiceResultStatus.NotFound => NotFound(result.Message),
+            ServiceResultStatus.Success => Ok(new { data = result.Data }),
+            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
             _ => BadRequest(result.Message)
         };
     }
