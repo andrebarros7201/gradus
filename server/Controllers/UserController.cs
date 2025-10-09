@@ -40,6 +40,7 @@ public class UserController : ControllerBase {
         return result.Status switch {
             ServiceResultStatus.Success => Created(),
             ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+            ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
             ServiceResultStatus.Conflict => Conflict(result.Message),
             _ => BadRequest(result.Message)
         };
@@ -59,6 +60,7 @@ public class UserController : ControllerBase {
         return result.Status switch {
             ServiceResultStatus.Success => Ok(),
             ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+            ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
             ServiceResultStatus.NotFound => NotFound(result.Message),
             _ => BadRequest(result.Message)
         };
@@ -83,6 +85,8 @@ public class UserController : ControllerBase {
         return result.Status switch {
             ServiceResultStatus.Success => Ok(result.Data),
             ServiceResultStatus.Unauthorized => Unauthorized(result.Message),
+            ServiceResultStatus.Conflict => Conflict(result.Message),
+            ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
             ServiceResultStatus.NotFound => NotFound(result.Message),
             _ => BadRequest(result.Message)
         };

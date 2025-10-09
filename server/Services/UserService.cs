@@ -65,7 +65,7 @@ public class UserService : IUserService {
             var currentUser = await _userRepository.GetUserById(userId.Value);
 
             if (currentUser.Role != Role.Admin) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+                return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this user");
             }
         }
 
@@ -82,7 +82,7 @@ public class UserService : IUserService {
         }
 
         if (currentUser.Role != Role.Admin) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+            return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to delete this user");
         }
 
         var targetUser = await _userRepository.GetUserById(id);
@@ -106,7 +106,7 @@ public class UserService : IUserService {
 
         // Check if the user is an admin or the user to be updated is the same as the current user
         if (currentUser.Role != Role.Admin && currentUserId != targetUserId) {
-            return ServiceResult<UserDto>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to update this user");
         }
 
         // Check if the username is already in use
