@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace Server.Results;
 
 public class ServiceResult<T> {
@@ -16,6 +18,17 @@ public class ServiceResult<T> {
         return new ServiceResult<T> {
             Status = status,
             Message = message
+        };
+    }
+
+    public static IActionResult ReturnStatus(ServiceResult<T> result) {
+        return result.Status switch {
+            ServiceResultStatus.Success => new OkObjectResult(new { data = result.Data }),
+            ServiceResultStatus.NotFound => new NotFoundObjectResult(new { message = result.Message }),
+            ServiceResultStatus.Conflict => new ConflictObjectResult(new { message = result.Message }),
+            ServiceResultStatus.Unauthorized => new UnauthorizedObjectResult(new { message = result.Message }),
+            ServiceResultStatus.Forbidden => new ObjectResult(new { message = result.Message }) { StatusCode = 403 },
+            _ => new BadRequestObjectResult(result.Message)
         };
     }
 }
