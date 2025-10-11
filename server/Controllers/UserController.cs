@@ -37,33 +37,18 @@ public class UserController : ControllerBase {
 
         ServiceResult<bool> result = await _userService.Create(dto, dto.Role != Role.Admin ? int.Parse(userId) : null);
 
-        return result.Status switch {
-            ServiceResultStatus.Success => Ok(),
-            ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
-            ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
-            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
-            _ => BadRequest(new { message = result.Message })
-        };
+        return ServiceResult<bool>.ReturnStatus(result);
     }
-
+    
     [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id) {
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (currentUserId == null) {
-            return Unauthorized();
-        }
+        // Can use ! because of [Authorize] attribute
+        ServiceResult<bool> result = await _userService.Delete(id, int.Parse(currentUserId!));
 
-        ServiceResult<bool> result = await _userService.Delete(id, int.Parse(currentUserId));
-
-        return result.Status switch {
-            ServiceResultStatus.Success => Ok(),
-            ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
-            ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
-            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
-            _ => BadRequest(new { message = result.Message })
-        };
+        return ServiceResult<bool>.ReturnStatus(result);
     }
 
     [Authorize]
@@ -76,19 +61,10 @@ public class UserController : ControllerBase {
 
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (currentUserId == null) {
-            return Unauthorized();
-        }
 
-        ServiceResult<UserDto> result = await _userService.Update(targetUserId, int.Parse(currentUserId), dto);
+        // Can use ! because of [Authorize] attribute
+        ServiceResult<UserDto> result = await _userService.Update(targetUserId, int.Parse(currentUserId!), dto);
 
-        return result.Status switch {
-            ServiceResultStatus.Success => Created(),
-            ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
-            ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
-            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
-            ServiceResultStatus.Conflict => Conflict(new { message = result.Message }),
-            _ => BadRequest(result.Message)
-        };
+        return ServiceResult<UserDto>.ReturnStatus(result);
     }
 }
