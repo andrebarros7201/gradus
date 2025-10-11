@@ -17,10 +17,12 @@ public class AuthService : IAuthService {
     }
 
     public async Task<ServiceResult<UserDto>> Login(UserLoginDto dto) {
+        // Fetch user by username
         var user = await _userRepository.GetUserByUsername(dto.Username);
 
+        // Early return if user is null
         if (user == null) {
-            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found");
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.BadRequest, "Invalid credentials");
         }
 
         bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.Password);
@@ -36,7 +38,7 @@ public class AuthService : IAuthService {
                 Name = user.Name,
                 Role = user.Role,
                 Admin = new AdminDto {
-                    Id = user.Admin.Id,
+                    Id = user.Admin!.Id
                 }
             }),
             Role.Class => ServiceResult<UserDto>.Success(new UserDto {
@@ -45,7 +47,7 @@ public class AuthService : IAuthService {
                 Name = user.Name,
                 Role = user.Role,
                 Class = new ClassDto {
-                    Id = user.Class.Id,
+                    Id = user.Class!.Id,
                     SchoolYear = user.Class.SchoolYear,
                     IsActive = user.Class.IsActive
                 }
@@ -56,7 +58,7 @@ public class AuthService : IAuthService {
                 Name = user.Name,
                 Role = user.Role,
                 Professor = new ProfessorDto {
-                    Id = user.Professor.Id,
+                    Id = user.Professor!.Id,
                     Subjects = user.Professor.Subjects
                 }
             })
@@ -64,14 +66,12 @@ public class AuthService : IAuthService {
     }
 
     public async Task<ServiceResult<UserDto>> FetchUser(int id) {
+        // Fetch user by id
         var user = await _userRepository.GetUserById(id);
-        if (user == null) {
-            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found");
-        }
 
         return user.Role switch {
             Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
-                Id = user.Id, Name = user.Name, Username = user.Username, Role = user.Role, Admin = new AdminDto { Id = user.Admin.Id }
+                Id = user.Id, Name = user.Name, Username = user.Username, Role = user.Role, Admin = new AdminDto { Id = user.Admin!.Id }
             }),
             Role.Class => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
@@ -79,7 +79,7 @@ public class AuthService : IAuthService {
                 Role = user.Role,
                 Name = user.Name,
                 Class = new ClassDto
-                    { Id = user.Class.Id, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+                    { Id = user.Class!.Id, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
@@ -87,7 +87,7 @@ public class AuthService : IAuthService {
                 Role = user.Role,
                 Name = user.Name,
                 Professor = new ProfessorDto {
-                    Id = user.Professor.Id,
+                    Id = user.Professor!.Id,
                     Subjects = user.Professor.Subjects
                 }
             }),
