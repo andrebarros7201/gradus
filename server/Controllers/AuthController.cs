@@ -31,12 +31,7 @@ public class AuthController : ControllerBase {
         ServiceResult<UserDto> result = await _authService.Login(dto);
 
         if (result.Status != ServiceResultStatus.Success) {
-            return result.Status switch {
-                ServiceResultStatus.Unauthorized => Unauthorized(new { message = result.Message }),
-                ServiceResultStatus.Forbidden => StatusCode(403, new { message = result.Message }),
-                ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
-                _ => BadRequest(result.Message)
-            };
+            return ServiceResult<UserDto>.ReturnStatus(result);
         }
 
         string token = _tokenService.GenerateToken(new TokenDataDto {
@@ -53,23 +48,18 @@ public class AuthController : ControllerBase {
             Expires = DateTime.UtcNow.AddDays(7)
         });
 
-        return Ok(new { data = result.Data });
+        return ServiceResult<UserDto>.ReturnStatus(result);
     }
 
     [Authorize]
     [HttpGet("me")]
     public async Task<IActionResult> FetchUser() {
-        string? userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null) {
-            return Unauthorized();
-        }
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        ServiceResult<UserDto> result = await _authService.FetchUser(int.Parse(userId));
-        return result.Status switch {
-            ServiceResultStatus.Success => Ok(new { data = result.Data }),
-            ServiceResultStatus.NotFound => NotFound(new { message = result.Message }),
-            _ => BadRequest(result.Message)
-        };
+        // Can use ! because of [Authorize] attribute
+        ServiceResult<UserDto> result = await _authService.FetchUser(int.Parse(userId!));
+        
+        return ServiceResult<UserDto>.ReturnStatus(result);
     }
 
     [Authorize]
