@@ -13,10 +13,18 @@ public class ClassRepository : IClassRepository {
     }
 
     public async Task<Class?> GetClassById(int id) {
-        return await _db.Classes.Include(c => c.Students).Include(c => c.Subjects).FirstOrDefaultAsync(c => c.Id == id);
+        return await _db.Classes
+            .Include(c => c.Students)
+            .Include(c => c.Subjects)
+            .Include(c => c.User).ThenInclude(u => u.Name)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<List<Class>> GetAllClasses() {
-        return await _db.Classes.Include(c => c.Students).Include(c => c.Subjects).ToListAsync();
+        return await _db.Classes
+            .Include(c => c.Students)
+            .Include(c => c.Subjects)
+            .Include(c => c.User).ThenInclude(u => u.Name)
+            .ToListAsync();
     }
 }
