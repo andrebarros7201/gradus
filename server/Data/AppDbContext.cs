@@ -12,8 +12,6 @@ public class AppDbContext : DbContext {
     public DbSet<Professor> Professors { get; set; }
     public DbSet<Student> Students { get; set; }
     public DbSet<Grade> Grades { get; set; }
-    public DbSet<ClassSubject> ClassSubjects { get; set; }
-    public DbSet<ClassStudents> ClassStudents { get; set; }
     public DbSet<Admin> Admins { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -48,36 +46,14 @@ public class AppDbContext : DbContext {
             .OnDelete(DeleteBehavior.Restrict);
 
         // Class - Subject
-        modelBuilder.Entity<ClassSubject>()
-            .HasKey(cs => new { cs.ClassId, cs.SubjectId });
-
-        modelBuilder.Entity<ClassSubject>()
-            .HasOne(cs => cs.Class)
-            .WithMany(c => c.Subjects)
-            .HasForeignKey(cs => cs.ClassId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<ClassSubject>()
-            .HasOne(cs => cs.Subject)
-            .WithMany(s => s.Classes)
-            .HasForeignKey(cs => cs.SubjectId)
-            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Class>()
+            .HasMany(c => c.Subjects)
+            .WithMany(s => s.Classes);
 
         // Class - Student
-        modelBuilder.Entity<ClassStudents>()
-            .HasKey(cs => new { cs.ClassId, cs.StudentId });
-
-        modelBuilder.Entity<ClassStudents>()
-            .HasOne(cs => cs.Class)
-            .WithMany(c => c.Students)
-            .HasForeignKey(cs => cs.ClassId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<ClassStudents>()
-            .HasOne(cs => cs.Student)
-            .WithMany(s => s.Classes)
-            .HasForeignKey(cs => cs.StudentId)
-            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Student>()
+            .HasMany(s => s.Classes)
+            .WithMany(c => c.Students);
 
         // Grade - Student
         modelBuilder.Entity<Grade>()
