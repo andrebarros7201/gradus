@@ -48,6 +48,7 @@ public class AuthService : IAuthService {
                 Role = user.Role,
                 Class = new ClassDto {
                     Id = user.Class!.Id,
+                    Name = user.Class.User.Name,
                     SchoolYear = user.Class.SchoolYear,
                     IsActive = user.Class.IsActive
                 }
@@ -79,7 +80,7 @@ public class AuthService : IAuthService {
                 Role = user.Role,
                 Name = user.Name,
                 Class = new ClassDto
-                    { Id = user.Class!.Id, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+                    { Id = user.Class!.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,

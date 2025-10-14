@@ -140,7 +140,8 @@ public class UserService : IUserService {
                 Role = targetUser.Role,
                 Class = targetUser.Role switch {
                     Role.Class => new ClassDto {
-                        Id = targetUser.Class.Id,
+                        Id = targetUser.Class!.Id,
+                        Name = targetUser.Class.User.Name,
                         SchoolYear = targetUser.Class.SchoolYear,
                         IsActive = targetUser.Class.IsActive
                     },
@@ -148,13 +149,13 @@ public class UserService : IUserService {
                 },
                 Admin = targetUser.Role switch {
                     Role.Admin => new AdminDto {
-                        Id = targetUser.Admin.Id
+                        Id = targetUser.Admin!.Id
                     },
                     _ => null
                 },
                 Professor = targetUser.Role switch {
                     Role.Professor => new ProfessorDto {
-                        Id = targetUser.Professor.Id
+                        Id = targetUser.Professor!.Id
                     },
                     _ => null
                 }
