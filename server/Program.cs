@@ -25,6 +25,8 @@ public class Program {
 
         // Dependency Injection
         builder.Services.AddScoped<IAuthService, AuthService>();
+
+        builder.Services.AddScoped<IClassRepository, ClassRepository>();
         
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
