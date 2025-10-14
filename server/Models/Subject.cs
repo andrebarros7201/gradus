@@ -5,7 +5,7 @@ public class Subject {
     public string Name { get; set; }
     public string SchoolYear { get; set; }
 
-    public List<ClassSubject> Classes { get; set; }
+    public List<Class> Classes { get; set; }
     public List<Grade> Grades { get; set; }
 
     public Professor Professor { get; set; }

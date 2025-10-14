@@ -7,6 +7,6 @@ public class Class {
 
     public User User { get; set; }
 
-    public List<ClassStudents> Students { get; set; } = [];
-    public List<ClassSubject> Subjects { get; set; } = [];
+    public List<Student> Students { get; set; } = [];
+    public List<Subject> Subjects { get; set; } = [];
 }
