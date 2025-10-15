@@ -37,7 +37,7 @@ public class AppDbContext : DbContext {
             .WithOne(c => c.User)
             .HasForeignKey<User>(c => c.ClassId)
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         // Professor - Subject
         modelBuilder.Entity<Professor>()
             .HasMany(p => p.Subjects)
@@ -68,5 +68,65 @@ public class AppDbContext : DbContext {
             .WithMany(s => s.Grades)
             .HasForeignKey(g => g.SubjectId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Seed
+
+        // Admin
+        modelBuilder.Entity<Admin>().HasData(
+            new Admin {
+                Id = 1
+            }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            new User {
+                Id = 1,
+                Name = "Admin",
+                Username = "admin",
+                Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
+                AdminId = 1,
+                ClassId = null,
+                ProfessorId = null,
+                CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Utc)
+            });
+
+        // Professor
+        modelBuilder.Entity<Professor>().HasData(
+            new Professor {
+                Id = 1
+            }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            new User {
+                Id = 2,
+                Name = "Professor",
+                Username = "professor",
+                Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
+                AdminId = null,
+                ClassId = null,
+                ProfessorId = 1,
+                CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Utc)
+            });
+
+        // Class
+        modelBuilder.Entity<Class>().HasData(
+            new Class {
+                Id = 1,
+                SchoolYear = "2025/26"
+            }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            new User {
+                Id = 3,
+                Name = "Class",
+                Username = "class",
+                Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
+                AdminId = null,
+                ClassId = 1,
+                ProfessorId = null,
+                CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Local).AddTicks(2206)
+            });
     }
 }
