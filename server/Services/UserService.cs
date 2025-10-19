@@ -139,7 +139,7 @@ public class UserService : IUserService {
                 Username = targetUser.Username,
                 Role = targetUser.Role,
                 Class = targetUser.Role switch {
-                    Role.Class => new ClassDto {
+                    Role.Class => new ClassSimpleDto {
                         Id = targetUser.Class!.Id,
                         Name = targetUser.Class.User.Name,
                         SchoolYear = targetUser.Class.SchoolYear,
