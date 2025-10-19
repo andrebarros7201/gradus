@@ -1,3 +1,5 @@
+using Server.DTOs.Class;
+using Server.DTOs.Student;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
 using Server.Models;
@@ -12,13 +14,25 @@ public class ClassService : IClassService {
         _classRepository = classRepository;
     }
 
-    public async Task<ServiceResult<List<Class>>> GetAllClasses() {
+    public async Task<ServiceResult<List<ClassSimpleDto>>> GetAllClasses() {
         List<Class> classes = await _classRepository.GetAllClasses();
-        return ServiceResult<List<Class>>.Success(classes);
+        return ServiceResult<List<ClassSimpleDto>>.Success(classes.Select(c => new ClassSimpleDto
+            { Id = c.Id, IsActive = c.IsActive, Name = c.User.Name, SchoolYear = c.SchoolYear }).ToList());
     }
 
-    public async Task<ServiceResult<Class?>> GetClassById(int id) {
+    public async Task<ServiceResult<ClassCompleteDto?>> GetClassById(int id) {
         var @class = await _classRepository.GetClassById(id);
-        return ServiceResult<Class?>.Success(@class);
+
+        if (@class == null) {
+            return ServiceResult<ClassCompleteDto?>.Error(ServiceResultStatus.NotFound, "Class not found");
+        }
+
+        return ServiceResult<ClassCompleteDto?>.Success(new ClassCompleteDto {
+            Id = @class.Id,
+            Name = @class.User.Name,
+            IsActive = @class.IsActive,
+            SchoolYear = @class.SchoolYear,
+            Students = @class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList()
+        });
     }
 }
