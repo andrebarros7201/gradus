@@ -1,5 +1,6 @@
 using Server.DTOs.Class;
 using Server.DTOs.Student;
+using Server.DTOs.Subject;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
 using Server.Models;
@@ -32,7 +33,8 @@ public class ClassService : IClassService {
             Name = @class.User.Name,
             IsActive = @class.IsActive,
             SchoolYear = @class.SchoolYear,
-            Students = @class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList()
+            Students = @class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
+            Subjects = @class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, ProfessorId = s.ProfessorId }).ToList()
         });
     }
 }
