@@ -19,15 +19,16 @@ public class StudentRepository : IStudentRepository {
         throw new NotImplementedException();
     }
 
-    public Task Create(Student student) {
+    public async Task CreateStudent(Student student) {
+        await _db.Students.AddAsync(student);
+        await _db.SaveChangesAsync();
+    }
+
+    public Task DeleteStudent(Student student) {
         throw new NotImplementedException();
     }
 
-    public Task Delete(Student student) {
-        throw new NotImplementedException();
-    }
-
-    public Task Update(Student student) {
+    public Task UpdateStudent(Student student) {
         throw new NotImplementedException();
     }
 }
