@@ -16,7 +16,7 @@ public class ClassRepository : IClassRepository {
         return await _db.Classes
             .Include(c => c.Students)
             .Include(c => c.Subjects)
-            .Include(c => c.User).ThenInclude(u => u.Name)
+            .Include(c => c.User)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
@@ -24,7 +24,7 @@ public class ClassRepository : IClassRepository {
         return await _db.Classes
             .Include(c => c.Students)
             .Include(c => c.Subjects)
-            .Include(c => c.User).ThenInclude(u => u.Name)
+            .Include(c => c.User)
             .ToListAsync();
     }
 }
