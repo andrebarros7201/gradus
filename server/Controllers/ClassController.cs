@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Server.DTOs.Class;
 using Server.Interfaces.Services;
 using Server.Models;
 using Server.Results;
@@ -16,15 +17,15 @@ public class ClassController : ControllerBase {
 
     [HttpGet]
     public async Task<IActionResult> GetAllClasses() {
-        ServiceResult<List<Class>> result = await _classService.GetAllClasses();
+        ServiceResult<List<ClassSimpleDto>> result = await _classService.GetAllClasses();
 
-        return ServiceResult<List<Class>>.ReturnStatus(result);
+        return ServiceResult<List<ClassSimpleDto>>.ReturnStatus(result);
     }
 
     [HttpGet("{classId:int}")]
     public async Task<IActionResult> GetClassById([FromRoute] int classId) {
-        ServiceResult<Class?> result = await _classService.GetClassById(classId);
+        ServiceResult<ClassCompleteDto?> result = await _classService.GetClassById(classId);
 
-        return ServiceResult<Class?>.ReturnStatus(result);
+        return ServiceResult<ClassCompleteDto?>.ReturnStatus(result);
     }
 }
