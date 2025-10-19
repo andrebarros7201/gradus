@@ -7,6 +7,6 @@ public class SubjectSimpleDto {
     public string Name { get; set; } = string.Empty;
 
     // Not useful when fetching a professor's subjects'
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int ProfessorId { get; set; }
 }
