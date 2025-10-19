@@ -85,6 +85,7 @@ public class AppDbContext : DbContext {
                 Username = "admin",
                 Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
                 AdminId = 1,
+                Role = Role.Admin,
                 ClassId = null,
                 ProfessorId = null,
                 CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Utc)
@@ -103,6 +104,7 @@ public class AppDbContext : DbContext {
                 Name = "Professor",
                 Username = "professor",
                 Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
+                Role = Role.Professor,
                 AdminId = null,
                 ClassId = null,
                 ProfessorId = 1,
@@ -123,6 +125,7 @@ public class AppDbContext : DbContext {
                 Name = "Class",
                 Username = "class",
                 Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
+                Role = Role.Class,
                 AdminId = null,
                 ClassId = 1,
                 ProfessorId = null,
