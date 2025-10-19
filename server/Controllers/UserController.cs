@@ -24,6 +24,14 @@ public class UserController : ControllerBase {
         return ServiceResult<UserDto>.ReturnStatus(result);
     }
 
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> GetMe() {
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        ServiceResult<UserDto> result = await _userService.FetchUser(int.Parse(currentUserId));
+        return ServiceResult<UserDto>.ReturnStatus(result);
+    }
+
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto dto) {
