@@ -3,6 +3,7 @@ using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
 using Server.DTOs.Professor;
+using Server.DTOs.Subject;
 using Server.DTOs.User;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
@@ -18,7 +19,39 @@ public class UserService : IUserService {
         _userRepository = userRepository;
     }
 
+    public async Task<ServiceResult<UserDto>> FetchUser(int id) {
+        // Fetch user by id
+        User user = await _userRepository.GetUserById(id);
 
+        return user.Role switch {
+            Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Name = user.Name,
+                Username = user.Username,
+                Role = user.Role,
+                Admin = new AdminDto { Id = user.Admin!.Id }
+            }),
+            Role.Class => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Name = user.Name,
+                Class = new ClassSimpleDto
+                    { Id = user.Class!.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+            }),
+            Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Name = user.Name,
+                Professor = new ProfessorDto {
+                    Id = user.Professor!.Id,
+                    Subjects = user.Professor.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name }).ToList()
+                }
+            }),
+            _ => ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found")
+        };
+    }
     // Logic for creating a user
     // If it's a new admin, no need to check for userId and validate it
     // If it's not an admin, check the userId and validate it (see if it exists and is an admin)

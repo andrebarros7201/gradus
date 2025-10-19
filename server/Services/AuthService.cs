@@ -67,37 +67,4 @@ public class AuthService : IAuthService {
         };
     }
 
-    public async Task<ServiceResult<UserDto>> FetchUser(int id) {
-        // Fetch user by id
-        var user = await _userRepository.GetUserById(id);
-
-        return user.Role switch {
-            Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
-                Id = user.Id,
-                Name = user.Name,
-                Username = user.Username,
-                Role = user.Role,
-                Admin = new AdminDto { Id = user.Admin!.Id }
-            }),
-            Role.Class => ServiceResult<UserDto>.Success(new UserDto {
-                Id = user.Id,
-                Username = user.Username,
-                Role = user.Role,
-                Name = user.Name,
-                Class = new ClassSimpleDto
-                    { Id = user.Class!.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
-            }),
-            Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
-                Id = user.Id,
-                Username = user.Username,
-                Role = user.Role,
-                Name = user.Name,
-                Professor = new ProfessorDto {
-                    Id = user.Professor!.Id,
-                    Subjects = user.Professor.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name }).ToList()
-                }
-            }),
-            _ => ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found")
-        };
-    }
 }

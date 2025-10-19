@@ -6,5 +6,4 @@ namespace Server.Interfaces.Services;
 
 public interface IAuthService {
     public Task<ServiceResult<UserDto>> Login(UserLoginDto dto);
-    public Task<ServiceResult<UserDto>> FetchUser(int id);
 }

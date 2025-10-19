@@ -18,6 +18,12 @@ public class UserController : ControllerBase {
         _userService = userService;
     }
 
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id) {
+        ServiceResult<UserDto> result = await _userService.FetchUser(id);
+        return ServiceResult<UserDto>.ReturnStatus(result);
+    }
+
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto dto) {

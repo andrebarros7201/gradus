@@ -52,17 +52,6 @@ public class AuthController : ControllerBase {
     }
 
     [Authorize]
-    [HttpGet("me")]
-    public async Task<IActionResult> FetchUser() {
-        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        // Can use ! because of [Authorize] attribute
-        ServiceResult<UserDto> result = await _authService.FetchUser(int.Parse(userId!));
-        
-        return ServiceResult<UserDto>.ReturnStatus(result);
-    }
-
-    [Authorize]
     [HttpGet("logout")]
     public IActionResult Logout() {
         Response.Cookies.Delete("token");
