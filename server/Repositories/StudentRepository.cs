@@ -12,10 +12,10 @@ public class StudentRepository : IStudentRepository {
         _db = db;
     }
 
-    public async Task<Student> GetStudentById(int id) {
+    public async Task<Student?> GetStudentById(int id) {
         return await _db.Students
-            .Include(s => s.Classes)
-            .Include(s => s.Grades)
+            .Include(s => s.Classes).ThenInclude(c => c.User)
+            .Include(s => s.Grades).ThenInclude(g => g.Subject)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
