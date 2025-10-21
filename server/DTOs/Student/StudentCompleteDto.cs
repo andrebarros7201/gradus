@@ -1,3 +1,5 @@
+using Server.DTOs.Class;
+using Server.DTOs.Grade;
 using Server.Models;
 
 namespace Server.DTOs.Student;
@@ -5,8 +7,6 @@ namespace Server.DTOs.Student;
 public class StudentCompleteDto {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
-
-    // TODO create a GradeDto
-    // public List<Grade> Grades { get; set; } = [];
-    public int ClassId { get; set; }
+    public ClassSimpleDto Class { get; set; }
+    public List<GradeSimpleDto> Grades { get; set; } = [];
 }
