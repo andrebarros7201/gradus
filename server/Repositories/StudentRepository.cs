@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Interfaces.Repositories;
 using Server.Models;
@@ -11,12 +12,11 @@ public class StudentRepository : IStudentRepository {
         _db = db;
     }
 
-    public Task<Student> GetStudentById(int id) {
-        throw new NotImplementedException();
-    }
-
-    public Task<Student> GetStudentByUsername(string username) {
-        throw new NotImplementedException();
+    public async Task<Student> GetStudentById(int id) {
+        return await _db.Students
+            .Include(s => s.Classes)
+            .Include(s => s.Grades)
+            .FirstOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task CreateStudent(Student student) {
