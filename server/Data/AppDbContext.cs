@@ -48,7 +48,8 @@ public class AppDbContext : DbContext {
         // Class - Subject
         modelBuilder.Entity<Class>()
             .HasMany(c => c.Subjects)
-            .WithMany(s => s.Classes);
+            .WithOne(s => s.Class)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Class - Student
         modelBuilder.Entity<Student>()
@@ -131,5 +132,30 @@ public class AppDbContext : DbContext {
                 ProfessorId = null,
                 CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Local).AddTicks(2206)
             });
+
+        // Students
+        modelBuilder.Entity<Student>().HasData(
+            new Student { Id = 1, Name = "Andre" },
+            new Student { Id = 2, Name = "Ines" }
+        );
+
+        // Link Students and Classes
+        modelBuilder.Entity("ClassStudent").HasData(
+            new { StudentsId = 1, ClassesId = 1 },
+            new { StudentsId = 2, ClassesId = 1 }
+        );
+
+        // Subjects
+        modelBuilder.Entity<Subject>().HasData(
+            new Subject {
+                Id = 1, Name = "Math", ProfessorId = 1, ClassId = 1
+            });
+
+        // Grades
+        modelBuilder.Entity<Grade>().HasData(
+            new Grade { Id = 1, Value = 10, SubjectId = 1, StudentId = 1 },
+            new Grade { Id = 2, Value = 8, SubjectId = 1, StudentId = 2 }
+        );
+
     }
 }
