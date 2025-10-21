@@ -17,8 +17,12 @@ public class ClassService : IClassService {
 
     public async Task<ServiceResult<List<ClassSimpleDto>>> GetAllClasses() {
         List<Class> classes = await _classRepository.GetAllClasses();
-        return ServiceResult<List<ClassSimpleDto>>.Success(classes.Select(c => new ClassSimpleDto
-            { Id = c.Id, IsActive = c.IsActive, Name = c.User.Name, SchoolYear = c.SchoolYear }).ToList());
+        return ServiceResult<List<ClassSimpleDto>>.Success(classes.Select(c => new ClassSimpleDto {
+            Id = c.Id,
+            IsActive = c.IsActive,
+            Name = c.User.Name,
+            SchoolYear = c.SchoolYear
+        }).ToList());
     }
 
     public async Task<ServiceResult<ClassCompleteDto?>> GetClassById(int id) {
