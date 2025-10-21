@@ -35,4 +35,12 @@ public class StudentController : ControllerBase {
 
         return ServiceResult<bool>.ReturnStatus(result);
     }
+
+    [Authorize]
+    [HttpGet("{studentId:int}")]
+    public async Task<IActionResult> GetStudent([FromRoute] int studentId) {
+        ServiceResult<StudentCompleteDto> result = await _studentService.FetchStudentById(studentId);
+        return ServiceResult<StudentCompleteDto>.ReturnStatus(result);
+    }
+    
 }

@@ -1,4 +1,6 @@
 using Server.Data;
+using Server.DTOs.Class;
+using Server.DTOs.Grade;
 using Server.DTOs.Student;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
@@ -7,62 +9,76 @@ using Server.Results;
 
 namespace Server.Services;
 
-public class StudentService : IStudentService
-{
+public class StudentService : IStudentService {
     private readonly IUserRepository _userRepository;
     private readonly IStudentRepository _studentRepository;
     private readonly IClassRepository _classRepository;
 
-    public StudentService(IUserRepository userRepository, IStudentRepository studentRepository, IClassRepository classRepository)
-    {
+    public StudentService(IUserRepository userRepository, IStudentRepository studentRepository, IClassRepository classRepository) {
         _userRepository = userRepository;
         _studentRepository = studentRepository;
         _classRepository = classRepository;
     }
 
-    public Task<ServiceResult<StudentCompleteDto>> FetchAllStudents(int classId)
-    {
+    public Task<ServiceResult<StudentCompleteDto>> FetchAllStudents(int classId) {
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResult<StudentCompleteDto>> FetchStudentById(int id)
-    {
+    public async Task<ServiceResult<StudentCompleteDto>> FetchStudentById(int id) {
+        if (id == null) {
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.BadRequest, "Invalid student id");
+        }
+
+        Student student = await _studentRepository.GetStudentById(id);
+
+        if (student == null) {
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.NotFound, "Student not found");
+        }
+
+        return ServiceResult<StudentCompleteDto>.Success(new StudentCompleteDto {
+            Id = student.Id,
+            Name = student.Name,
+            Class = student.Classes.Where(c => c.IsActive == true).Select(c => new ClassSimpleDto {
+                Id = c.Id,
+                Name = c.User.Name,
+                IsActive = c.IsActive,
+                SchoolYear = c.SchoolYear
+            }).FirstOrDefault(),
+            Grades = student.Grades.Select(g => new GradeSimpleDto {
+                Id = g.Id,
+                SubjectName = g.Subject.Name,
+                Value = g.Value
+            }).ToList()
+        });
+    }
+
+    public Task<ServiceResult<StudentCompleteDto>> FetchStudentByUsername(string username) {
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResult<StudentCompleteDto>> FetchStudentByUsername(string username)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<ServiceResult<bool>> CreateStudent(int currentUserId, StudentRegisterDto dto)
-    {
+    public async Task<ServiceResult<bool>> CreateStudent(int currentUserId, StudentRegisterDto dto) {
         // Fetch current user
         var currentUser = await _userRepository.GetUserById(currentUserId);
 
         // Check if the current user exists
-        if (currentUser == null)
-        {
+        if (currentUser == null) {
             return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
         }
 
         // Only admins can create students
         // Check if the current user is an admin
-        if (currentUser.Role != Role.Admin)
-        {
+        if (currentUser.Role != Role.Admin) {
             return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this student");
         }
 
         var @class = await _classRepository.GetClassById(dto.ClassId);
 
-        if (@class == null)
-        {
+        if (@class == null) {
             return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Class not found");
         }
 
         // Create the new student
-        var newStudent = new Student
-        {
+        var newStudent = new Student {
             Name = dto.Name,
             Classes = [@class] // Initialize with the class the student is enrolled in
         };
@@ -72,13 +88,11 @@ public class StudentService : IStudentService
         return ServiceResult<bool>.Success(true);
     }
 
-    public Task<ServiceResult<bool>> DeleteStudent(int id)
-    {
+    public Task<ServiceResult<bool>> DeleteStudent(int id) {
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResult<StudentCompleteDto>> UpdateStudent()
-    {
+    public Task<ServiceResult<StudentCompleteDto>> UpdateStudent() {
         throw new NotImplementedException();
     }
 }
