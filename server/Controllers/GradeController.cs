@@ -43,4 +43,14 @@ public class GradeController : ControllerBase {
 
         return ServiceResult<GradeSimpleDto>.ReturnStatus(result);
     }
+
+    [Authorize]
+    [HttpDelete("{gradeId:int}")]
+    public async Task<IActionResult> DeleteGrade([FromRoute] int gradeId) {
+        string? currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<bool> result = await _gradeService.DeleteGrade(int.Parse(currentUser), gradeId);
+
+        return ServiceResult<bool>.ReturnStatus(result);
+    }
 }

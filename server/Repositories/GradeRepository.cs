@@ -33,7 +33,9 @@ public class GradeRepository : IGradeRepository {
         return grade;
     }
 
-    public Task<bool> DeleteGrade(int id) {
-        throw new NotImplementedException();
+    public async Task<bool> DeleteGrade(Grade grade) {
+        _db.Grades.Remove(grade);
+        await _db.SaveChangesAsync();
+        return true;
     }
 }

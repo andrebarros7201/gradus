@@ -73,7 +73,25 @@ public class GradeService : IGradeService {
         });
     }
 
-    public Task<ServiceResult<bool>> DeleteGrade(int id) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<bool>> DeleteGrade(int currentUserId, int gradeId) {
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
+
+        if (currentUser == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
+
+        if (currentUser.Role == Role.Class) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to update a grade");
+        }
+
+        Grade? grade = await _gradeRepository.GetGradeById(gradeId);
+
+        if (grade == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Grade not found");
+        }
+
+        await _gradeRepository.DeleteGrade(grade);
+
+        return ServiceResult<bool>.Success(true);
     }
 }
