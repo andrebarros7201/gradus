@@ -29,7 +29,8 @@ public class StudentRepository : IStudentRepository {
         await _db.SaveChangesAsync();
     }
 
-    public Task UpdateStudent(Student student) {
-        throw new NotImplementedException();
+    public async Task UpdateStudent(Student student) {
+        _db.Update(student);
+        await _db.SaveChangesAsync();
     }
 }

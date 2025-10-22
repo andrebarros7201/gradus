@@ -44,6 +44,21 @@ public class StudentController : ControllerBase {
     }
 
     [Authorize]
+    [HttpPatch("{studentId:int}")]
+    public async Task<IActionResult> UpdateStudent([FromRoute] int studentId, [FromBody] StudentUpdateDto dto) {
+        // Validate Model
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<StudentCompleteDto> result = await _studentService.UpdateStudent(int.Parse(currentUserId), studentId, dto);
+
+        return ServiceResult<StudentCompleteDto>.ReturnStatus(result);
+    }
+
+    [Authorize]
     [HttpDelete("{studentId:int}")]
     public async Task<IActionResult> DeleteStudent([FromRoute] int studentId) {
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -52,5 +67,5 @@ public class StudentController : ControllerBase {
 
         return ServiceResult<bool>.ReturnStatus(result);
     }
-    
+
 }

@@ -20,10 +20,6 @@ public class StudentService : IStudentService {
         _classRepository = classRepository;
     }
 
-    public Task<ServiceResult<StudentCompleteDto>> FetchAllStudents(int classId) {
-        throw new NotImplementedException();
-    }
-
     public async Task<ServiceResult<StudentCompleteDto>> FetchStudentById(int id) {
         if (id == null) {
             return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.BadRequest, "Invalid student id");
@@ -50,10 +46,6 @@ public class StudentService : IStudentService {
                 Value = g.Value
             }).ToList()
         });
-    }
-
-    public Task<ServiceResult<StudentCompleteDto>> FetchStudentByUsername(string username) {
-        throw new NotImplementedException();
     }
 
     public async Task<ServiceResult<bool>> CreateStudent(int currentUserId, StudentRegisterDto dto) {
@@ -111,7 +103,41 @@ public class StudentService : IStudentService {
         
     }
 
-    public Task<ServiceResult<StudentCompleteDto>> UpdateStudent() {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<StudentCompleteDto>> UpdateStudent(int currentUserId, int studentId, StudentUpdateDto dto) {
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
+
+        if (currentUser == null) {
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.NotFound, "Current user not found");
+        }
+
+        if (currentUser.Role != Role.Admin) {
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.Forbidden, "Current user is not authorized to perform this action");
+        }
+
+        Student? targetStudent = await _studentRepository.GetStudentById(studentId);
+
+        if (targetStudent == null) {
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.NotFound, "Student not found");
+        }
+
+        targetStudent.Name = dto.Name;
+
+        await _studentRepository.UpdateStudent(targetStudent);
+
+        return ServiceResult<StudentCompleteDto>.Success(new StudentCompleteDto {
+            Id = targetStudent.Id,
+            Name = targetStudent.Name,
+            Class = targetStudent.Classes.Where(c => c.IsActive == true).Select(c => new ClassSimpleDto {
+                Id = c.Id,
+                Name = c.User.Name,
+                IsActive = c.IsActive,
+                SchoolYear = c.SchoolYear
+            }).FirstOrDefault(),
+            Grades = targetStudent.Grades.Select(g => new GradeSimpleDto {
+                Id = g.Id,
+                SubjectName = g.Subject.Name,
+                Value = g.Value
+            }).ToList()
+        });
     }
 }
