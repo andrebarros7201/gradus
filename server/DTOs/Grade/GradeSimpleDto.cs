@@ -11,6 +11,6 @@ public class GradeSimpleDto {
     public int StudentId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string StudentName { get; set; } = string.Empty;
+    public string StudentName { get; set; }
     
 }
