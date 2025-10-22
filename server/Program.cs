@@ -34,7 +34,9 @@ public class Program {
 
         builder.Services.AddScoped<IStudentService, StudentService>();
         builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-        
+
+        builder.Services.AddScoped<IGradeService, GradeService>();
+        builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 
         builder.Services.AddScoped<TokenService>();
 
