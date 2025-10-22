@@ -24,8 +24,9 @@ public class StudentRepository : IStudentRepository {
         await _db.SaveChangesAsync();
     }
 
-    public Task DeleteStudent(Student student) {
-        throw new NotImplementedException();
+    public async Task DeleteStudent(Student student) {
+        _db.Students.Remove(student);
+        await _db.SaveChangesAsync();
     }
 
     public Task UpdateStudent(Student student) {

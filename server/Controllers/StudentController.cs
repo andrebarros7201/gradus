@@ -42,5 +42,15 @@ public class StudentController : ControllerBase {
         ServiceResult<StudentCompleteDto> result = await _studentService.FetchStudentById(studentId);
         return ServiceResult<StudentCompleteDto>.ReturnStatus(result);
     }
+
+    [Authorize]
+    [HttpDelete("{studentId:int}")]
+    public async Task<IActionResult> DeleteStudent([FromRoute] int studentId) {
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<bool> result = await _studentService.DeleteStudent(int.Parse(currentUserId), studentId);
+
+        return ServiceResult<bool>.ReturnStatus(result);
+    }
     
 }

@@ -88,8 +88,27 @@ public class StudentService : IStudentService {
         return ServiceResult<bool>.Success(true);
     }
 
-    public Task<ServiceResult<bool>> DeleteStudent(int id) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<bool>> DeleteStudent(int currentUserId, int studentId) {
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
+
+        if (currentUser == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
+        }
+
+        Student? student = await _studentRepository.GetStudentById(studentId);
+
+        if (student == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Student not found");
+        }
+
+        if (currentUser.Role != Role.Admin) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to delete this student");
+        }
+
+        await _studentRepository.DeleteStudent(student);
+
+        return ServiceResult<bool>.Success(true);
+        
     }
 
     public Task<ServiceResult<StudentCompleteDto>> UpdateStudent() {
