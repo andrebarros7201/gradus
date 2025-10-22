@@ -1,0 +1,32 @@
+using Server.Data;
+using Server.Interfaces.Repositories;
+using Server.Models;
+
+namespace Server.Repositories;
+
+public class GradeRepository : IGradeRepository {
+    private readonly AppDbContext _db;
+
+    public GradeRepository(AppDbContext db) {
+        _db = db;
+    }
+
+    public async Task<Grade> CreateGrade(Grade grade) {
+        await _db.Grades.AddAsync(grade);
+        await _db.SaveChangesAsync();
+
+        // Load the subject navigation property
+        await _db.Entry(grade).Reference(g => g.Subject).LoadAsync();
+        await _db.Entry(grade).Reference(g => g.Student).LoadAsync();
+
+        return grade;
+    }
+
+    public Task<Grade> UpdateGrade(Grade grade) {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteGrade(int id) {
+        throw new NotImplementedException();
+    }
+}
