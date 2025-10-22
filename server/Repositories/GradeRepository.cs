@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Interfaces.Repositories;
 using Server.Models;
@@ -11,6 +12,10 @@ public class GradeRepository : IGradeRepository {
         _db = db;
     }
 
+    public async Task<Grade?> GetGradeById(int id) {
+        return await _db.Grades.Include(g => g.Student).Include(g => g.Subject).FirstOrDefaultAsync(g => g.Id == id);
+    }
+
     public async Task<Grade> CreateGrade(Grade grade) {
         await _db.Grades.AddAsync(grade);
         await _db.SaveChangesAsync();
@@ -22,8 +27,10 @@ public class GradeRepository : IGradeRepository {
         return grade;
     }
 
-    public Task<Grade> UpdateGrade(Grade grade) {
-        throw new NotImplementedException();
+    public async Task<Grade> UpdateGrade(Grade grade) {
+        _db.Grades.Update(grade);
+        await _db.SaveChangesAsync();
+        return grade;
     }
 
     public Task<bool> DeleteGrade(int id) {

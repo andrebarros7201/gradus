@@ -29,4 +29,18 @@ public class GradeController : ControllerBase {
 
         return ServiceResult<GradeSimpleDto>.ReturnStatus(result);
     }
+
+    [Authorize]
+    [HttpPatch("{gradeId:int}")]
+    public async Task<IActionResult> UpdateGrade([FromBody] GradeUpdateDto dto, [FromRoute] int gradeId) {
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        string? currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<GradeSimpleDto> result = await _gradeService.UpdateGrade(int.Parse(currentUser), gradeId, dto);
+
+        return ServiceResult<GradeSimpleDto>.ReturnStatus(result);
+    }
 }

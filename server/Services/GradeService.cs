@@ -43,8 +43,34 @@ public class GradeService : IGradeService {
         });
     }
 
-    public Task<ServiceResult<GradeSimpleDto>> UpdateGrade(int currentUserId, int gradeId, GradeUpdateDto dto) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<GradeSimpleDto>> UpdateGrade(int currentUserId, int gradeId, GradeUpdateDto dto) {
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
+
+        if (currentUser == null) {
+            return ServiceResult<GradeSimpleDto>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
+
+        if (currentUser.Role == Role.Class) {
+            return ServiceResult<GradeSimpleDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to update a grade");
+        }
+
+        Grade? grade = await _gradeRepository.GetGradeById(gradeId);
+
+        if (grade == null) {
+            return ServiceResult<GradeSimpleDto>.Error(ServiceResultStatus.NotFound, "Grade not found");
+        }
+
+        grade.Value = dto.Value;
+
+        await _gradeRepository.UpdateGrade(grade);
+
+        return ServiceResult<GradeSimpleDto>.Success(new GradeSimpleDto {
+            Id = grade.Id,
+            Value = grade.Value,
+            StudentId = grade.StudentId,
+            StudentName = grade.Student.Name,
+            SubjectName = grade.Subject.Name
+        });
     }
 
     public Task<ServiceResult<bool>> DeleteGrade(int id) {
