@@ -61,14 +61,14 @@ public class AppDbContext : DbContext {
             .HasOne(g => g.Student)
             .WithMany(s => s.Grades)
             .HasForeignKey(g => g.StudentId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Grade - Subject
         modelBuilder.Entity<Grade>()
             .HasOne(g => g.Subject)
             .WithMany(s => s.Grades)
             .HasForeignKey(g => g.SubjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Seed
 
