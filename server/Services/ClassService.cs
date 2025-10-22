@@ -38,7 +38,7 @@ public class ClassService : IClassService {
             IsActive = @class.IsActive,
             SchoolYear = @class.SchoolYear,
             Students = @class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
-            Subjects = @class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, ProfessorId = s.ProfessorId }).ToList()
+            Subjects = @class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name }).ToList()
         });
     }
 }

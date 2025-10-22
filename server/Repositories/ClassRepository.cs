@@ -15,7 +15,7 @@ public class ClassRepository : IClassRepository {
     public async Task<Class?> GetClassById(int id) {
         return await _db.Classes
             .Include(c => c.Students)
-            .Include(c => c.Subjects)
+            .Include(c => c.Subjects).ThenInclude(s => s.Professor).ThenInclude(p => p.User)
             .Include(c => c.User)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
