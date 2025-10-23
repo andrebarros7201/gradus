@@ -137,8 +137,36 @@ public class SubjectService : ISubjectService {
         });
     }
 
-    public Task<ServiceResult<SubjectCompleteDto>> UpdateSubject(int currentUserId, SubjectUpdateDto dto) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<SubjectCompleteDto>> UpdateSubject(int currentUserId, int subjectId, SubjectUpdateDto dto) {
+        User? user = await _userRepository.GetUserById(currentUserId);
+
+        if (user == null) {
+            return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
+
+        if (user.Role != Role.Admin) {
+            return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to update this subject");
+        }
+
+        Subject? subject = await _subjectRepository.GetSubjectById(subjectId);
+
+        if (subject == null) {
+            return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.NotFound, "Subject not found");
+        }
+
+        subject.Name = dto.Name;
+        subject.ProfessorId = dto.ProfessorId;
+
+        await _subjectRepository.UpdateSubject(subject);
+
+        return ServiceResult<SubjectCompleteDto>.Success(new SubjectCompleteDto {
+            Id = subject.Id,
+            Name = subject.Name,
+            Professor = subject.Professor.User.Name,
+            ProfessorId = subject.ProfessorId,
+            ClassId = subject.ClassId,
+            Class = subject.Class.User.Name
+        });
     }
 
     public Task<ServiceResult<bool>> DeleteSubject(int currentUserId, int subjectId) {

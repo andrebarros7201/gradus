@@ -40,5 +40,20 @@ public class SubjectController : ControllerBase {
 
         return ServiceResult<SubjectCompleteDto>.ReturnStatus(result);
     }
+
+    [Authorize]
+    [HttpPatch("{subjectId:int}")]
+    public async Task<IActionResult> UpdateSubject([FromRoute] int subjectId, SubjectUpdateDto dto) {
+        // Validate Model
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<SubjectCompleteDto> result = await _subjectService.UpdateSubject(int.Parse(currentUserId), subjectId, dto);
+
+        return ServiceResult<SubjectCompleteDto>.ReturnStatus(result);
+    }
     
 }

@@ -35,8 +35,11 @@ public class SubjectRepository : ISubjectRepository {
         return subjectEntity!;
     }
 
-    public Task<Subject> UpdateSubject(Subject subject) {
-        throw new NotImplementedException();
+    public async Task<Subject> UpdateSubject(Subject subject) {
+        _db.Subjects.Update(subject);
+        await _db.SaveChangesAsync();
+        await _db.Entry(subject).ReloadAsync();
+        return subject;
     }
 
     public Task<bool> DeleteSubject(Subject subject) {
