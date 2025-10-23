@@ -1,0 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using Server.Data;
+using Server.Interfaces.Repositories;
+using Server.Models;
+
+namespace Server.Repositories;
+
+public class SubjectRepository : ISubjectRepository {
+    private readonly AppDbContext _db;
+
+    public SubjectRepository(AppDbContext db) {
+        _db = db;
+    }
+
+    public async Task<Subject?> GetSubjectById(int id) {
+        return await _db.Subjects
+            .Include(s => s.Professor).ThenInclude(p => p.User)
+            .Include(s => s.Class).ThenInclude(c => c.User)
+            .Include(s => s.Grades).ThenInclude(g => g.Student)
+            .FirstOrDefaultAsync(s => s.Id == id);
+    }
+
+    public Task<Subject> CreateSubject(Subject subject) {
+        throw new NotImplementedException();
+    }
+
+    public Task<Subject> UpdateSubject(Subject subject) {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteSubject(Subject subject) {
+        throw new NotImplementedException();
+    }
+}

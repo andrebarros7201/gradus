@@ -1,0 +1,28 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Server.DTOs.Subject;
+using Server.Interfaces.Services;
+using Server.Results;
+
+namespace Server.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class SubjectController : ControllerBase {
+    private readonly ISubjectService _subjectService;
+
+    public SubjectController(ISubjectService subjectService) {
+        _subjectService = subjectService;
+    }
+
+    [Authorize]
+    [HttpGet("{subjectId:int}")]
+    public async Task<IActionResult> GetSubjectById([FromRoute] int subjectId) {
+        string? currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<SubjectCompleteDto> result = await _subjectService.GetSubjectById(int.Parse(currentUser), subjectId);
+
+        return ServiceResult<SubjectCompleteDto>.ReturnStatus(result);
+    }
+}
