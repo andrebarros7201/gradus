@@ -12,7 +12,7 @@ public class UserRepository : IUserRepository {
         _db = db;
     }
 
-    public async Task<User> GetUserById(int id) {
+    public async Task<User?> GetUserById(int id) {
         return await _db.Users
             .Include(u => u.Admin)
             .Include(u => u.Professor).ThenInclude(p => p.Subjects)
@@ -20,7 +20,7 @@ public class UserRepository : IUserRepository {
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task<User> GetUserByUsername(string username) {
+    public async Task<User?> GetUserByUsername(string username) {
         return await _db.Users
             .Include(u => u.Admin)
             .Include(u => u.Professor).ThenInclude(p => p.Subjects)
