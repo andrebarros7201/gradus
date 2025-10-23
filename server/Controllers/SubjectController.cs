@@ -25,4 +25,20 @@ public class SubjectController : ControllerBase {
 
         return ServiceResult<SubjectCompleteDto>.ReturnStatus(result);
     }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> CreateSubject([FromBody] SubjectCreateDto dto) {
+        // Validate Model
+        if (!ModelState.IsValid) {
+            return BadRequest(ModelState);
+        }
+
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<SubjectCompleteDto> result = await _subjectService.CreateSubject(int.Parse(currentUserId), dto);
+
+        return ServiceResult<SubjectCompleteDto>.ReturnStatus(result);
+    }
+    
 }

@@ -96,8 +96,45 @@ public class SubjectService : ISubjectService {
         return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.BadRequest, "Invalid role");
     }
 
-    public Task<ServiceResult<SubjectCompleteDto>> CreateSubject(int currentUserId, SubjectCreateDto dto) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<SubjectCompleteDto>> CreateSubject(int currentUserId, SubjectCreateDto dto) {
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
+
+        if (currentUser == null) {
+            return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
+
+        if (currentUser.Role != Role.Admin) {
+            return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create a subject");
+        }
+
+        User? professor = await _userRepository.GetUserById(dto.ProfessorId);
+
+        if (professor == null) {
+            return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.NotFound, "Professor not found");
+        }
+
+        User? @class = await _userRepository.GetUserById(dto.ClassId);
+
+        if (@class == null) {
+            return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.NotFound, "Class not found");
+        }
+
+        var newSubject = new Subject {
+            Name = dto.Name,
+            ProfessorId = dto.ProfessorId,
+            ClassId = dto.ClassId
+        };
+
+        await _subjectRepository.CreateSubject(newSubject);
+
+        return ServiceResult<SubjectCompleteDto>.Success(new SubjectCompleteDto {
+            Id = newSubject.Id,
+            Name = newSubject.Name,
+            Professor = newSubject.Professor.User.Name,
+            ProfessorId = newSubject.ProfessorId,
+            ClassId = newSubject.ClassId,
+            Class = newSubject.Class.User.Name
+        });
     }
 
     public Task<ServiceResult<SubjectCompleteDto>> UpdateSubject(int currentUserId, SubjectUpdateDto dto) {
