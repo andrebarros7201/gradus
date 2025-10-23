@@ -38,6 +38,9 @@ public class Program {
         builder.Services.AddScoped<IGradeService, GradeService>();
         builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 
+        builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+        builder.Services.AddScoped<ISubjectService, SubjectService>();
+
         builder.Services.AddScoped<TokenService>();
 
         // JWT Authentication
