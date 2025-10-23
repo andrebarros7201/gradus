@@ -42,7 +42,9 @@ public class SubjectRepository : ISubjectRepository {
         return subject;
     }
 
-    public Task<bool> DeleteSubject(Subject subject) {
-        throw new NotImplementedException();
+    public async Task<bool> DeleteSubject(Subject subject) {
+        _db.Subjects.Remove(subject);
+        await _db.SaveChangesAsync();
+        return true;
     }
 }

@@ -169,7 +169,25 @@ public class SubjectService : ISubjectService {
         });
     }
 
-    public Task<ServiceResult<bool>> DeleteSubject(int currentUserId, int subjectId) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<bool>> DeleteSubject(int currentUserId, int subjectId) {
+        User? user = await _userRepository.GetUserById(currentUserId);
+
+        if (user == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
+
+        if (user.Role != Role.Admin) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to update this subject");
+        }
+
+        Subject? subject = await _subjectRepository.GetSubjectById(subjectId);
+
+        if (subject == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Subject not found");
+        }
+
+        await _subjectRepository.DeleteSubject(subject);
+
+        return ServiceResult<bool>.Success(true);       
     }
 }

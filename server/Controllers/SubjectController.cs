@@ -55,5 +55,16 @@ public class SubjectController : ControllerBase {
 
         return ServiceResult<SubjectCompleteDto>.ReturnStatus(result);
     }
+
+
+    [Authorize]
+    [HttpDelete("{subjectId:int}")]
+    public async Task<IActionResult> DeleteSubject([FromRoute] int subjectId) {
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<bool> result = await _subjectService.DeleteSubject(int.Parse(currentUserId), subjectId);
+
+        return ServiceResult<bool>.ReturnStatus(result);
+    }
     
 }
