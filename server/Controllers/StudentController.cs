@@ -17,7 +17,7 @@ public class StudentController : ControllerBase {
     }
 
     [Authorize]
-    [HttpPost("register")]
+    [HttpPost]
     public async Task<IActionResult> RegisterStudent([FromBody] StudentRegisterDto dto) {
         // Validate Model
         if (!ModelState.IsValid) {
