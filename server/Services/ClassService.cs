@@ -1,4 +1,5 @@
 using Server.DTOs.Class;
+using Server.DTOs.Student;
 using Server.DTOs.Subject;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;

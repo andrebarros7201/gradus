@@ -1,6 +1,5 @@
 using Server.DTOs.Class;
 using Server.DTOs.Grade;
-using Server.Models;
 
 namespace Server.DTOs.Student;
 

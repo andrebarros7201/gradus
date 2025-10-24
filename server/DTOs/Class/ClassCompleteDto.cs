@@ -1,3 +1,4 @@
+using Server.DTOs.Student;
 using Server.DTOs.Subject;
 
 namespace Server.DTOs.Class;
