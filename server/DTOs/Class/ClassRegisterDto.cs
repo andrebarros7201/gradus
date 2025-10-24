@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.InteropServices;
-
 namespace Server.DTOs.Class;
 
 public class ClassRegisterDto {
