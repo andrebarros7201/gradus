@@ -1,5 +1,4 @@
 using Server.DTOs.Class;
-using Server.DTOs.Student;
 using Server.DTOs.Subject;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
@@ -26,7 +25,7 @@ public class ClassService : IClassService {
     }
 
     public async Task<ServiceResult<ClassCompleteDto?>> GetClassById(int id) {
-        var @class = await _classRepository.GetClassById(id);
+        Class? @class = await _classRepository.GetClassById(id);
 
         if (@class == null) {
             return ServiceResult<ClassCompleteDto?>.Error(ServiceResultStatus.NotFound, "Class not found");
