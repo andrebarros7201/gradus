@@ -19,7 +19,7 @@ public class AuthService : IAuthService {
 
     public async Task<ServiceResult<UserDto>> Login(UserLoginDto dto) {
         // Fetch user by username
-        var user = await _userRepository.GetUserByUsername(dto.Username);
+        User? user = await _userRepository.GetUserByUsername(dto.Username);
 
         // Early return if user is null
         if (user == null) {
