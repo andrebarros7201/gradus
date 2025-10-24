@@ -43,25 +43,25 @@ public class StudentService : IStudentService {
         });
     }
 
-    public async Task<ServiceResult<bool>> CreateStudent(int currentUserId, StudentRegisterDto dto) {
+    public async Task<ServiceResult<StudentCompleteDto>> CreateStudent(int currentUserId, StudentRegisterDto dto) {
         // Fetch current user
         User? currentUser = await _userRepository.GetUserById(currentUserId);
 
         // Check if the current user exists
         if (currentUser == null) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.NotFound, "Current user not found");
         }
 
         // Only admins can create students
         // Check if the current user is an admin
         if (currentUser.Role != Role.Admin) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this student");
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this student");
         }
 
         Class? @class = await _classRepository.GetClassById(dto.ClassId);
 
         if (@class == null) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Class not found");
+            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.NotFound, "Class not found");
         }
 
         // Create the new student
@@ -70,9 +70,23 @@ public class StudentService : IStudentService {
             Classes = [@class] // Initialize with the class the student is enrolled in
         };
 
-        await _studentRepository.CreateStudent(newStudent);
+        Student createdStudent = await _studentRepository.CreateStudent(newStudent);
 
-        return ServiceResult<bool>.Success(true);
+        return ServiceResult<StudentCompleteDto>.Success(new StudentCompleteDto {
+            Id = createdStudent.Id,
+            Class = createdStudent.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
+                Id = c.Id,
+                IsActive = c.IsActive,
+                Name = c.User.Name,
+                SchoolYear = c.SchoolYear
+            }).FirstOrDefault()!,
+            Name = createdStudent.Name,
+            Grades = createdStudent.Grades.Select(g => new GradeSimpleDto {
+                Id = g.Id,
+                SubjectName = g.Subject.Name,
+                Value = g.Value
+            }).ToList()
+        });
     }
 
     public async Task<ServiceResult<bool>> DeleteStudent(int currentUserId, int studentId) {

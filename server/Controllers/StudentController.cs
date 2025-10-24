@@ -31,9 +31,9 @@ public class StudentController : ControllerBase {
             return new ObjectResult("Forbidden") { StatusCode = 403 };
         }
 
-        ServiceResult<bool> result = await _studentService.CreateStudent(int.Parse(currentUserId), dto);
+        ServiceResult<StudentCompleteDto> result = await _studentService.CreateStudent(int.Parse(currentUserId), dto);
 
-        return ServiceResult<bool>.ReturnStatus(result);
+        return ServiceResult<StudentCompleteDto>.ReturnStatus(result);
     }
 
     [Authorize]

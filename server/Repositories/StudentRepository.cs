@@ -19,9 +19,23 @@ public class StudentRepository : IStudentRepository {
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
-    public async Task CreateStudent(Student student) {
+    public async Task<Student> CreateStudent(Student student) {
         await _db.Students.AddAsync(student);
         await _db.SaveChangesAsync();
+
+        await _db.Entry(student).ReloadAsync();
+
+        return (await _db.Students
+            .Include(s => s.Classes).ThenInclude(c => c.User)
+            .Include(s => s.Grades).ThenInclude(g => g.Subject)
+            .FirstOrDefaultAsync(s => s.Id == student.Id))!;
+    }
+
+    public async Task<Student> UpdateStudent(Student student) {
+        _db.Update(student);
+        await _db.SaveChangesAsync();
+        await _db.Entry(student).ReloadAsync();
+        return student;
     }
 
     public async Task DeleteStudent(Student student) {
@@ -29,8 +43,4 @@ public class StudentRepository : IStudentRepository {
         await _db.SaveChangesAsync();
     }
 
-    public async Task UpdateStudent(Student student) {
-        _db.Update(student);
-        await _db.SaveChangesAsync();
-    }
 }
