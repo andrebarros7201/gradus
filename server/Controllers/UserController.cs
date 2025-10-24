@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Server.DTOs;
 using Server.DTOs.User;
 using Server.Interfaces.Services;
 using Server.Models;
@@ -28,12 +27,12 @@ public class UserController : ControllerBase {
     [HttpGet("me")]
     public async Task<IActionResult> GetMe() {
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        ServiceResult<UserDto> result = await _userService.FetchUser(int.Parse(currentUserId));
+        ServiceResult<UserDto> result = await _userService.FetchUser(int.Parse(currentUserId!));
         return ServiceResult<UserDto>.ReturnStatus(result);
     }
 
 
-    [HttpPost("register")]
+    [HttpPost]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto dto) {
         // Validate Model
         if (!ModelState.IsValid) {
@@ -41,7 +40,7 @@ public class UserController : ControllerBase {
         }
 
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
+        
         // When creating a user that is not an admin, the user id must be provided
         if (dto.Role != Role.Admin) {
             if (userId == null) {
