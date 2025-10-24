@@ -1,4 +1,3 @@
-using Server.Data;
 using Server.DTOs.Class;
 using Server.DTOs.Grade;
 using Server.DTOs.Student;
@@ -21,11 +20,7 @@ public class StudentService : IStudentService {
     }
 
     public async Task<ServiceResult<StudentCompleteDto>> FetchStudentById(int id) {
-        if (id == null) {
-            return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.BadRequest, "Invalid student id");
-        }
-
-        Student student = await _studentRepository.GetStudentById(id);
+        Student? student = await _studentRepository.GetStudentById(id);
 
         if (student == null) {
             return ServiceResult<StudentCompleteDto>.Error(ServiceResultStatus.NotFound, "Student not found");
@@ -34,12 +29,12 @@ public class StudentService : IStudentService {
         return ServiceResult<StudentCompleteDto>.Success(new StudentCompleteDto {
             Id = student.Id,
             Name = student.Name,
-            Class = student.Classes.Where(c => c.IsActive == true).Select(c => new ClassSimpleDto {
+            Class = student.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
                 Id = c.Id,
                 Name = c.User.Name,
                 IsActive = c.IsActive,
                 SchoolYear = c.SchoolYear
-            }).FirstOrDefault(),
+            }).FirstOrDefault()!,
             Grades = student.Grades.Select(g => new GradeSimpleDto {
                 Id = g.Id,
                 SubjectName = g.Subject.Name,
@@ -50,7 +45,7 @@ public class StudentService : IStudentService {
 
     public async Task<ServiceResult<bool>> CreateStudent(int currentUserId, StudentRegisterDto dto) {
         // Fetch current user
-        var currentUser = await _userRepository.GetUserById(currentUserId);
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
 
         // Check if the current user exists
         if (currentUser == null) {
@@ -63,7 +58,7 @@ public class StudentService : IStudentService {
             return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this student");
         }
 
-        var @class = await _classRepository.GetClassById(dto.ClassId);
+        Class? @class = await _classRepository.GetClassById(dto.ClassId);
 
         if (@class == null) {
             return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Class not found");
@@ -127,12 +122,12 @@ public class StudentService : IStudentService {
         return ServiceResult<StudentCompleteDto>.Success(new StudentCompleteDto {
             Id = targetStudent.Id,
             Name = targetStudent.Name,
-            Class = targetStudent.Classes.Where(c => c.IsActive == true).Select(c => new ClassSimpleDto {
+            Class = targetStudent.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
                 Id = c.Id,
                 Name = c.User.Name,
                 IsActive = c.IsActive,
                 SchoolYear = c.SchoolYear
-            }).FirstOrDefault(),
+            }).FirstOrDefault()!,
             Grades = targetStudent.Grades.Select(g => new GradeSimpleDto {
                 Id = g.Id,
                 SubjectName = g.Subject.Name,
