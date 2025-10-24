@@ -57,9 +57,9 @@ public class UserService : IUserService {
     }
 
     // Only admins can create users
-    public async Task<ServiceResult<string>> Create(UserRegisterDto dto, int? userId) {
+    public async Task<ServiceResult<string>> Create(UserRegisterDto dto, int userId) {
         // Fetch the current user
-        User? currentUser = await _userRepository.GetUserById(userId.Value);
+        User? currentUser = await _userRepository.GetUserById(userId);
 
         if (currentUser == null) {
             return ServiceResult<string>.Error(ServiceResultStatus.NotFound, "Current user not found");

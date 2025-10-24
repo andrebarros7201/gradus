@@ -43,7 +43,7 @@ public class UserController : ControllerBase {
 
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        ServiceResult<string> result = await _userService.Create(dto, dto.Role != Role.Admin ? int.Parse(userId) : null);
+        ServiceResult<string> result = await _userService.Create(dto, int.Parse(userId!));
 
         return ServiceResult<string>.ReturnStatus(result);
     }
