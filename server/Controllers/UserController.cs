@@ -17,6 +17,7 @@ public class UserController : ControllerBase {
         _userService = userService;
     }
 
+    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id) {
         ServiceResult<UserDto> result = await _userService.FetchUser(id);
@@ -32,6 +33,7 @@ public class UserController : ControllerBase {
     }
 
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto dto) {
         // Validate Model
@@ -40,17 +42,10 @@ public class UserController : ControllerBase {
         }
 
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-        // When creating a user that is not an admin, the user id must be provided
-        if (dto.Role != Role.Admin) {
-            if (userId == null) {
-                return Unauthorized("Unauthorized");
-            }
-        }
 
-        ServiceResult<bool> result = await _userService.Create(dto, dto.Role != Role.Admin ? int.Parse(userId) : null);
+        ServiceResult<string> result = await _userService.Create(dto, dto.Role != Role.Admin ? int.Parse(userId) : null);
 
-        return ServiceResult<bool>.ReturnStatus(result);
+        return ServiceResult<string>.ReturnStatus(result);
     }
     
     [Authorize]
@@ -58,7 +53,7 @@ public class UserController : ControllerBase {
     public async Task<IActionResult> Delete([FromRoute] int id) {
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        // Can use ! because of [Authorize] attribute
+        // Can use ! because of the [Authorize] attribute
         ServiceResult<bool> result = await _userService.Delete(id, int.Parse(currentUserId!));
 
         return ServiceResult<bool>.ReturnStatus(result);
@@ -75,7 +70,7 @@ public class UserController : ControllerBase {
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 
-        // Can use ! because of [Authorize] attribute
+        // Can use ! because of the [Authorize] attribute
         ServiceResult<UserDto> result = await _userService.Update(targetUserId, int.Parse(currentUserId!), dto);
 
         return ServiceResult<UserDto>.ReturnStatus(result);

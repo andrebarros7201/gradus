@@ -55,14 +55,24 @@ public class UserService : IUserService {
             _ => ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found")
         };
     }
-    // Logic for creating a user
-    // If it's a new admin, no need to check for userId and validate it
-    // If it's not an admin, check the userId and validate it (see if it exists and is an admin)
-    public async Task<ServiceResult<bool>> Create(UserRegisterDto dto, int? userId) {
+
+    // Only admins can create users
+    public async Task<ServiceResult<string>> Create(UserRegisterDto dto, int? userId) {
+        // Fetch the current user
+        User? currentUser = await _userRepository.GetUserById(userId.Value);
+
+        if (currentUser == null) {
+            return ServiceResult<string>.Error(ServiceResultStatus.NotFound, "Current user not found");
+        }
+
+        if (currentUser.Role != Role.Admin) {
+            return ServiceResult<string>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this user");
+        }
+        
         User? existingUser = await _userRepository.GetUserByUsername(dto.Username);
 
         if (existingUser != null) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Conflict, "Username already exists");
+            return ServiceResult<string>.Error(ServiceResultStatus.Conflict, "Username already exists");
         }
 
         var newUser = new User {
@@ -89,29 +99,12 @@ public class UserService : IUserService {
                 newUser.Professor = new Professor();
                 break;
             default:
-                return ServiceResult<bool>.Error(ServiceResultStatus.BadRequest, "Invalid role");
-        }
-
-        if (dto.Role != Role.Admin) {
-            if (userId == null) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this user");
-            }
-
-            // Need to use .Value because the user id is an int?
-            User? currentUser = await _userRepository.GetUserById(userId.Value);
-
-            if (currentUser == null) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
-            }
-
-            if (currentUser.Role != Role.Admin) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this user");
-            }
+                return ServiceResult<string>.Error(ServiceResultStatus.BadRequest, "Invalid role");
         }
 
         await _userRepository.Create(newUser);
 
-        return ServiceResult<bool>.Success(true);
+        return ServiceResult<string>.Success("User created successfully");
     }
 
     public async Task<ServiceResult<bool>> Delete(int id, int currentUserId) {
