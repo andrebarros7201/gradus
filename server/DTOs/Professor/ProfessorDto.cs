@@ -1,5 +1,4 @@
 using Server.DTOs.Subject;
-using Server.Models;
 
 namespace Server.DTOs.Professor;
 
