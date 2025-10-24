@@ -16,7 +16,7 @@ public class GradeService : IGradeService {
     }
 
     public async Task<ServiceResult<GradeSimpleDto>> CreateGrade(int currentUserId, GradeCreateDto dto) {
-        User user = await _userRepository.GetUserById(currentUserId);
+        User? user = await _userRepository.GetUserById(currentUserId);
 
         if (user == null) {
             return ServiceResult<GradeSimpleDto>.Error(ServiceResultStatus.NotFound, "User not found");
