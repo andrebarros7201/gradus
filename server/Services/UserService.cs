@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
@@ -21,7 +20,11 @@ public class UserService : IUserService {
 
     public async Task<ServiceResult<UserDto>> FetchUser(int id) {
         // Fetch user by id
-        User user = await _userRepository.GetUserById(id);
+        User? user = await _userRepository.GetUserById(id);
+
+        if (user == null) {
+            return ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found");
+        }
 
         return user.Role switch {
             Role.Admin => ServiceResult<UserDto>.Success(new UserDto {
@@ -56,7 +59,7 @@ public class UserService : IUserService {
     // If it's a new admin, no need to check for userId and validate it
     // If it's not an admin, check the userId and validate it (see if it exists and is an admin)
     public async Task<ServiceResult<bool>> Create(UserRegisterDto dto, int? userId) {
-        var existingUser = await _userRepository.GetUserByUsername(dto.Username);
+        User? existingUser = await _userRepository.GetUserByUsername(dto.Username);
 
         if (existingUser != null) {
             return ServiceResult<bool>.Error(ServiceResultStatus.Conflict, "Username already exists");
@@ -71,19 +74,19 @@ public class UserService : IUserService {
         switch (dto.Role) {
             case Role.Admin:
                 newUser.Role = Role.Admin;
-                newUser.Admin = new Admin { };
+                newUser.Admin = new Admin();
                 break;
 
             case Role.Class:
                 newUser.Role = Role.Class;
                 newUser.Class = new Class {
-                    SchoolYear = dto.Class.SchoolYear
+                    SchoolYear = dto.Class!.SchoolYear
                 };
                 break;
 
             case Role.Professor:
                 newUser.Role = Role.Professor;
-                newUser.Professor = new Professor { };
+                newUser.Professor = new Professor();
                 break;
             default:
                 return ServiceResult<bool>.Error(ServiceResultStatus.BadRequest, "Invalid role");
@@ -95,7 +98,11 @@ public class UserService : IUserService {
             }
 
             // Need to use .Value because the user id is an int?
-            var currentUser = await _userRepository.GetUserById(userId.Value);
+            User? currentUser = await _userRepository.GetUserById(userId.Value);
+
+            if (currentUser == null) {
+                return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
+            }
 
             if (currentUser.Role != Role.Admin) {
                 return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this user");
@@ -108,7 +115,7 @@ public class UserService : IUserService {
     }
 
     public async Task<ServiceResult<bool>> Delete(int id, int currentUserId) {
-        var currentUser = await _userRepository.GetUserById(currentUserId);
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
 
         if (currentUser == null) {
             return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
@@ -118,7 +125,7 @@ public class UserService : IUserService {
             return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to delete this user");
         }
 
-        var targetUser = await _userRepository.GetUserById(id);
+        User? targetUser = await _userRepository.GetUserById(id);
 
         if (targetUser == null) {
             return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Target user not found");
@@ -130,7 +137,7 @@ public class UserService : IUserService {
     }
 
     public async Task<ServiceResult<UserDto>> Update(int targetUserId, int currentUserId, UserPatchDto dto) {
-        var currentUser = await _userRepository.GetUserById(currentUserId);
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
 
         // Ensure the current user exists
         if (currentUser == null) {
@@ -143,14 +150,14 @@ public class UserService : IUserService {
         }
 
         // Check if the username is already in use
-        var existingUserWithSameUsername = await _userRepository.GetUserByUsername(dto.Username);
+        User? existingUserWithSameUsername = await _userRepository.GetUserByUsername(dto.Username);
 
         if (existingUserWithSameUsername != null && existingUserWithSameUsername.Id != targetUserId) {
             return ServiceResult<UserDto>.Error(ServiceResultStatus.Conflict, "Username already exists");
         }
 
         // Get the target user
-        var targetUser = await _userRepository.GetUserById(targetUserId);
+        User? targetUser = await _userRepository.GetUserById(targetUserId);
 
         // Ensure the target user exists
         if (targetUser == null) {
