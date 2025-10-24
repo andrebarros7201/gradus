@@ -63,7 +63,8 @@ public class AuthService : IAuthService {
                     Id = user.Professor!.Id,
                     Subjects = user.Professor.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name }).ToList()
                 }
-            })
+            }),
+            _ => ServiceResult<UserDto>.Error(ServiceResultStatus.BadRequest, "Invalid credentials")
         };
     }
 
