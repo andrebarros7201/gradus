@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
+using Server.DTOs.User;
 using Server.Interfaces.Services;
 using Server.Models;
 using Server.Results;

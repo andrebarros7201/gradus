@@ -1,4 +1,5 @@
 using Server.DTOs;
+using Server.DTOs.User;
 using Server.Models;
 using Server.Results;
 

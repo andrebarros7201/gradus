@@ -1,11 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
 using Server.DTOs.Professor;
 using Server.Models;
 
-namespace Server.DTOs;
+namespace Server.DTOs.User;
 
 public class UserDto {
     public int Id { get; set; }

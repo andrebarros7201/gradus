@@ -3,6 +3,7 @@ using Server.DTOs.Admin;
 using Server.DTOs.Class;
 using Server.DTOs.Professor;
 using Server.DTOs.Subject;
+using Server.DTOs.User;
 using Server.Interfaces.Repositories;
 using Server.Interfaces.Services;
 using Server.Models;
