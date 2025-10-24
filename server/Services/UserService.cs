@@ -107,26 +107,26 @@ public class UserService : IUserService {
         return ServiceResult<string>.Success("User created successfully");
     }
 
-    public async Task<ServiceResult<bool>> Delete(int id, int currentUserId) {
+    public async Task<ServiceResult<string>> Delete(int id, int currentUserId) {
         User? currentUser = await _userRepository.GetUserById(currentUserId);
 
         if (currentUser == null) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Current user not found");
+            return ServiceResult<string>.Error(ServiceResultStatus.NotFound, "Current user not found");
         }
 
         if (currentUser.Role != Role.Admin) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Forbidden, "You are not authorized to delete this user");
+            return ServiceResult<string>.Error(ServiceResultStatus.Forbidden, "You are not authorized to delete this user");
         }
 
         User? targetUser = await _userRepository.GetUserById(id);
 
         if (targetUser == null) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Target user not found");
+            return ServiceResult<string>.Error(ServiceResultStatus.NotFound, "Target user not found");
         }
 
         await _userRepository.Delete(targetUser);
 
-        return ServiceResult<bool>.Success(true);
+        return ServiceResult<string>.Success("User deleted successfully");
     }
 
     public async Task<ServiceResult<UserDto>> Update(int targetUserId, int currentUserId, UserPatchDto dto) {

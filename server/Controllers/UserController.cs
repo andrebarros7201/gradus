@@ -54,9 +54,9 @@ public class UserController : ControllerBase {
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         // Can use ! because of the [Authorize] attribute
-        ServiceResult<bool> result = await _userService.Delete(id, int.Parse(currentUserId!));
+        ServiceResult<string> result = await _userService.Delete(id, int.Parse(currentUserId!));
 
-        return ServiceResult<bool>.ReturnStatus(result);
+        return ServiceResult<string>.ReturnStatus(result);
     }
 
     [Authorize]
