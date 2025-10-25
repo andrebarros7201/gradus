@@ -1,0 +1,48 @@
+@use "colors";
+@use "mixins";
+
+// Headings
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: colors.$text-primary;
+}
+
+h1 {
+  font-size: 3rem;
+
+  @include mixins.responds-to(md) {
+    font-size: 3.5rem;
+  }
+}
+
+h2 {
+  font-size: 2rem;
+
+  @include mixins.responds-to(md) {
+    font-size: 2.5rem;
+  }
+}
+
+h3 {
+  font-size: 1.25rem;
+
+  @include mixins.responds-to(md) {
+    font-size: 1.75rem;
+  }
+}
+
+// Paragraph and Links
+p,
+a {
+  font-size: 1rem;
+  color: colors.$text-primary;
+  text-decoration: none;
+
+  @include mixins.responds-to(md) {
+    font-size: 1.25rem;
+  }
+}
