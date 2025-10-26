@@ -1,13 +1,13 @@
 // ===== Base =====
-$background: #f9fafb; // soft off-white background
-$text-primary: #1f2937; // dark gray for main text
-$text-secondary: #4b5563; // lighter gray for secondary text
-$border-color: #e5e7eb; // light border or divider color
+$background: #f9fafb;
+$text-primary: #1f2937;
+$text-secondary: #4b5563;
+$border: #c1c5ca;
 
 // ===== Brand =====
-$primary: #2563eb; // main blue
-$primary-light: #3b82f6; // hover or highlight version
-$accent: #10b981; // green accent for success or positive actions
+$primary: #2563eb;
+$primary-light: #3b82f6;
+$accent: #10b981;
 $accent-light: #6ee7b7;
 
 // ===== States =====
@@ -17,6 +17,6 @@ $warning: #f59e0b;
 $info: #3b82f6;
 
 // ===== UI =====
-$card-bg: #ffffff;
+$card-bg: #f3f4f6;
 $input-bg: #f3f4f6;
 $disabled: #d1d5db;
