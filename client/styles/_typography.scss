@@ -46,3 +46,13 @@ a {
     font-size: 1.25rem;
   }
 }
+
+a {
+  padding: 0.25rem;
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    border-bottom: 2px solid colors.$primary;
+  }
+
+}
