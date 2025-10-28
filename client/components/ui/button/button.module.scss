@@ -26,3 +26,8 @@
 .danger {
   background-color: colors.$danger;
 }
+
+.disabled {
+  background-color: colors.$disabled;
+  cursor: not-allowed;
+}

@@ -11,7 +11,7 @@ type Props = {
 export function Button({ label, type = 'button', disabled, variant = 'primary', onClick }: Props) {
   return (
     <button
-      className={`${classes.button} ${classes[variant]}`}
+      className={`${classes.button} ${classes[variant]} ${disabled ? classes.disabled : null}`}
       onClick={onClick}
       type={type}
       disabled={disabled}
