@@ -13,7 +13,8 @@
 }
 
 .wrapper__input {
-  color: colors.$text-primary;
+  background-color: colors.$bg-input;
+  color: colors.$text-main;
   padding: 0.5rem 1rem;
   outline: none;
   border: 1px solid colors.$primary;
