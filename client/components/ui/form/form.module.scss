@@ -1,9 +1,16 @@
+@use "@/styles/colors";
+
 .form {
-  width: min(500px, 100%);
+  width: min(600px, 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   padding: 1rem;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
 }
