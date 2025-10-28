@@ -1,22 +1,27 @@
-// ===== Base =====
-$background: #f9fafb;
-$text-primary: #1f2937;
+// Background
+$bg-primary: #f9fafb;
+$bg-card: #f3f4f6;
+$bg-input: #f3f4f6;
+
+// Text
+$text-main: #1f2937;
 $text-secondary: #4b5563;
-$border: #c1c5ca;
+$text-muted: #6b7280;
 
-// ===== Brand =====
+// Brand
 $primary: #2563eb;
-$primary-light: #3b82f6;
+$primary-hover: #3b82f6;
 $accent: #10b981;
-$accent-light: #6ee7b7;
 
-// ===== States =====
+// Status
 $success: #22c55e;
 $error: #ef4444;
 $warning: #f59e0b;
-$info: #3b82f6;
 
-// ===== UI =====
-$card-bg: #f3f4f6;
-$input-bg: #f3f4f6;
+// UI
+$border: #d1d5db;
 $disabled: #d1d5db;
+
+// Button Variants
+$secondary: #6b7280;
+$danger: #ef4444; // Same as error, but for consistency
