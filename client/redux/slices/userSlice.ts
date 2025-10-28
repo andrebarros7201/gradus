@@ -2,7 +2,6 @@ import { IUser } from '@/types/IUser';
 import { IUserSlice } from '@/types/IUserSlice';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { log } from 'console';
 
 // Initial State Values
 const initialState: IUserSlice = {
