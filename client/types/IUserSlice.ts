@@ -1,6 +1,7 @@
-import { IUser } from "./IUser";
+import { IUser } from './IUser';
 
 export interface IUserSlice {
   isLoading: boolean;
+  isAuthenticated: boolean;
   user: IUser | null;
 }
