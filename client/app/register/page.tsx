@@ -6,7 +6,6 @@ import { Form } from '@/components/ui/form/Form';
 import { FormEvent, useRef } from 'react';
 import { Input } from '@/components/ui/input/Input';
 import { Button } from '@/components/ui/button/Button';
-import { cwd } from 'process';
 
 export default function RegisterPage() {
   const nameRef = useRef<HTMLInputElement>(null);
