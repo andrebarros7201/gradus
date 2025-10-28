@@ -15,7 +15,7 @@ public class Program {
     public static void Main(string[] args) {
         // Load .env file
         Env.Load();
-        
+
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
@@ -28,7 +28,7 @@ public class Program {
 
         builder.Services.AddScoped<IClassRepository, ClassRepository>();
         builder.Services.AddScoped<IClassService, ClassService>();
-        
+
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
 
@@ -62,6 +62,14 @@ public class Program {
             };
         });
 
+        builder.Services.AddCors(options => {
+            options.AddPolicy("AllowFrontend",
+                builder => builder.WithOrigins(Configuration.CLIENT_URL)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+        });
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment()) {
@@ -70,8 +78,10 @@ public class Program {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Server v1");
                 c.RoutePrefix = "";
             });
-            
+
         }
+        // Enable CORS to allow requests from the frontend
+        app.UseCors("AllowFrontend");
 
         app.UseHttpsRedirection();
         app.UseAuthentication();
