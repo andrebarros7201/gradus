@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Input } from '@/components/ui/input/Input';
 import { useDispatch } from 'react-redux';
 import { RootDispatch } from '@/redux/store';
-import { loginUser } from '@/redux/slices/userSlice';
+import { userLogin } from '@/redux/slices/userSlice';
 import { showNotification } from '@/redux/slices/notificationSlice';
 
 export default function LoginPage() {
@@ -28,7 +28,7 @@ export default function LoginPage() {
     if (!username || !password) return;
 
     try {
-      await dispatch(loginUser({ username, password })).unwrap();
+      await dispatch(userLogin({ username, password })).unwrap();
       dispatch(showNotification({ message: 'Login successful!', type: 'success' }));
     } catch (err) {
       dispatch(showNotification({ message: (err as string) || 'Login failed!', type: 'error' }));
