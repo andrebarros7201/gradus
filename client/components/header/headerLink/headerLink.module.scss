@@ -1,0 +1,13 @@
+@use "@/styles/colors";
+
+.link {
+    color: colors.$text-main;
+    text-decoration: none;
+    padding: 0.25rem;
+    border-bottom: 2px solid transparent;
+}
+
+.active {
+    font-weight: bold;
+    border-bottom: 2px solid colors.$primary;
+}
