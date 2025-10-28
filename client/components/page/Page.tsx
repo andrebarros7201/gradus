@@ -5,5 +5,5 @@ type Props = {
   children: ReactNode | ReactNode[];
 };
 export const Page = ({ children }: Props) => {
-  return <main className={classes['page-wrapper']}>{children}</main>;
+  return <main className={classes['page__wrapper']}>{children}</main>;
 };
