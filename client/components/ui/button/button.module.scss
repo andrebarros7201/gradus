@@ -1,0 +1,28 @@
+@use "@/styles/colors";
+@use "@/styles/mixins";
+
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+
+  @include mixins.responds-to(sm) {
+    font-size: 1rem;
+  }
+
+}
+
+.primary {
+  background-color: colors.$primary;
+}
+
+.secondary {
+  background-color: colors.$accent;
+}
+
+.danger {
+  background-color: colors.$error;
+}
