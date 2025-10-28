@@ -8,7 +8,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: colors.$text-primary;
+  color: colors.$text-main;
 }
 
 h1 {
@@ -39,7 +39,7 @@ h3 {
 p,
 a {
   font-size: 1rem;
-  color: colors.$text-primary;
+  color: colors.$text-main;
   text-decoration: none;
 
   @include mixins.responds-to(md) {
