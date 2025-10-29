@@ -39,8 +39,7 @@ public class UserService : IUserService {
                 Username = user.Username,
                 Role = user.Role,
                 Name = user.Name,
-                Class = new ClassSimpleDto
-                    { Id = user.Class!.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+                Class = new ClassSimpleDto { Id = user.Class!.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
@@ -68,7 +67,7 @@ public class UserService : IUserService {
         if (currentUser.Role != Role.Admin) {
             return ServiceResult<string>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create this user");
         }
-        
+
         User? existingUser = await _userRepository.GetUserByUsername(dto.Username);
 
         if (existingUser != null) {
@@ -104,7 +103,13 @@ public class UserService : IUserService {
 
         await _userRepository.Create(newUser);
 
-        return ServiceResult<string>.Success("User created successfully");
+        string message = dto.Role switch {
+            Role.Admin => "Admin created successfully",
+            Role.Class => "Class created successfully",
+            Role.Professor => "Professor created successfully",
+            _ => "User created successfully"
+        };
+        return ServiceResult<string>.Success(message);
     }
 
     public async Task<ServiceResult<string>> Delete(int id, int currentUserId) {
@@ -167,32 +172,32 @@ public class UserService : IUserService {
 
         // Return the updated user based on the role
         return ServiceResult<UserDto>.Success(new UserDto {
-                Id = targetUser.Id,
-                Name = targetUser.Name,
-                Username = targetUser.Username,
-                Role = targetUser.Role,
-                Class = targetUser.Role switch {
-                    Role.Class => new ClassSimpleDto {
-                        Id = targetUser.Class!.Id,
-                        Name = targetUser.Class.User.Name,
-                        SchoolYear = targetUser.Class.SchoolYear,
-                        IsActive = targetUser.Class.IsActive
-                    },
-                    _ => null
+            Id = targetUser.Id,
+            Name = targetUser.Name,
+            Username = targetUser.Username,
+            Role = targetUser.Role,
+            Class = targetUser.Role switch {
+                Role.Class => new ClassSimpleDto {
+                    Id = targetUser.Class!.Id,
+                    Name = targetUser.Class.User.Name,
+                    SchoolYear = targetUser.Class.SchoolYear,
+                    IsActive = targetUser.Class.IsActive
                 },
-                Admin = targetUser.Role switch {
-                    Role.Admin => new AdminDto {
-                        Id = targetUser.Admin!.Id
-                    },
-                    _ => null
+                _ => null
+            },
+            Admin = targetUser.Role switch {
+                Role.Admin => new AdminDto {
+                    Id = targetUser.Admin!.Id
                 },
-                Professor = targetUser.Role switch {
-                    Role.Professor => new ProfessorDto {
-                        Id = targetUser.Professor!.Id
-                    },
-                    _ => null
-                }
+                _ => null
+            },
+            Professor = targetUser.Role switch {
+                Role.Professor => new ProfessorDto {
+                    Id = targetUser.Professor!.Id
+                },
+                _ => null
             }
+        }
         );
     }
 }
