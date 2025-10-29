@@ -1,5 +1,6 @@
 import { IUser } from '@/types/IUser';
 import { IUserSlice } from '@/types/IUserSlice';
+import { Role } from '@/types/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
@@ -26,7 +27,19 @@ export const userLogin = createAsyncThunk<
       { withCredentials: true },
     );
     const user = response.data.data;
-    return { user };
+
+    // Map response to IUser type
+    const cleanUser: IUser = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      role: user.role,
+      ...(user.role === Role.Admin ? { admin: user.admin } : {}),
+      ...(user.role === Role.Class ? { class: user.class } : {}),
+      ...(user.role === Role.Professor ? { professor: user.professor } : {}),
+    } as IUser;
+
+    return { user: cleanUser };
   } catch (e) {
     const error = e as AxiosError;
     return rejectWithValue((error.response?.data as string) || 'Login failed');
@@ -45,6 +58,8 @@ export const userLogout = createAsyncThunk<void, void, { rejectValue: string }>(
     }
   },
 );
+
+// TODO check user type and render register if user role is admin
 
 const userSlice = createSlice({
   name: 'user',
