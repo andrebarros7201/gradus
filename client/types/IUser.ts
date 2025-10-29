@@ -1,13 +1,25 @@
-import { IAdmin } from "./IAdmin";
-import { IClass } from "./IClass";
-import { IProfessor } from "./IProfessor";
+import { IAdmin } from './IAdmin';
+import { IClass } from './IClass';
+import { IProfessor } from './IProfessor';
+import { Role } from './RoleEnum';
 
-export interface IUser {
+interface IBaseUser {
   id: number;
   name: string;
   username: string;
-  role: number;
-  admin?: IAdmin;
-  class?: IClass;
-  professor?: IProfessor;
+  role: Role;
 }
+
+interface IUserAdmin extends IBaseUser {
+  admin: IAdmin;
+}
+
+interface IUserClass extends IBaseUser {
+  class: IClass;
+}
+
+interface IUserProfessor extends IBaseUser {
+  professor: IProfessor;
+}
+
+export type IUser = IUserAdmin | IUserClass | IUserProfessor | null;
