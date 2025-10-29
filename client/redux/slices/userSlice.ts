@@ -1,8 +1,10 @@
+import { INotification } from '@/types/INotificationSlice';
 import { IUser } from '@/types/IUser';
 import { IUserSlice } from '@/types/IUserSlice';
 import { Role } from '@/types/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
+import { ApiError } from 'next/dist/server/api-utils';
 
 // Initial State Values
 const initialState: IUserSlice = {
@@ -10,6 +12,40 @@ const initialState: IUserSlice = {
   isAuthenticated: false,
   user: null,
 };
+
+// User Register
+export const userRegister = createAsyncThunk<
+  { message: string; notification: INotification },
+  { name: string; username: string; password: string; role: number; schoolYear: string },
+  { rejectValue: { notification: INotification } }
+>(
+  'user/registerUser',
+  async ({ name, username, password, role, schoolYear }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.SERVER_URL}/api/user`,
+        {
+          name,
+          username,
+          password,
+          role,
+          class: role === Role.Class ? { class: schoolYear } : null, // Only send class info if role is Class
+        },
+        { withCredentials: true },
+      );
+      const message = response.data.data;
+      return { message, notification: { type: 'success', message } };
+    } catch (e) {
+      const error = e as AxiosError<ApiError>;
+      return rejectWithValue({
+        notification: {
+          type: 'error',
+          message: (error.response?.data.message as string) || 'Registration failed',
+        },
+      });
+    }
+  },
+);
 
 // User Login
 export const userLogin = createAsyncThunk<
@@ -65,6 +101,16 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) =>
     builder
+      // User Register
+      .addCase(userRegister.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(userRegister.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(userRegister.rejected, (state) => {
+        state.isLoading = false;
+      })
       // User Login
       .addCase(userLogin.pending, (state) => {
         state.isLoading = true;
