@@ -1,0 +1,24 @@
+@use '@/styles/colors';
+
+.wrapper {
+  width: min(300px, 100%);
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.wrapper__label {
+  text-align: left;
+  flex: 1;
+}
+
+.wrapper__select {
+  background-color: colors.$bg-input;
+  color: colors.$text-main;
+  padding: 0.5rem 1rem;
+  outline: none;
+  border: 1px solid colors.$primary;
+  border-radius: 0.25rem;
+  flex: 1;
+}
