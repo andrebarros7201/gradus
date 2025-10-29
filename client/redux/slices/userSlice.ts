@@ -49,9 +49,9 @@ export const userRegister = createAsyncThunk<
 
 // User Login
 export const userLogin = createAsyncThunk<
-  { user: IUser },
+  { user: IUser; notification: INotification },
   { username: string; password: string },
-  { rejectValue: string }
+  { rejectValue: { notification: INotification } }
 >('user/loginUser', async ({ username, password }, { rejectWithValue }) => {
   try {
     const response = await axios.post(
@@ -75,10 +75,15 @@ export const userLogin = createAsyncThunk<
       ...(user.role === Role.Professor ? { professor: user.professor } : {}),
     } as IUser;
 
-    return { user: cleanUser };
+    return { user: cleanUser, notification: { type: 'success', message: 'Login successful' } };
   } catch (e) {
-    const error = e as AxiosError;
-    return rejectWithValue((error.response?.data as string) || 'Login failed');
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: (error.response?.data.message as string) || 'Login failed',
+      },
+    });
   }
 });
 

@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { RootDispatch } from '@/redux/store';
 import { userLogin } from '@/redux/slices/userSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
+import { INotification } from '@/types/INotificationSlice';
 
 export default function LoginPage() {
   const dispatch = useDispatch<RootDispatch>();
@@ -28,10 +29,12 @@ export default function LoginPage() {
     if (!username || !password) return;
 
     try {
-      await dispatch(userLogin({ username, password })).unwrap();
-      dispatch(setNotification({ message: 'Login successful!', type: 'success' }));
+      const response = await dispatch(userLogin({ username, password })).unwrap();
+      const { notification } = response;
+      dispatch(setNotification(notification));
     } catch (err) {
-      dispatch(setNotification({ message: (err as string) || 'Login failed!', type: 'error' }));
+      const { notification } = err as { notification: INotification };
+      dispatch(setNotification(notification));
     }
   }
 
