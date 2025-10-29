@@ -4,7 +4,6 @@ import { IUserSlice } from '@/types/IUserSlice';
 import { Role } from '@/types/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { ApiError } from 'next/dist/server/api-utils';
 
 // Initial State Values
 const initialState: IUserSlice = {
@@ -36,7 +35,7 @@ export const userRegister = createAsyncThunk<
       const message = response.data.data;
       return { message, notification: { type: 'success', message } };
     } catch (e) {
-      const error = e as AxiosError<ApiError>;
+      const error = e as AxiosError<{ message: string }>;
       return rejectWithValue({
         notification: {
           type: 'error',
