@@ -3,14 +3,37 @@
 import { Page } from '@/components/page/Page';
 import classes from './page.module.scss';
 import { Form } from '@/components/ui/form/Form';
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input/Input';
 import { Button } from '@/components/ui/button/Button';
+import { RootDispatch, RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { Role } from '@/types/RoleEnum';
+import { setNotification } from '@/redux/slices/notificationSlice';
 
 export default function RegisterPage() {
+  const { user } = useSelector((state: RootState) => state.user);
+
+  const router = useRouter();
+  const dispatch = useDispatch<RootDispatch>();
+
   const nameRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  // Verify if user is admin
+  useEffect(() => {
+    if (!user || user.role !== Role.Admin) {
+      router.push('/login');
+      dispatch(
+        setNotification({
+          type: 'error',
+          message: 'You must be an admin to access the registration page.',
+        }),
+      );
+    }
+  }, [dispatch, router, user]);
 
   function onSubmit(e: FormEvent) {
     // Prevent default form submission behavior
@@ -19,8 +42,6 @@ export default function RegisterPage() {
     const name = nameRef.current?.value;
     const username = usernameRef.current?.value;
     const password = passwordRef.current?.value;
-
-
   }
 
   return (
