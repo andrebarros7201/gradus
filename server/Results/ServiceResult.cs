@@ -24,6 +24,7 @@ public class ServiceResult<T> {
     public static IActionResult ReturnStatus(ServiceResult<T> result) {
         return result.Status switch {
             ServiceResultStatus.Success => new OkObjectResult(new { data = result.Data }),
+            ServiceResultStatus.BadRequest => new BadRequestObjectResult(new { message = result.Message }),
             ServiceResultStatus.NotFound => new NotFoundObjectResult(new { message = result.Message }),
             ServiceResultStatus.Conflict => new ConflictObjectResult(new { message = result.Message }),
             ServiceResultStatus.Unauthorized => new UnauthorizedObjectResult(new { message = result.Message }),
