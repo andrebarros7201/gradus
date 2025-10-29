@@ -10,7 +10,7 @@ const notificationSlice = createSlice({
   name: 'notification',
   initialState,
   reducers: {
-    showNotification: (state, action: PayloadAction<INotification>) => {
+    setNotification: (state, action: PayloadAction<INotification>) => {
       state.notification = action.payload;
       state.isVisible = true;
     },
@@ -22,4 +22,4 @@ const notificationSlice = createSlice({
 });
 
 export const notificationReducer = notificationSlice.reducer;
-export const { showNotification, closeNotification } = notificationSlice.actions;
+export const { setNotification, closeNotification } = notificationSlice.actions;

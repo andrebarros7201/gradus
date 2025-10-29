@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input/Input';
 import { useDispatch } from 'react-redux';
 import { RootDispatch } from '@/redux/store';
 import { userLogin } from '@/redux/slices/userSlice';
-import { showNotification } from '@/redux/slices/notificationSlice';
+import { setNotification } from '@/redux/slices/notificationSlice';
 
 export default function LoginPage() {
   const dispatch = useDispatch<RootDispatch>();
@@ -29,9 +29,9 @@ export default function LoginPage() {
 
     try {
       await dispatch(userLogin({ username, password })).unwrap();
-      dispatch(showNotification({ message: 'Login successful!', type: 'success' }));
+      dispatch(setNotification({ message: 'Login successful!', type: 'success' }));
     } catch (err) {
-      dispatch(showNotification({ message: (err as string) || 'Login failed!', type: 'error' }));
+      dispatch(setNotification({ message: (err as string) || 'Login failed!', type: 'error' }));
     }
   }
 

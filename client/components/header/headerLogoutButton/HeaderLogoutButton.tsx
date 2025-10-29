@@ -3,7 +3,7 @@ import classes from './headerLogoutButton.module.scss';
 import { RootDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import { userLogout } from '@/redux/slices/userSlice';
-import { showNotification } from '@/redux/slices/notificationSlice';
+import { setNotification } from '@/redux/slices/notificationSlice';
 
 export const HeaderLogoutButton = () => {
   const dispatch = useDispatch<RootDispatch>();
@@ -11,9 +11,9 @@ export const HeaderLogoutButton = () => {
   async function handleLogout() {
     try {
       dispatch(userLogout());
-      dispatch(showNotification({ message: 'Logout successful!', type: 'success' }));
+      dispatch(setNotification({ message: 'Logout successful!', type: 'success' }));
     } catch (err) {
-      dispatch(showNotification({ message: (err as string) || 'Logout failed!', type: 'error' }));
+      dispatch(setNotification({ message: (err as string) || 'Logout failed!', type: 'error' }));
     }
   }
 
