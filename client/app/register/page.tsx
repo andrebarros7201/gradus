@@ -27,19 +27,6 @@ export default function RegisterPage() {
   const roleRef = useRef<HTMLSelectElement>(null);
   const schoolYearRef = useRef<HTMLSelectElement>(null);
 
-  // Verify if user is admin
-  useEffect(() => {
-    if (!user || user.role !== Role.Admin) {
-      router.push('/login');
-      dispatch(
-        setNotification({
-          type: 'error',
-          message: 'You must be an admin to access the registration page.',
-        }),
-      );
-    }
-  }, [dispatch, router, user]);
-
   async function onSubmit(e: FormEvent) {
     // Prevent default form submission behavior
     e.preventDefault();
@@ -77,6 +64,22 @@ export default function RegisterPage() {
       const { notification } = error as { notification: INotification };
       dispatch(setNotification(notification));
     }
+  }
+
+  useEffect(() => {
+    if (!user || user.role !== Role.Admin) {
+      dispatch(
+        setNotification({
+          type: 'error',
+          message: 'You must be an admin to access the registration page.',
+        }),
+      );
+      router.replace('/login');
+    }
+  }, [user, dispatch, router]);
+
+  if (!user || user.role !== Role.Admin) {
+    return null;
   }
 
   return (
