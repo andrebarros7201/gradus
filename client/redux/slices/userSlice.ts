@@ -59,8 +59,6 @@ export const userLogout = createAsyncThunk<void, void, { rejectValue: string }>(
   },
 );
 
-// TODO check user type and render register if user role is admin
-
 const userSlice = createSlice({
   name: 'user',
   initialState,
