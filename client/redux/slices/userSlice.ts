@@ -15,7 +15,7 @@ const initialState: IUserSlice = {
 // User Register
 export const userRegister = createAsyncThunk<
   { message: string; notification: INotification },
-  { name: string; username: string; password: string; role: number; schoolYear: string },
+  { name: string; username: string; password: string; role: number; schoolYear?: string },
   { rejectValue: { notification: INotification } }
 >(
   'user/registerUser',
