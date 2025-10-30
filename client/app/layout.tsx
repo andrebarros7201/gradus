@@ -5,6 +5,7 @@ import '@/styles/main.scss';
 import { Header } from '../components/header/Header';
 import { Notification } from '@/components/notification/Notification';
 import { ReduxProvider } from '@/components/ReduxProvider';
+import { App } from '@/components/admin/App';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,9 +32,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div className={'container'}>
           <ReduxProvider>
-            <Header />
-            <Notification />
-            {children}
+            <App>
+              <Header />
+              <Notification />
+              {children}
+            </App>
           </ReduxProvider>
         </div>
       </body>
