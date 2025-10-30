@@ -11,15 +11,19 @@ type Props = {
 
 export const ProtectedRouteAdmin = ({ children }: Props) => {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { isVisible } = useSelector((state: RootState) => state.notification);
   const dispatch = useDispatch<RootDispatch>();
   const router = useRouter();
 
   useEffect(() => {
     if (!isAuthenticated || user?.role != Role.Admin) {
       router.replace('/login');
-      dispatch(setNotification({ type: 'error', message: 'Unauthorized to access this page' }));
+
+      // This fixes the logout notification overlap
+      if (!isVisible)
+        dispatch(setNotification({ type: 'error', message: 'Unauthorized to access this page' }));
     }
-  }, [dispatch, isAuthenticated, router, user]);
+  }, [dispatch, isAuthenticated, isVisible, router, user]);
 
   if (!isAuthenticated) return null;
 
