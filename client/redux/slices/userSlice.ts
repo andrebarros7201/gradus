@@ -86,6 +86,29 @@ export const userLogin = createAsyncThunk<
   }
 });
 
+// Fetch User
+export const fetchUser = createAsyncThunk<
+  { user: IUser },
+  void,
+  { rejectValue: { notification: INotification } }
+>('user/fetchUser', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(
+      `${process.env.SERVER_URL}/api/user/me`,
+      { withCredentials: true },
+    );
+    const { data } = response.data;
+    return { user: data };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: (error.response?.data.message as string) || 'Failed to load user',
+      },
+    });
+  }
+});
 // User Logout
 export const userLogout = createAsyncThunk<void, void, { rejectValue: string }>(
   'user/logoutUser',
@@ -125,6 +148,20 @@ const userSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(userLogin.rejected, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      // Fetch User
+      .addCase(fetchUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+      })
+      .addCase(fetchUser.rejected, (state) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
