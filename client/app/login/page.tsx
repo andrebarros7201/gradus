@@ -1,7 +1,7 @@
 'use client';
 
 import { Page } from '@/components/page/Page';
-import classes from './page.module.scss';
+//import classes from './page.module.scss';
 import { Form } from '@/components/ui/form/Form';
 import { FormEvent, useRef } from 'react';
 import { Button } from '@/components/ui/button/Button';
