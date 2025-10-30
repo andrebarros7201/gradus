@@ -3,23 +3,19 @@
 import { Page } from '@/components/page/Page';
 //import classes from './page.module.scss';
 import { Form } from '@/components/ui/form/Form';
-import { FormEvent, useEffect, useRef } from 'react';
+import { FormEvent, useRef } from 'react';
 import { Input } from '@/components/ui/input/Input';
 import { Button } from '@/components/ui/button/Button';
-import { RootDispatch, RootState } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
-import { Role } from '@/types/RoleEnum';
+import { RootDispatch } from '@/redux/store';
+import { useDispatch } from 'react-redux';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { userRegister } from '@/redux/slices/userSlice';
 import { UserRegisterSelect } from '@/components/ui/userRegisterSelect/UserRegisterSelect';
 import { INotification } from '@/types/INotificationSlice';
 import * as z from 'zod';
+import { ProtectedRouteAdmin } from '@/components/admin/ProtectRouteAdmin';
 
 export default function RegisterPage() {
-  const { user } = useSelector((state: RootState) => state.user);
-
-  const router = useRouter();
   const dispatch = useDispatch<RootDispatch>();
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -99,31 +95,23 @@ export default function RegisterPage() {
     }
   }
 
-  useEffect(() => {
-    if (!user || user.role !== Role.Admin) {
-      dispatch(
-        setNotification({
-          type: 'error',
-          message: 'You must be an admin to access the registration page.',
-        }),
-      );
-      router.replace('/login');
-    }
-  }, [user, dispatch, router]);
-
-  if (!user || user.role !== Role.Admin) {
-    return null;
-  }
-
   return (
-    <Page>
-      <Form label="Register" onSubmit={(e) => onSubmit(e)}>
-        <Input label={'Name'} type={'text'} minValue={3} maxValue={100} ref={nameRef} />
-        <Input label={'Username'} type={'text'} minValue={3} maxValue={100} ref={usernameRef} />
-        <Input label={'Password'} type={'password'} minValue={3} maxValue={100} ref={passwordRef} />
-        <UserRegisterSelect roleRef={roleRef} schoolYearRef={schoolYearRef} />
-        <Button label={'Register'} type={'submit'} />
-      </Form>
-    </Page>
+    <ProtectedRouteAdmin>
+      <Page>
+        <Form label="Register" onSubmit={(e) => onSubmit(e)}>
+          <Input label={'Name'} type={'text'} minValue={3} maxValue={100} ref={nameRef} />
+          <Input label={'Username'} type={'text'} minValue={3} maxValue={100} ref={usernameRef} />
+          <Input
+            label={'Password'}
+            type={'password'}
+            minValue={3}
+            maxValue={100}
+            ref={passwordRef}
+          />
+          <UserRegisterSelect roleRef={roleRef} schoolYearRef={schoolYearRef} />
+          <Button label={'Register'} type={'submit'} />
+        </Form>
+      </Page>
+    </ProtectedRouteAdmin>
   );
 }
