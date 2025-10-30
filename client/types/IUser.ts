@@ -1,5 +1,5 @@
 import { IAdmin } from './IAdmin';
-import { IClass } from './IClass';
+import { IClassSimple } from './IClass';
 import { IProfessor } from './IProfessor';
 import { Role } from './RoleEnum';
 
@@ -15,7 +15,7 @@ interface IUserAdmin extends IBaseUser {
 }
 
 interface IUserClass extends IBaseUser {
-  class: IClass;
+  class: IClassSimple;
 }
 
 interface IUserProfessor extends IBaseUser {
