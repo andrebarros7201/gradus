@@ -7,12 +7,12 @@ import { HeaderLogoutButton } from './headerLogoutButton/HeaderLogoutButton';
 import { Role } from '@/types/RoleEnum';
 
 export const Header = () => {
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.user);
+  const { isAuthenticated, user, isLoading } = useSelector((state: RootState) => state.user);
 
   return (
     <div className={classes.header}>
       <h2>Gradus</h2>
-      {isAuthenticated ? (
+      {isLoading ? null : isAuthenticated ? (
         <div className={classes['header-group']}>
           {
             // Only Admins can create new users
