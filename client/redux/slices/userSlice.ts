@@ -7,7 +7,7 @@ import axios, { AxiosError } from 'axios';
 
 // Initial State Values
 const initialState: IUserSlice = {
-  isLoading: false,
+  isLoading: true, // It needs to start as true to fetch the user on startup. Fetch User thunk will turn this false
   isAuthenticated: false,
   user: null,
 };
@@ -93,10 +93,9 @@ export const fetchUser = createAsyncThunk<
   { rejectValue: { notification: INotification } }
 >('user/fetchUser', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
-      `${process.env.SERVER_URL}/api/user/me`,
-      { withCredentials: true },
-    );
+    const response = await axios.get(`${process.env.SERVER_URL}/api/user/me`, {
+      withCredentials: true,
+    });
     const { data } = response.data;
     return { user: data };
   } catch (e) {

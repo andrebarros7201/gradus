@@ -10,24 +10,27 @@ type Props = {
 };
 
 export const ProtectedRouteAdmin = ({ children }: Props) => {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { user, isAuthenticated, isLoading } = useSelector((state: RootState) => state.user);
   const { isVisible } = useSelector((state: RootState) => state.notification);
   const dispatch = useDispatch<RootDispatch>();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role != Role.Admin) {
-      router.replace('/login');
+    // Only check after loading finishes
+    if (!isLoading) {
+      if (!isAuthenticated || user?.role != Role.Admin) {
+        router.replace('/login');
 
-      // This fixes the logout notification overlap
-      if (!isVisible)
-        dispatch(setNotification({ type: 'error', message: 'Unauthorized to access this page' }));
+        // This fixes the logout notification overlap
+        if (!isVisible)
+          dispatch(setNotification({ type: 'error', message: 'Unauthorized to access this page' }));
+      }
     }
-  }, [dispatch, isAuthenticated, isVisible, router, user]);
+  }, [dispatch, isAuthenticated, isLoading, isVisible, router, user]);
 
   if (!isAuthenticated) return null;
 
-  if (!user || user.role != Role.Admin) return null;
+  if (!isAuthenticated || !user || user.role != Role.Admin) return null;
 
   return <>{children}</>;
 };
