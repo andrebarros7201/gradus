@@ -20,6 +20,7 @@ export const fetchAllClasses = createAsyncThunk<
     });
     const { data } = response.data;
     return { classes: data };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return rejectWithValue({ notification: { type: 'error', message: 'Failed to load classes' } });
   }
