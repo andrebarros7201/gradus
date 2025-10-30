@@ -14,7 +14,7 @@ const initialState: IUserSlice = {
 
 // User Register
 export const userRegister = createAsyncThunk<
-  { message: string; notification: INotification },
+  { notification: INotification },
   { name: string; username: string; password: string; role: number; schoolYear?: string },
   { rejectValue: { notification: INotification } }
 >(
@@ -33,7 +33,7 @@ export const userRegister = createAsyncThunk<
         { withCredentials: true },
       );
       const message = response.data.data;
-      return { message, notification: { type: 'success', message } };
+      return { notification: { type: 'success', message } };
     } catch (e) {
       const error = e as AxiosError<{ message: string }>;
       return rejectWithValue({
