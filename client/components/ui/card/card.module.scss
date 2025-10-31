@@ -1,0 +1,19 @@
+@use '@/styles/colors';
+.card {
+  width: min(300px, 100%);
+  aspect-ratio: 1/1;
+  background-color: colors.$bg-card;
+  border-radius: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.card__label {
+  width: 100%;
+  text-align: center;
+  text-transform: capitalize;
+}
