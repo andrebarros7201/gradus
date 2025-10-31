@@ -1,0 +1,21 @@
+@use '@/styles/colors';
+
+.item {
+  width: 100%;
+  background-color: colors.$bg-card;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 1rem;
+
+  > * {
+    width: 100%;
+    text-align: center;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+}
