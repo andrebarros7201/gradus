@@ -28,7 +28,7 @@ export const userRegister = createAsyncThunk<
           username,
           password,
           role,
-          class: role === Role.Class ? { class: schoolYear } : null, // Only send class info if role is Class
+          class: role === Role.Class ? { schoolYear } : null, // Only send class info if role is Class
         },
         { withCredentials: true },
       );
