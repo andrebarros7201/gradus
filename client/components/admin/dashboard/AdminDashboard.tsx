@@ -11,9 +11,9 @@ export const AdminDashboard = () => {
     <main className={classes.dashboard}>
       <h3>Welcome back, {user?.name}</h3>
       <div className={classes['dashboard__cards']}>
-        <Card label={'Classes'} description={'Manage classes'} href={'/class'} />
-        <Card label={'Classes'} description={'Manage classes'} href={'/class'} />
-        <Card label={'Classes'} description={'Manage classes'} href={'/class'} />
+        <Card label={'Classes'} description={'Manage classes'} href={'/dashboard/class'} />
+        <Card label={'Classes'} description={'Manage classes'} href={'/dashboard/class'} />
+        <Card label={'Classes'} description={'Manage classes'} href={'/dashboard/class'} />
       </div>
     </main>
   );
