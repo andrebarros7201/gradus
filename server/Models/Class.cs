@@ -5,7 +5,7 @@ public class Class {
     public string SchoolYear { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
 
-    public User User { get; set; }
+    public User User { get; set; } = null!;
     public int UserId { get; set; }
 
     public List<Student> Students { get; set; } = [];

@@ -4,6 +4,6 @@ public class Professor {
     public int Id { get; set; }
     public List<Subject> Subjects { get; set; } = [];
 
-    public User User { get; set; }
+    public User User { get; set; } = null!;
     public int UserId { get; set; }
 }
