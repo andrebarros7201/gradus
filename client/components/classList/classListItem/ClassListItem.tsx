@@ -1,6 +1,6 @@
 import classes from './classListItem.module.scss';
 import { Button } from '@/components/ui/button/Button';
-import { IClassSimple } from '@/types/IClass';
+import { IClassSimple } from '@/types/IClassSimple';
 
 type Props = {
   item: IClassSimple;

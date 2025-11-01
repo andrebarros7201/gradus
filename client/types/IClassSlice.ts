@@ -1,6 +1,6 @@
-import { IClassSimple } from "./IClass";
+import { IClassSimple } from './IClassSimple';
 
-export interface IClassSlice{
-    isLoading: boolean;
-    classes: IClassSimple[]
+export interface IClassSlice {
+  isLoading: boolean;
+  classes: IClassSimple[];
 }

@@ -1,4 +1,4 @@
-import { IClassSimple } from '@/types/IClass';
+import { IClassSimple } from '@/types/IClassSimple';
 import { IClassSlice } from '@/types/IClassSlice';
 import { INotification } from '@/types/INotificationSlice';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -20,7 +20,7 @@ export const fetchAllClasses = createAsyncThunk<
     });
     const { data } = response.data;
     return { classes: data };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return rejectWithValue({ notification: { type: 'error', message: 'Failed to load classes' } });
   }
@@ -40,8 +40,8 @@ const classSlice = createSlice({
         state.classes = action.payload.classes;
       })
       .addCase(fetchAllClasses.rejected, (state) => {
-        state.isLoading= false
-        state.classes = []
+        state.isLoading = false;
+        state.classes = [];
       }),
 });
 

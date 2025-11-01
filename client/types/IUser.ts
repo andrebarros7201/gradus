@@ -1,5 +1,5 @@
 import { IAdmin } from './IAdmin';
-import { IClassSimple } from './IClass';
+import { IClassSimple } from './IClassSimple';
 import { IProfessor } from './IProfessor';
 import { Role } from './RoleEnum';
 
