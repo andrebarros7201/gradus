@@ -18,24 +18,24 @@ public class AppDbContext : DbContext {
         base.OnModelCreating(modelBuilder);
 
         // User - Admin
-        modelBuilder.Entity<User>()
-            .HasOne(u => u.Admin)
-            .WithOne(a => a.User)
-            .HasForeignKey<User>(a => a.AdminId)
+        modelBuilder.Entity<Admin>()
+            .HasOne(a => a.User)
+            .WithOne(u => u.Admin)
+            .HasForeignKey<Admin>(a => a.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // User - Professor
-        modelBuilder.Entity<User>()
-            .HasOne(u => u.Professor)
-            .WithOne(p => p.User)
-            .HasForeignKey<User>(p => p.ProfessorId)
+        modelBuilder.Entity<Professor>()
+            .HasOne(p => p.User)
+            .WithOne(u => u.Professor)
+            .HasForeignKey<Professor>(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // User - Class
-        modelBuilder.Entity<User>()
-            .HasOne(u => u.Class)
-            .WithOne(c => c.User)
-            .HasForeignKey<User>(c => c.ClassId)
+        modelBuilder.Entity<Class>()
+            .HasOne(c => c.User)
+            .WithOne(u => u.Class)
+            .HasForeignKey<Class>(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Professor - Subject
@@ -75,7 +75,8 @@ public class AppDbContext : DbContext {
         // Admin
         modelBuilder.Entity<Admin>().HasData(
             new Admin {
-                Id = 1
+                Id = 1,
+                UserId = 1
             }
         );
 
@@ -85,17 +86,15 @@ public class AppDbContext : DbContext {
                 Name = "Admin",
                 Username = "admin",
                 Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
-                AdminId = 1,
                 Role = Role.Admin,
-                ClassId = null,
-                ProfessorId = null,
                 CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Utc)
             });
 
         // Professor
         modelBuilder.Entity<Professor>().HasData(
             new Professor {
-                Id = 1
+                Id = 1,
+                UserId = 2
             }
         );
 
@@ -106,9 +105,6 @@ public class AppDbContext : DbContext {
                 Username = "professor",
                 Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
                 Role = Role.Professor,
-                AdminId = null,
-                ClassId = null,
-                ProfessorId = 1,
                 CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Utc)
             });
 
@@ -116,6 +112,7 @@ public class AppDbContext : DbContext {
         modelBuilder.Entity<Class>().HasData(
             new Class {
                 Id = 1,
+                UserId = 3,
                 SchoolYear = "2025/26"
             }
         );
@@ -127,9 +124,6 @@ public class AppDbContext : DbContext {
                 Username = "class",
                 Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
                 Role = Role.Class,
-                AdminId = null,
-                ClassId = 1,
-                ProfessorId = null,
                 CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Local).AddTicks(2206)
             });
 
@@ -148,7 +142,10 @@ public class AppDbContext : DbContext {
         // Subjects
         modelBuilder.Entity<Subject>().HasData(
             new Subject {
-                Id = 1, Name = "Math", ProfessorId = 1, ClassId = 1
+                Id = 1,
+                Name = "Math",
+                ProfessorId = 1,
+                ClassId = 1
             });
 
         // Grades

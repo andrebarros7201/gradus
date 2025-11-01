@@ -19,9 +19,9 @@ public class ClassService : IClassService {
         List<Class> classes = await _classRepository.GetAllClasses();
         return ServiceResult<List<ClassSimpleDto>>.Success(classes.Select(c => new ClassSimpleDto {
             Id = c.Id,
-            UserId = c.User.Id,
+            UserId = c.User?.Id ?? 0,
             IsActive = c.IsActive,
-            Name = c.User.Name,
+            Name = c.User?.Name ?? "No user assigned",
             SchoolYear = c.SchoolYear
         }).ToList());
     }

@@ -50,7 +50,7 @@ public class SubjectService : ISubjectService {
         // Class
         if (currentUser.Role == Role.Class) {
             // Class does not have this subject
-            if (subject.ClassId != currentUser.ClassId) {
+            if (subject.ClassId != currentUser.Class!.Id) {
                 return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to access this subject");
             }
 
@@ -188,6 +188,6 @@ public class SubjectService : ISubjectService {
 
         await _subjectRepository.DeleteSubject(subject);
 
-        return ServiceResult<bool>.Success(true);       
+        return ServiceResult<bool>.Success(true);
     }
 }
