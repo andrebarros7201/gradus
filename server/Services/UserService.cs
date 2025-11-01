@@ -2,6 +2,7 @@ using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
 using Server.DTOs.Professor;
+using Server.DTOs.Student;
 using Server.DTOs.Subject;
 using Server.DTOs.User;
 using Server.Interfaces.Repositories;
@@ -39,7 +40,15 @@ public class UserService : IUserService {
                 Username = user.Username,
                 Role = user.Role,
                 Name = user.Name,
-                Class = new ClassSimpleDto { Id = user.Class!.Id, UserId = user.Class.User.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+                Class = new ClassCompleteDto {
+                    Id = user.Class!.Id,
+                    UserId = user.Class.User.Id,
+                    Name = user.Class.User.Name,
+                    SchoolYear = user.Class.SchoolYear,
+                    IsActive = user.Class.IsActive,
+                    Students = user.Class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
+                    Subjects = user.Class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name }).ToList()
+                }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
@@ -177,12 +186,14 @@ public class UserService : IUserService {
             Username = targetUser.Username,
             Role = targetUser.Role,
             Class = targetUser.Role switch {
-                Role.Class => new ClassSimpleDto {
+                Role.Class => new ClassCompleteDto {
                     Id = targetUser.Class!.Id,
                     UserId = targetUser.Class.User.Id,
                     Name = targetUser.Class.User.Name,
                     SchoolYear = targetUser.Class.SchoolYear,
-                    IsActive = targetUser.Class.IsActive
+                    IsActive = targetUser.Class.IsActive,
+                    Students = targetUser.Class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
+                    Subjects = targetUser.Class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name }).ToList()
                 },
                 _ => null
             },

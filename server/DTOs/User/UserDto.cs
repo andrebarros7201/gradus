@@ -16,7 +16,7 @@ public class UserDto {
     public AdminDto? Admin { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ClassSimpleDto? Class { get; set; }
+    public ClassCompleteDto? Class { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ProfessorDto? Professor { get; set; }

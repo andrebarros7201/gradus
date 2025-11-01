@@ -2,6 +2,7 @@ using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
 using Server.DTOs.Professor;
+using Server.DTOs.Student;
 using Server.DTOs.Subject;
 using Server.DTOs.User;
 using Server.Interfaces.Repositories;
@@ -48,12 +49,15 @@ public class AuthService : IAuthService {
                 Username = user.Username,
                 Name = user.Name,
                 Role = user.Role,
-                Class = new ClassSimpleDto {
+                Class = new ClassCompleteDto {
                     Id = user.Class!.Id,
                     UserId = user.Class.User.Id,
                     Name = user.Class.User.Name,
                     SchoolYear = user.Class.SchoolYear,
-                    IsActive = user.Class.IsActive
+                    IsActive = user.Class.IsActive,
+                    Students = user.Class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
+                    Subjects = user.Class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name }).ToList()
+
                 }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
