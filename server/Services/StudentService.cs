@@ -31,6 +31,7 @@ public class StudentService : IStudentService {
             Name = student.Name,
             Class = student.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
                 Id = c.Id,
+                UserId = c.User.Id,
                 Name = c.User.Name,
                 IsActive = c.IsActive,
                 SchoolYear = c.SchoolYear
@@ -76,6 +77,7 @@ public class StudentService : IStudentService {
             Id = createdStudent.Id,
             Class = createdStudent.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
                 Id = c.Id,
+                UserId = c.User.Id,
                 IsActive = c.IsActive,
                 Name = c.User.Name,
                 SchoolYear = c.SchoolYear
@@ -109,7 +111,7 @@ public class StudentService : IStudentService {
         await _studentRepository.DeleteStudent(student);
 
         return ServiceResult<bool>.Success(true);
-        
+
     }
 
     public async Task<ServiceResult<StudentCompleteDto>> UpdateStudent(int currentUserId, int studentId, StudentUpdateDto dto) {
@@ -138,6 +140,7 @@ public class StudentService : IStudentService {
             Name = targetStudent.Name,
             Class = targetStudent.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
                 Id = c.Id,
+                UserId = c.User.Id,
                 Name = c.User.Name,
                 IsActive = c.IsActive,
                 SchoolYear = c.SchoolYear

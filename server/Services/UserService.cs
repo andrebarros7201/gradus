@@ -39,7 +39,7 @@ public class UserService : IUserService {
                 Username = user.Username,
                 Role = user.Role,
                 Name = user.Name,
-                Class = new ClassSimpleDto { Id = user.Class!.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
+                Class = new ClassSimpleDto { Id = user.Class!.Id, UserId = user.Class.User.Id, Name = user.Class.User.Name, SchoolYear = user.Class.SchoolYear, IsActive = user.Class.IsActive }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
                 Id = user.Id,
@@ -179,6 +179,7 @@ public class UserService : IUserService {
             Class = targetUser.Role switch {
                 Role.Class => new ClassSimpleDto {
                     Id = targetUser.Class!.Id,
+                    UserId = targetUser.Class.User.Id,
                     Name = targetUser.Class.User.Name,
                     SchoolYear = targetUser.Class.SchoolYear,
                     IsActive = targetUser.Class.IsActive

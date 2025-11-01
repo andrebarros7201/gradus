@@ -50,6 +50,7 @@ public class AuthService : IAuthService {
                 Role = user.Role,
                 Class = new ClassSimpleDto {
                     Id = user.Class!.Id,
+                    UserId = user.Class.User.Id,
                     Name = user.Class.User.Name,
                     SchoolYear = user.Class.SchoolYear,
                     IsActive = user.Class.IsActive
