@@ -35,6 +35,7 @@ public class ClassService : IClassService {
 
         return ServiceResult<ClassCompleteDto?>.Success(new ClassCompleteDto {
             Id = @class.Id,
+            UserId = @class.User.Id,
             Name = @class.User.Name,
             IsActive = @class.IsActive,
             SchoolYear = @class.SchoolYear,
