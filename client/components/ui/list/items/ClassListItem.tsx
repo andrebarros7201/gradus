@@ -1,5 +1,5 @@
+import classes from './listItem.module.scss';
 import { deleteClass } from '@/redux/slices/classSlice';
-import classes from './classListItem.module.scss';
 import { Button } from '@/components/ui/button/Button';
 import { RootDispatch } from '@/redux/store';
 import { IClassSimple } from '@/types/IClassSimple';

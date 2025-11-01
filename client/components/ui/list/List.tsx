@@ -1,8 +1,8 @@
 import classes from './list.module.scss';
 import { IClassSimple } from '@/types/IClassSimple';
 import { ISubjectSimple } from '@/types/ISubjectSimple';
-import { ClassListItem } from './class/ClassListItem';
-import { SubjectListItem } from './subject/SubjectListItem';
+import { ClassListItem } from './items/ClassListItem';
+import { SubjectListItem } from './items/SubjectListItem';
 
 type Class = {
   type: 'class';
