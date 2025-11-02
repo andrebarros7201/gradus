@@ -2,18 +2,20 @@
 
 //import classes from './createUserForm.module.scss';
 import { Form } from '@/components/ui/form/Form';
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input/Input';
 import { Button } from '@/components/ui/button/Button';
 import { RootDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { userRegister } from '@/redux/slices/userSlice';
-import { UserRegisterSelect } from '@/components/ui/userRegisterSelect/UserRegisterSelect';
 import { INotification } from '@/types/INotificationSlice';
 import * as z from 'zod';
+import { RoleSelect } from '@/components/ui/roleSelect/RoleSelect';
+import { SchoolYearSelect } from '@/components/ui/schoolYearSelect/SchoolYearSelect';
 
 export function CreateUserForm() {
+  const [role, setRole] = useState<number>(0);
   const dispatch = useDispatch<RootDispatch>();
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -98,7 +100,8 @@ export function CreateUserForm() {
       <Input label={'Name'} type={'text'} minValue={3} maxValue={100} ref={nameRef} />
       <Input label={'Username'} type={'text'} minValue={3} maxValue={100} ref={usernameRef} />
       <Input label={'Password'} type={'password'} minValue={3} maxValue={100} ref={passwordRef} />
-      <UserRegisterSelect roleRef={roleRef} schoolYearRef={schoolYearRef} />
+      <RoleSelect ref={roleRef} onChange={(e) => setRole(Number(e.target.value))} />
+      {role === 1 && <SchoolYearSelect ref={schoolYearRef} />}
       <Button label={'Register'} type={'submit'} />
     </Form>
   );
