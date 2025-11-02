@@ -6,10 +6,12 @@ import { IClassSimple } from '@/types/IClassSimple';
 import { INotification } from '@/types/INotificationSlice';
 import { useDispatch } from 'react-redux';
 
-type Props = {
+type ClassProps = {
+  type: 'class';
   item: IClassSimple;
-  type: 'class' | 'admin' | 'professor';
 };
+
+type Props = ClassProps;
 
 export const DeleteUserButton = ({ item, type }: Props) => {
   const dispatch = useDispatch<RootDispatch>();
