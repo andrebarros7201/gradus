@@ -4,7 +4,7 @@ import { IUserSlice } from '@/types/IUserSlice';
 import { Role } from '@/types/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { removeClass } from './classSlice';
+import { removeClass, updateClass } from './classSlice';
 
 // Initial State Values
 const initialState: IUserSlice = {
@@ -110,6 +110,54 @@ export const fetchUser = createAsyncThunk<
   }
 });
 
+// Update User
+export const updateUser = createAsyncThunk<
+  { notification: INotification; userId: number },
+  {
+    userId: number;
+    username: string;
+    name: string;
+    schoolYear?: string;
+    password?: string;
+    type: 'admin' | 'professor' | 'class';
+  },
+  { rejectValue: { notification: INotification } }
+>(
+  'user/updateUser',
+  async ({ userId, username, name, schoolYear, password, type }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await axios.patch(
+        `${process.env.SERVER_URL}/api/user/${userId}`,
+        { name, username, password },
+        {
+          withCredentials: true,
+        },
+      );
+
+      const { data } = response.data;
+
+      // Change the user type list
+      switch (type) {
+        case 'class':
+          dispatch(updateClass({ userId, name, username }));
+      }
+
+      const formattedType = type[0].toUpperCase().concat(type.slice(1));
+      return {
+        notification: { type: 'success', message: `${formattedType} updated successfully.` },
+        userId,
+      };
+    } catch (e) {
+      const error = e as AxiosError<{ message: string }>;
+      return rejectWithValue({
+        notification: {
+          type: 'error',
+          message: error.response?.data.message ?? `Failed to delete ${type}`,
+        },
+      });
+    }
+  },
+);
 // Delete User
 export const deleteUser = createAsyncThunk<
   { notification: INotification; userId: number },
@@ -197,6 +245,16 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+      })
+      // Update User
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateUser.rejected, (state) => {
+        state.isLoading = false;
       })
       // Delete User
       .addCase(deleteUser.pending, (state) => {
