@@ -1,8 +1,8 @@
 import { IClassSimple } from '@/types/IClassSimple';
 import { IClassSlice } from '@/types/IClassSlice';
 import { INotification } from '@/types/INotificationSlice';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState: IClassSlice = {
   isLoading: false,
@@ -27,33 +27,19 @@ export const fetchAllClasses = createAsyncThunk<
   }
 });
 
-// Delete Class
-export const deleteClass = createAsyncThunk<
-  { notification: INotification; userId: number },
-  { userId: number },
-  { rejectValue: { notification: INotification } }
->('class/deleteClass', async ({ userId }, { rejectWithValue }) => {
-  try {
-    const response = await axios.delete(`${process.env.SERVER_URL}/api/user/${userId}`, {
-      withCredentials: true,
-    });
-    const { data } = response.data;
-    return { notification: { type: 'success', message: data }, userId };
-  } catch (e) {
-    const error = e as AxiosError<{ message: string }>;
-    return rejectWithValue({
-      notification: {
-        type: 'error',
-        message: error.response?.data.message ?? 'Failed to delete class',
-      },
-    });
-  }
-});
-
 const classSlice = createSlice({
   name: 'classSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    removeClass: (state, action: PayloadAction<{ userId: number }>) => {
+      const indexClass = state.classes.findIndex((c) => c.userId === action.payload.userId);
+
+      // Don't change if index equals -1
+      if (indexClass === -1) return;
+
+      state.classes.splice(indexClass, 1);
+    },
+  },
   extraReducers: (builder) =>
     builder
       // Fetch All Classes
@@ -67,21 +53,8 @@ const classSlice = createSlice({
       .addCase(fetchAllClasses.rejected, (state) => {
         state.isLoading = false;
         state.classes = [];
-      })
-      // Delete Class
-      .addCase(deleteClass.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(deleteClass.fulfilled, (state, action) => {
-        const { userId } = action.payload;
-        state.isLoading = true;
-        const classIndex = state.classes.findIndex((c) => c.userId === userId);
-        if (classIndex === -1) return;
-        state.classes = state.classes.splice(classIndex, 1);
-      })
-      .addCase(deleteClass.rejected, (state) => {
-        state.isLoading = false;
       }),
 });
 
 export const classReducer = classSlice.reducer;
+export const { removeClass } = classSlice.actions;

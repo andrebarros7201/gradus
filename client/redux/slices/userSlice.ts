@@ -4,6 +4,7 @@ import { IUserSlice } from '@/types/IUserSlice';
 import { Role } from '@/types/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
+import { removeClass } from './classSlice';
 
 // Initial State Values
 const initialState: IUserSlice = {
@@ -28,7 +29,7 @@ export const userRegister = createAsyncThunk<
           username,
           password,
           role,
-          ...(role === Role.Class && {class:  { schoolYear }}), // Only send class info if role is Class
+          ...(role === Role.Class && { class: { schoolYear } }), // Only send class info if role is Class
         },
         { withCredentials: true },
       );
@@ -108,6 +109,38 @@ export const fetchUser = createAsyncThunk<
     });
   }
 });
+
+// Delete User
+export const deleteUser = createAsyncThunk<
+  { notification: INotification; userId: number },
+  { userId: number; type: 'admin' | 'professor' | 'class' },
+  { rejectValue: { notification: INotification } }
+>('user/deleteUser', async ({ userId, type }, { rejectWithValue, dispatch }) => {
+  try {
+    const response = await axios.delete(`${process.env.SERVER_URL}/api/user/${userId}`, {
+      withCredentials: true,
+    });
+
+    const { data } = response.data;
+
+    // Change the user type list
+    switch (type) {
+      case 'class':
+        dispatch(removeClass({ userId }));
+    }
+
+    return { notification: { type: 'success', message: data }, userId };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message ?? `Failed to delete ${type}`,
+      },
+    });
+  }
+});
+
 // User Logout
 export const userLogout = createAsyncThunk<void, void, { rejectValue: string }>(
   'user/logoutUser',
@@ -164,6 +197,16 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+      })
+      // Delete User
+      .addCase(deleteUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteUser.rejected, (state) => {
+        state.isLoading = false;
       })
       // User Logout
       .addCase(userLogout.pending, (state) => {
