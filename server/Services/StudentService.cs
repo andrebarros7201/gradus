@@ -33,6 +33,7 @@ public class StudentService : IStudentService {
                 Id = c.Id,
                 UserId = c.User.Id,
                 Name = c.User.Name,
+                Username = c.User.Username,
                 IsActive = c.IsActive,
                 SchoolYear = c.SchoolYear
             }).FirstOrDefault()!,
@@ -78,6 +79,7 @@ public class StudentService : IStudentService {
             Class = createdStudent.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
                 Id = c.Id,
                 UserId = c.User.Id,
+                Username = c.User.Username,
                 IsActive = c.IsActive,
                 Name = c.User.Name,
                 SchoolYear = c.SchoolYear
@@ -141,6 +143,7 @@ public class StudentService : IStudentService {
             Class = targetStudent.Classes.Where(c => c.IsActive).Select(c => new ClassSimpleDto {
                 Id = c.Id,
                 UserId = c.User.Id,
+                Username = c.User.Username,
                 Name = c.User.Name,
                 IsActive = c.IsActive,
                 SchoolYear = c.SchoolYear

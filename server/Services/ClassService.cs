@@ -20,6 +20,7 @@ public class ClassService : IClassService {
         return ServiceResult<List<ClassSimpleDto>>.Success(classes.Select(c => new ClassSimpleDto {
             Id = c.Id,
             UserId = c.User.Id,
+            Username = c.User.Username,
             IsActive = c.IsActive,
             Name = c.User.Name,
             SchoolYear = c.SchoolYear
