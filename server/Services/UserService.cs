@@ -176,6 +176,7 @@ public class UserService : IUserService {
         targetUser.Username = dto.Username;
         targetUser.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
         if (targetUser.Role == Role.Class && targetUser.Class != null) targetUser.Class.SchoolYear = dto.SchoolYear!; // Update School Year if Role is Class
+        if (targetUser.Role == Role.Class && targetUser.Class != null) targetUser.Class.IsActive = dto.IsActive ?? targetUser.Class.IsActive; // Update isActive property if Role is Class if not null
 
         // Update the user in the database
         await _userRepository.Update(targetUser);
