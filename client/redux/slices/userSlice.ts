@@ -5,6 +5,7 @@ import { Role } from '@/types/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { removeClass, updateClass } from './classSlice';
+import { is } from 'zod/locales';
 
 // Initial State Values
 const initialState: IUserSlice = {
@@ -16,7 +17,13 @@ const initialState: IUserSlice = {
 // User Register
 export const userRegister = createAsyncThunk<
   { notification: INotification },
-  { name: string; username: string; password: string; role: number; schoolYear?: string },
+  {
+    name: string;
+    username: string;
+    password: string;
+    role: number;
+    schoolYear?: string;
+  },
   { rejectValue: { notification: INotification } }
 >(
   'user/registerUser',
@@ -118,17 +125,21 @@ export const updateUser = createAsyncThunk<
     username: string;
     name: string;
     schoolYear?: string;
+    isActive?: boolean;
     password?: string;
     type: 'admin' | 'professor' | 'class';
   },
   { rejectValue: { notification: INotification } }
 >(
   'user/updateUser',
-  async ({ userId, username, name, schoolYear, password, type }, { rejectWithValue, dispatch }) => {
+  async (
+    { userId, username, name, schoolYear, isActive, password, type },
+    { rejectWithValue, dispatch },
+  ) => {
     try {
       await axios.patch(
         `${process.env.SERVER_URL}/api/user/${userId}`,
-        { name, username, password, ...(schoolYear && { schoolYear }) },
+        { name, username, password, ...(type === 'class' && { schoolYear, isActive }) },
         {
           withCredentials: true,
         },
@@ -137,7 +148,9 @@ export const updateUser = createAsyncThunk<
       // Change the user type list
       switch (type) {
         case 'class':
-          dispatch(updateClass({ userId, name, username, schoolYear }));
+          if (!schoolYear || isActive === undefined) break; // I know these values cannot be null
+          dispatch(updateClass({ userId, name, username, schoolYear, isActive }));
+          break;
       }
 
       const formattedType = type[0].toUpperCase().concat(type.slice(1));

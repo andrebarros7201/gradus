@@ -12,6 +12,7 @@ import { RootDispatch } from '@/redux/store';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { INotification } from '@/types/INotificationSlice';
 import { updateUser } from '@/redux/slices/userSlice';
+import { IsActiveSelect } from '@/components/ui/isActiveSelect/IsActiveSelect';
 
 type ClassProps = {
   type: 'class';
@@ -27,26 +28,28 @@ export const UpdateUserButton = ({ item, type }: Props) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const schoolYearRef = useRef<HTMLSelectElement>(null);
+  const isActiveRef = useRef<HTMLSelectElement>(null);
 
-  const updateUserSchema = z
-    .object({
+  const updateUserSchema = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal('class'),
       name: z.string().nonempty('Name is required').min(3, 'Name must have at least 3 characters'),
       username: z
         .string()
         .nonempty('Username is required')
         .min(3, 'Username must have at least 3 characters'),
-      schoolYear: z.string().optional(),
-    })
-    .refine(
-      (data) => {
-        if (type === 'class') return !!data.schoolYear;
-        return true;
-      },
-      {
-        message: 'School Year is required',
-        path: ['schoolYear'],
-      },
-    );
+      schoolYear: z.string('School Year is required'),
+      isActive: z.string('Is Active is required'),
+    }),
+    z.object({
+      type: z.union([z.literal('professor'), z.literal('admin')]),
+      name: z.string().nonempty('Name is required').min(3, 'Name must have at least 3 characters'),
+      username: z
+        .string()
+        .nonempty('Username is required')
+        .min(3, 'Username must have at least 3 characters'),
+    }),
+  ]);
 
   async function onSubmit(e: FormEvent) {
     // Prevent default form submit behavior
@@ -55,9 +58,10 @@ export const UpdateUserButton = ({ item, type }: Props) => {
     const name = nameRef.current?.value;
     const username = usernameRef.current?.value;
     const schoolYear = schoolYearRef.current?.value;
+    const isActive = isActiveRef.current?.value;
 
     try {
-      const result = updateUserSchema.safeParse({ name, username, schoolYear });
+      const result = updateUserSchema.safeParse({ type, name, username, schoolYear, isActive });
 
       if (!result.success) {
         const firstError = result.error.issues[0].message || 'Invalid Input';
@@ -69,8 +73,13 @@ export const UpdateUserButton = ({ item, type }: Props) => {
           userId: item.userId,
           name: result.data.name,
           username: result.data.username,
-          schoolYear: result.data.schoolYear,
-          type: 'class',
+          type,
+          ...(result.data.type === 'class'
+            ? {
+                schoolYear: result.data.schoolYear,
+                isActive: result.data.isActive === '0' ? false : true,
+              }
+            : null),
         }),
       ).unwrap();
 
@@ -81,6 +90,7 @@ export const UpdateUserButton = ({ item, type }: Props) => {
       usernameRef.current!.value = '';
       //passwordRef.current!.value = '';
       if (schoolYearRef.current) schoolYearRef.current.value = '2025/26';
+      if (isActiveRef.current) isActiveRef.current.value = '1';
       setIsModalOpen(false);
     } catch (e) {
       const error = e as { notification: INotification };
@@ -110,7 +120,9 @@ export const UpdateUserButton = ({ item, type }: Props) => {
               maxValue={100}
               ref={usernameRef}
             />
+            {/* Display both Selects when type === 'class' */}
             {type === 'class' && <SchoolYearSelect ref={schoolYearRef} />}
+            {type === 'class' && <IsActiveSelect ref={isActiveRef} />}
             <Button label={'Update'} type={'submit'} />
           </Form>
         </Modal>
