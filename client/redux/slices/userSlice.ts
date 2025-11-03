@@ -5,7 +5,6 @@ import { Role } from '@/types/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { removeClass, updateClass } from './classSlice';
-import { is } from 'zod/locales';
 
 // Initial State Values
 const initialState: IUserSlice = {
