@@ -33,9 +33,9 @@ const classSlice = createSlice({
   reducers: {
     updateClass: (
       state,
-      action: PayloadAction<{ userId: number; name: string; username: string }>,
+      action: PayloadAction<{ userId: number; name: string; username: string; schoolYear: string }>,
     ) => {
-      const { userId, name, username } = action.payload;
+      const { userId, name, username, schoolYear } = action.payload;
       const indexClass = state.classes.findIndex((c) => c.userId === userId);
 
       // Don't change if index equals -1
@@ -43,6 +43,7 @@ const classSlice = createSlice({
 
       state.classes[indexClass].name = name;
       state.classes[indexClass].username = username;
+      state.classes[indexClass].schoolYear = schoolYear;
     },
     removeClass: (state, action: PayloadAction<{ userId: number }>) => {
       const indexClass = state.classes.findIndex((c) => c.userId === action.payload.userId);

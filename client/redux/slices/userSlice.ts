@@ -126,20 +126,18 @@ export const updateUser = createAsyncThunk<
   'user/updateUser',
   async ({ userId, username, name, schoolYear, password, type }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `${process.env.SERVER_URL}/api/user/${userId}`,
-        { name, username, password },
+        { name, username, password, ...(schoolYear && { schoolYear }) },
         {
           withCredentials: true,
         },
       );
 
-      const { data } = response.data;
-
       // Change the user type list
       switch (type) {
         case 'class':
-          dispatch(updateClass({ userId, name, username }));
+          dispatch(updateClass({ userId, name, username, schoolYear }));
       }
 
       const formattedType = type[0].toUpperCase().concat(type.slice(1));
