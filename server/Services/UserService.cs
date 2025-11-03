@@ -143,7 +143,7 @@ public class UserService : IUserService {
         return ServiceResult<string>.Success("User deleted successfully");
     }
 
-    public async Task<ServiceResult<UserDto>> Update(int targetUserId, int currentUserId, UserPatchDto dto) {
+    public async Task<ServiceResult<UserDto>> Update(int targetUserId, int currentUserId, UserUpdateDto dto) {
         User? currentUser = await _userRepository.GetUserById(currentUserId);
 
         // Ensure the current user exists

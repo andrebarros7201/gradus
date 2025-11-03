@@ -47,7 +47,7 @@ public class UserController : ControllerBase {
 
         return ServiceResult<string>.ReturnStatus(result);
     }
-    
+
     [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id) {
@@ -61,7 +61,7 @@ public class UserController : ControllerBase {
 
     [Authorize]
     [HttpPatch("{targetUserId:int}")]
-    public async Task<IActionResult> Update([FromRoute] int targetUserId, [FromBody] UserPatchDto dto) {
+    public async Task<IActionResult> Update([FromRoute] int targetUserId, [FromBody] UserUpdateDto dto) {
         // Validate Model
         if (!ModelState.IsValid) {
             return BadRequest(ModelState);

@@ -8,5 +8,5 @@ public interface IUserService {
     public Task<ServiceResult<UserDto>> FetchUser(int id);
     public Task<ServiceResult<string>> Create(UserRegisterDto dto, int userId);
     public Task<ServiceResult<string>> Delete(int id, int currentUserId);
-    public Task<ServiceResult<UserDto>> Update(int targetUserId, int currentUserId, UserPatchDto dto);
+    public Task<ServiceResult<UserDto>> Update(int targetUserId, int currentUserId, UserUpdateDto dto);
 }
