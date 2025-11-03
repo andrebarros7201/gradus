@@ -29,14 +29,25 @@ export const UpdateUserButton = ({ item, type }: Props) => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const schoolYearRef = useRef<HTMLSelectElement>(null);
 
-  const updateUserSchema = z.object({
-    name: z.string().nonempty('Name is required').min(3, 'Name must have at least 3 characters'),
-    username: z
-      .string()
-      .nonempty('Username is required')
-      .min(3, 'Username must have at least 3 characters'),
-    schoolYear: z.string(),
-  });
+  const updateUserSchema = z
+    .object({
+      name: z.string().nonempty('Name is required').min(3, 'Name must have at least 3 characters'),
+      username: z
+        .string()
+        .nonempty('Username is required')
+        .min(3, 'Username must have at least 3 characters'),
+      schoolYear: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        if (type === 'class') return !!data.schoolYear;
+        return true;
+      },
+      {
+        message: 'School Year is required',
+        path: ['schoolYear'],
+      },
+    );
 
   async function onSubmit(e: FormEvent) {
     // Prevent default form submit behavior
@@ -59,6 +70,7 @@ export const UpdateUserButton = ({ item, type }: Props) => {
           userId: item.userId,
           name: result.data.name,
           username: result.data.username,
+          schoolYear: result.data.schoolYear,
           type: 'class',
         }),
       ).unwrap();
