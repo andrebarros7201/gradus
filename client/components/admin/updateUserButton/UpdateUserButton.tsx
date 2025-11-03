@@ -19,7 +19,6 @@ type ClassProps = {
 };
 
 type Props = ClassProps;
-// TODO allow the class to change school year and fix modal style bug
 
 export const UpdateUserButton = ({ item, type }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
