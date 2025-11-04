@@ -9,14 +9,12 @@
   gap: 1rem;
 
   &__header {
-    border: 1px solid red;
     display: none;
     width: 100%;
     align-items: center;
     padding: 1rem;
 
     @include mixins.responds-to(md) {
-      border: 1px solid blue;
       display: flex;
     }
 
