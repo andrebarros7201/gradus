@@ -12,6 +12,7 @@
   align-items: center;
   background-color: rgba(#000000, 0.25);
   z-index: 1000;
+  backdrop-filter: blur(5);
 
   &__content {
     width: min(600px, 100%);
@@ -29,7 +30,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
   }
 
   &__title {
