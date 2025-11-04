@@ -1,5 +1,5 @@
 import classes from './updateUserForm.module.scss';
-import { FormEvent, useRef, useState } from 'react';
+import { Activity, FormEvent, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button/Button';
 import { Modal } from '@/components/ui/modal/Modal';
 import { Form } from '@/components/ui/form/Form';
@@ -120,9 +120,13 @@ export const UpdateUserButton = ({ item, type }: Props) => {
               maxValue={100}
               ref={usernameRef}
             />
-            {/* Display both Selects when type === 'class' */}
-            {type === 'class' && <SchoolYearSelect ref={schoolYearRef} />}
-            {type === 'class' && <IsActiveSelect ref={isActiveRef} />}
+            {type === 'class' && (
+              <>
+                <SchoolYearSelect ref={schoolYearRef} />
+                <IsActiveSelect ref={isActiveRef} />
+              </>
+            )}
+
             <Button label={'Update'} type={'submit'} />
           </Form>
         </Modal>
