@@ -15,42 +15,32 @@
     flex-direction: row;
     gap: 0;
   }
+}
+.item__field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-  &__field {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.item__buttons {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 
-    & > :first-child {
-      font-weight: bold;
-    }
-
-    @include mixins.responds-to(md) {
-      & > :first-child {
-        display: none;
-      }
-    }
+  @include mixins.responds-to(md) {
+    flex-direction: row;
   }
+}
 
-  &__buttons {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
+.item__label {
+  font-weight: bold;
 
-    & > :first-child {
-      font-weight: bold;
-    }
-
-    @include mixins.responds-to(md) {
-      & > :first-child {
-        display: none;
-      }
-      flex-direction: row;
-    }
+  @include mixins.responds-to(md) {
+    display: none;
   }
 }

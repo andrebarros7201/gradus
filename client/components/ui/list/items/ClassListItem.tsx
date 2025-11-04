@@ -11,23 +11,23 @@ export const ClassListItem = ({ item }: Props) => {
   return (
     <div className={classes['item']}>
       <div className={classes['item__field']}>
-        <p>Id</p>
+        <p className={classes['item__label']}>Id</p>
         <p>{item.id}</p>
       </div>
       <div className={classes['item__field']}>
-        <p>Name</p>
+        <p className={classes['item__label']}>Name</p>
         <p>{item.name}</p>
       </div>
       <div className={classes['item__field']}>
-        <p>School Year</p>
+        <p className={classes['item__label']}>School Year</p>
         <p>{item.schoolYear}</p>
       </div>
       <div className={classes['item__field']}>
-        <p>Is Active</p>
+        <p className={classes['item__label']}>Is Active</p>
         <p>{item.isActive === true ? 'Yes' : 'No'}</p>
       </div>
       <div className={classes['item__buttons']}>
-        <p>Actions</p>
+        <p className={classes['item__label']}>Actions</p>
         <UpdateUserButton item={item} type={'class'} />
         <DeleteUserButton item={item} type={'class'} />
       </div>
