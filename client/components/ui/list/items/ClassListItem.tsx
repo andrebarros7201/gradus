@@ -2,14 +2,18 @@ import { DeleteUserButton } from '@/components/admin/deleteUserButton/DeleteUser
 import classes from './listItem.module.scss';
 import { IClassSimple } from '@/types/IClassSimple';
 import { UpdateUserButton } from '@/components/admin/updateUserButton/UpdateUserButton';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type Props = {
   item: IClassSimple;
 };
 
 export const ClassListItem = ({ item }: Props) => {
+  const pathname = usePathname();
+
   return (
-    <div className={classes['item']}>
+    <Link className={classes['item']} href={`${pathname}/${item.id}`}>
       <div className={classes['item__field']}>
         <p className={classes['item__label']}>Id</p>
         <p>{item.id}</p>
@@ -31,6 +35,6 @@ export const ClassListItem = ({ item }: Props) => {
         <UpdateUserButton item={item} type={'class'} />
         <DeleteUserButton item={item} type={'class'} />
       </div>
-    </div>
+    </Link>
   );
 };
