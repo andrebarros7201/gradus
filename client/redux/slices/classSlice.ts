@@ -90,6 +90,9 @@ const classSlice = createSlice({
 
       state.classes.splice(indexClass, 1);
     },
+    clearCurrentClass : (state) => {
+      state.currentClass = null
+    }
   },
   extraReducers: (builder) =>
     builder
@@ -120,4 +123,4 @@ const classSlice = createSlice({
 });
 
 export const classReducer = classSlice.reducer;
-export const { updateClass, removeClass } = classSlice.actions;
+export const { updateClass, removeClass, clearCurrentClass } = classSlice.actions;
