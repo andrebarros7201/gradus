@@ -7,6 +7,7 @@ import axios from 'axios';
 const initialState: IClassSlice = {
   isLoading: false,
   classes: [],
+  currentClass: null
 };
 
 // Fetch All Classes
