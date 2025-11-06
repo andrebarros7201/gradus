@@ -113,7 +113,7 @@ const classSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(fetchCurrentClass.fulfilled, (state, action) => {
-        state.isLoading = true;
+        state.isLoading = false;
         state.currentClass = action.payload.class;
       })
       .addCase(fetchCurrentClass.rejected, (state) => {
