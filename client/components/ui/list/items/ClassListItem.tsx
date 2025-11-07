@@ -4,16 +4,19 @@ import { IClassSimple } from '@/types/IClassSimple';
 import { UpdateUserButton } from '@/components/admin/updateUserButton/UpdateUserButton';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ButtonLink } from '../../buttonLink/ButtonLink';
 
 type Props = {
   item: IClassSimple;
 };
 
+// TODO change the LINK as the outer element and create a dedicated link button
+
 export const ClassListItem = ({ item }: Props) => {
   const pathname = usePathname();
 
   return (
-    <Link className={classes['item']} href={`${pathname}/${item.id}`}>
+    <div className={classes['item']}>
       <div className={classes['item__field']}>
         <p className={classes['item__label']}>Id</p>
         <p>{item.id}</p>
@@ -32,9 +35,10 @@ export const ClassListItem = ({ item }: Props) => {
       </div>
       <div className={classes['item__buttons']}>
         <p className={classes['item__label']}>Actions</p>
+        <ButtonLink label={'Go to'} href={`${pathname}/${item.id}`} />
         <UpdateUserButton item={item} type={'class'} />
         <DeleteUserButton item={item} type={'class'} />
       </div>
-    </Link>
+    </div>
   );
 };
