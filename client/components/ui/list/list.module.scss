@@ -21,6 +21,10 @@
     &-item {
       flex: 1;
       text-align: center;
+
+      &:last-child {
+        flex: 2;
+      }
     }
   }
 }
