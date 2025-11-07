@@ -2,15 +2,12 @@ import { DeleteUserButton } from '@/components/admin/deleteUserButton/DeleteUser
 import classes from './listItem.module.scss';
 import { IClassSimple } from '@/types/IClassSimple';
 import { UpdateUserButton } from '@/components/admin/updateUserButton/UpdateUserButton';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
 
 type Props = {
   item: IClassSimple;
 };
-
-// TODO change the LINK as the outer element and create a dedicated link button
 
 export const ClassListItem = ({ item }: Props) => {
   const pathname = usePathname();
