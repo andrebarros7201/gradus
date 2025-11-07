@@ -2,6 +2,7 @@ import { ButtonLink } from '@/components/ui/buttonLink/ButtonLink';
 import classes from './classDetails.module.scss';
 
 import { IClassComplete } from '@/types/IClassComplete';
+import { UpdateUserButton } from '@/components/admin/userButton/updateUserButton/UpdateUserButton';
 
 type Props = {
   item: IClassComplete;
@@ -12,6 +13,7 @@ export const ClassDetails = ({ item }: Props) => {
     <main className={classes.classDetails}>
       <div className={classes['classDetails__button']}>
         <ButtonLink label={'Go Back'} href={'/dashboard/class'} />
+        <UpdateUserButton type={'class'} item={item} />
       </div>
       <div className={classes['classDetails__field']}>
         <p className={classes['classDetails__label']}>Name</p>
