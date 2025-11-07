@@ -7,6 +7,7 @@ import { use, useEffect } from 'react';
 import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/classSlice';
 import { Page } from '@/components/page/Page';
 import { ClassDetails } from '@/components/class/classDetails/ClassDetails';
+import { ClassViewToggler } from '@/components/class/classViewToggler/ClassViewToggler';
 
 type Props = {
   params: Promise<{ classId: string }>;
@@ -32,6 +33,7 @@ export default function ClassPage({ params }: Props) {
     currentClass && (
       <Page>
         <ClassDetails item={currentClass} />
+        <ClassViewToggler item={currentClass} />
       </Page>
     )
   );
