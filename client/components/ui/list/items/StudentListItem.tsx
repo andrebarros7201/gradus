@@ -2,22 +2,13 @@ import classes from './listItem.module.scss';
 import { IStudentSimple } from '@/types/IStudentSimple';
 import { Button } from '../../button/Button';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
+import { UpdateStudentButton } from '@/components/admin/studentButton/UpdateStudentButton/UpdateStudentButton';
 
 type Props = {
   item: IStudentSimple;
 };
 
 export const StudentListItem = ({ item }: Props) => {
-  async function handleDelete(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  async function handleUpdate(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
   return (
     <div className={classes['item']}>
       <div className={classes['item__field']}>
@@ -30,8 +21,8 @@ export const StudentListItem = ({ item }: Props) => {
       </div>
       <div className={classes['item__buttons']}>
         <p className={classes['item__label']}>Actions</p>
-        <Button label={'Update'} variant="secondary" onClick={handleUpdate} />
-        <Button label={'Delete'} variant={'danger'} onClick={handleDelete} />
+        <UpdateStudentButton item={item} />
+        <Button label={'Delete'} variant={'danger'} />
         <ButtonLink label={'Go to'} href={`/student/${item.id}`} />
       </div>
     </div>
