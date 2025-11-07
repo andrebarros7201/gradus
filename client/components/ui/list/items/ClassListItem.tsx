@@ -1,7 +1,7 @@
-import { DeleteUserButton } from '@/components/admin/deleteUserButton/DeleteUserButton';
+import { DeleteUserButton } from '@/components/admin/userButton/deleteUserButton/DeleteUserButton';
 import classes from './listItem.module.scss';
 import { IClassSimple } from '@/types/IClassSimple';
-import { UpdateUserButton } from '@/components/admin/updateUserButton/UpdateUserButton';
+import { UpdateUserButton } from '@/components/admin/userButton/updateUserButton/UpdateUserButton';
 import { usePathname } from 'next/navigation';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
 
