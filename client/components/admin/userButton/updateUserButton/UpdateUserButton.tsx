@@ -1,5 +1,5 @@
 import classes from './updateUserForm.module.scss';
-import { Activity, FormEvent, useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button/Button';
 import { Modal } from '@/components/ui/modal/Modal';
 import { Form } from '@/components/ui/form/Form';
@@ -7,21 +7,25 @@ import { Input } from '@/components/ui/input/Input';
 import { IClassSimple } from '@/types/IClassSimple';
 import { SchoolYearSelect } from '@/components/ui/schoolYearSelect/SchoolYearSelect';
 import * as z from 'zod';
-import { useDispatch } from 'react-redux';
-import { RootDispatch } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootDispatch, RootState } from '@/redux/store';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { INotification } from '@/types/INotificationSlice';
 import { updateUser } from '@/redux/slices/userSlice';
 import { IsActiveSelect } from '@/components/ui/isActiveSelect/IsActiveSelect';
+import { IClassComplete } from '@/types/IClassComplete';
+import { useSelectedLayoutSegments } from 'next/navigation';
+import { Role } from '@/types/RoleEnum';
 
 type ClassProps = {
   type: 'class';
-  item: IClassSimple;
+  item: IClassSimple | IClassComplete;
 };
 
 type Props = ClassProps;
 
 export const UpdateUserButton = ({ item, type }: Props) => {
+  const { user } = useSelector((state: RootState) => state.user);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -100,7 +104,10 @@ export const UpdateUserButton = ({ item, type }: Props) => {
 
   return (
     <>
-      <Button label={'Update'} variant={'secondary'} onClick={() => setIsModalOpen(true)} />
+      {/* Only Admins can update*/}
+      {user?.role === Role.Admin && (
+        <Button label={'Update'} variant={'secondary'} onClick={() => setIsModalOpen(true)} />
+      )}
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)} title={'Update Class'}>
           <Form onSubmit={onSubmit}>
