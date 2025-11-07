@@ -3,6 +3,8 @@ import { IClassSimple } from '@/types/IClassSimple';
 import { ISubjectSimple } from '@/types/ISubjectSimple';
 import { ClassListItem } from './items/ClassListItem';
 import { SubjectListItem } from './items/SubjectListItem';
+import { IStudentSimple } from '@/types/IStudentSimple';
+import { StudentListItem } from './items/StudentListItem';
 
 type Class = {
   type: 'class';
@@ -14,7 +16,12 @@ type Subject = {
   list: ISubjectSimple[];
 };
 
-type Props = Class | Subject;
+type Student = {
+  type: 'student';
+  list: IStudentSimple[];
+};
+
+type Props = Class | Subject | Student;
 
 export const List = ({ type, list }: Props) => {
   // Get headers according to list type
@@ -23,6 +30,8 @@ export const List = ({ type, list }: Props) => {
       ? ['Id', 'Name', 'School Year', 'Is Active', 'Actions']
       : type === 'subject'
       ? ['Id', 'Name', 'Professor', 'Actions']
+      : type === 'student'
+      ? ['Id', 'Name', 'Actions']
       : [];
 
   return (
@@ -36,6 +45,7 @@ export const List = ({ type, list }: Props) => {
       </div>
       {type === 'class' && list.map((item) => <ClassListItem key={item.id} item={item} />)}
       {type === 'subject' && list.map((item) => <SubjectListItem key={item.id} item={item} />)}
+      {type === 'student' && list.map((item) => <StudentListItem key={item.id} item={item} />)}
     </div>
   );
 };
