@@ -53,6 +53,7 @@ public class AuthService : IAuthService {
                     Id = user.Class!.Id,
                     UserId = user.Class.User.Id,
                     Name = user.Class.User.Name,
+                    Username = user.Class.User.Username,
                     SchoolYear = user.Class.SchoolYear,
                     IsActive = user.Class.IsActive,
                     Students = user.Class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
