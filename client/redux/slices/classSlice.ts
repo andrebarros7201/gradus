@@ -1,4 +1,3 @@
-import { IClassComplete } from '@/types/IClassComplete';
 import { IClassSimple } from '@/types/IClassSimple';
 import { IClassSlice } from '@/types/IClassSlice';
 import { INotification } from '@/types/INotificationSlice';
@@ -29,29 +28,6 @@ export const fetchAllClasses = createAsyncThunk<
       notification: {
         type: 'error',
         message: error.response?.data.message ?? 'Failed to load classes',
-      },
-    });
-  }
-});
-
-// Fetch current class
-export const fetchCurrentClass = createAsyncThunk<
-  { class: IClassComplete },
-  { classId: number },
-  { rejectValue: { notification: INotification } }
->('class/fetchCurrentClass', async ({ classId }, { rejectWithValue }) => {
-  try {
-    const response = await axios.get(`${process.env.SERVER_URL}/api/class/${classId}`, {
-      withCredentials: true,
-    });
-    const { data } = response.data;
-    return { class: data };
-  } catch (e) {
-    const error = e as AxiosError<{ message: string }>;
-    return rejectWithValue({
-      notification: {
-        type: 'error',
-        message: error.response?.data.message ?? 'Failed to load class',
       },
     });
   }
@@ -90,9 +66,6 @@ const classSlice = createSlice({
 
       state.classes.splice(indexClass, 1);
     },
-    clearCurrentClass : (state) => {
-      state.currentClass = null
-    }
   },
   extraReducers: (builder) =>
     builder
@@ -107,20 +80,8 @@ const classSlice = createSlice({
       .addCase(fetchAllClasses.rejected, (state) => {
         state.isLoading = false;
         state.classes = [];
-      })
-      // Fetch Class
-      .addCase(fetchCurrentClass.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchCurrentClass.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.currentClass = action.payload.class;
-      })
-      .addCase(fetchCurrentClass.rejected, (state) => {
-        state.isLoading = false;
-        state.currentClass = null;
       }),
 });
 
 export const classReducer = classSlice.reducer;
-export const { updateClass, removeClass, clearCurrentClass } = classSlice.actions;
+export const { updateClass, removeClass } = classSlice.actions;
