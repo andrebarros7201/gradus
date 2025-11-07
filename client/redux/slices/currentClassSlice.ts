@@ -33,6 +33,7 @@ export const fetchCurrentClass = createAsyncThunk<
   }
 });
 
+// Update Student
 export const updateStudent = createAsyncThunk<
   { student: IStudentComplete; notification: INotification },
   { studentId: number; studentName: string },
@@ -55,6 +56,31 @@ export const updateStudent = createAsyncThunk<
       notification: {
         type: 'error',
         message: error.response?.data.message || 'Failed to update student',
+      },
+    });
+  }
+});
+
+// Delete Student
+export const deleteStudent = createAsyncThunk<
+  { studentId: number; notification: INotification },
+  { studentId: number },
+  { rejectValue: { notification: INotification } }
+>('currentClass/deleteStudent', async ({ studentId }, { rejectWithValue }) => {
+  try {
+    await axios.delete(`${process.env.SERVER_URL}/api/student/${studentId}`, {
+      withCredentials: true,
+    });
+    return {
+      notification: { type: 'success', message: 'Student deleted successfully' },
+      studentId,
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to delete student',
       },
     });
   }
@@ -90,12 +116,28 @@ const currentClassSlice = createSlice({
         const { student } = action.payload;
         state.isLoading = false;
         const studentIndex = state.currentClass!.students.findIndex((s) => s.id === student.id);
-        console.log(student);
+
         if (studentIndex === -1) return; // Student not found
 
         state.currentClass!.students[studentIndex].name = student.name;
       })
       .addCase(updateStudent.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Delete Student
+      .addCase(deleteStudent.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteStudent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { studentId } = action.payload;
+        const studentIndex = state.currentClass!.students.findIndex((s) => s.id === studentId);
+
+        if (studentIndex === -1) return; // Student not found
+
+        state.currentClass!.students.splice(studentIndex, 1);
+      })
+      .addCase(deleteStudent.rejected, (state) => {
         state.isLoading = false;
       }),
 });
