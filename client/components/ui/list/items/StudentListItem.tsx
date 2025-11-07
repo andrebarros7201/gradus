@@ -1,8 +1,8 @@
 import classes from './listItem.module.scss';
 import { IStudentSimple } from '@/types/IStudentSimple';
-import { Button } from '../../button/Button';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
 import { UpdateStudentButton } from '@/components/admin/studentButton/updateStudentButton/UpdateStudentButton';
+import { DeleteStudentButton } from '@/components/admin/studentButton/deleteStudentButton/DeleteStudentButton';
 
 type Props = {
   item: IStudentSimple;
@@ -22,7 +22,7 @@ export const StudentListItem = ({ item }: Props) => {
       <div className={classes['item__buttons']}>
         <p className={classes['item__label']}>Actions</p>
         <UpdateStudentButton item={item} />
-        <Button label={'Delete'} variant={'danger'} />
+        <DeleteStudentButton id={item.id} />
         <ButtonLink label={'Go to'} href={`/student/${item.id}`} />
       </div>
     </div>
