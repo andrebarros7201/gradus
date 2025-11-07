@@ -2,7 +2,7 @@ import classes from './listItem.module.scss';
 import { IStudentSimple } from '@/types/IStudentSimple';
 import { Button } from '../../button/Button';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
-import { UpdateStudentButton } from '@/components/admin/studentButton/UpdateStudentButton/UpdateStudentButton';
+import { UpdateStudentButton } from '@/components/admin/studentButton/updateStudentButton/UpdateStudentButton';
 
 type Props = {
   item: IStudentSimple;
