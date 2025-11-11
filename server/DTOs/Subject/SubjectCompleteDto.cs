@@ -9,5 +9,5 @@ public class SubjectCompleteDto {
     public string Professor { get; set; } = string.Empty;
     public int ClassId { get; set; }
     public string Class { get; set; } = string.Empty;
-    public List<GradeSimpleDto> Grades { get; set; } = [];
+    public List<EvaluationDto> Evaluations { get; set; } = [];
 }

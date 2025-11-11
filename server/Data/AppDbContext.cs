@@ -11,6 +11,7 @@ public class AppDbContext : DbContext {
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Professor> Professors { get; set; }
     public DbSet<Student> Students { get; set; }
+    public DbSet<Evaluation> Evaluations { get; set; }
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Admin> Admins { get; set; }
 
@@ -65,8 +66,15 @@ public class AppDbContext : DbContext {
 
         // Grade - Subject
         modelBuilder.Entity<Grade>()
-            .HasOne(g => g.Subject)
+            .HasOne(g => g.Evaluation)
             .WithMany(s => s.Grades)
+            .HasForeignKey(g => g.EvaluationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Evaluation - Subject
+        modelBuilder.Entity<Evaluation>()
+            .HasOne(g => g.Subject)
+            .WithMany(s => s.Evaluations)
             .HasForeignKey(g => g.SubjectId)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -148,10 +156,21 @@ public class AppDbContext : DbContext {
                 ClassId = 1
             });
 
+        // Evaluation
+        modelBuilder.Entity<Evaluation>().HasData(
+            new Evaluation {
+                Id = 1,
+                Name = "Exam",
+                Date = new DateOnly(2025, 02, 02),
+                EvaluationType = EvaluationType.Exam,
+                SubjectId = 1
+            }
+        );
+
         // Grades
         modelBuilder.Entity<Grade>().HasData(
-            new Grade { Id = 1, Value = 10, SubjectId = 1, StudentId = 1 },
-            new Grade { Id = 2, Value = 8, SubjectId = 1, StudentId = 2 }
+            new Grade { Id = 1, Value = 10, EvaluationId = 1, StudentId = 1 },
+            new Grade { Id = 2, Value = 8, EvaluationId = 1, StudentId = 2 }
         );
 
     }

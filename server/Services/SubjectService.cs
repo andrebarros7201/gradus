@@ -38,12 +38,19 @@ public class SubjectService : ISubjectService {
                 ProfessorId = subject.ProfessorId,
                 ClassId = subject.ClassId,
                 Class = subject.Class.User.Name,
-                Grades = subject.Grades.Select(g => new GradeSimpleDto {
-                    Id = g.Id,
-                    StudentId = g.StudentId,
-                    StudentName = g.Student.Name,
-                    Value = g.Value
-                }).ToList()
+                Evaluations = subject.Evaluations.Select(e => new EvaluationDto {
+                    Id = e.Id,
+                    Date = e.Date,
+                    Name = e.Name,
+                    SubjectId = e.SubjectId,
+                    Grades = e.Grades.Select(g => new GradeSimpleDto {
+                        Id = g.Id,
+                        EvaluationName = g.Evaluation.Name,
+                        StudentId = g.StudentId,
+                        StudentName = g.Student.Name,
+                        Value = g.Value
+                    }).ToList()
+                }).ToList(),
             });
         }
 
@@ -61,12 +68,19 @@ public class SubjectService : ISubjectService {
                 ProfessorId = subject.ProfessorId,
                 ClassId = subject.ClassId,
                 Class = subject.Class.User.Name,
-                Grades = subject.Grades.Select(g => new GradeSimpleDto {
-                    Id = g.Id,
-                    StudentId = g.StudentId,
-                    StudentName = g.Student.Name,
-                    Value = g.Value
-                }).ToList()
+                Evaluations = subject.Evaluations.Select(e => new EvaluationDto {
+                    Id = e.Id,
+                    Date = e.Date,
+                    Name = e.Name,
+                    SubjectId = e.SubjectId,
+                    Grades = e.Grades.Select(g => new GradeSimpleDto {
+                        Id = g.Id,
+                        EvaluationName = g.Evaluation.Name,
+                        StudentId = g.StudentId,
+                        StudentName = g.Student.Name,
+                        Value = g.Value
+                    }).ToList()
+                }).ToList(),
             });
         }
 
@@ -84,12 +98,19 @@ public class SubjectService : ISubjectService {
                 ProfessorId = subject.ProfessorId,
                 ClassId = subject.ClassId,
                 Class = subject.Class.User.Name,
-                Grades = subject.Grades.Select(g => new GradeSimpleDto {
-                    Id = g.Id,
-                    StudentId = g.StudentId,
-                    StudentName = g.Student.Name,
-                    Value = g.Value
-                }).ToList()
+                Evaluations = subject.Evaluations.Select(e => new EvaluationDto {
+                    Id = e.Id,
+                    Date = e.Date,
+                    Name = e.Name,
+                    SubjectId = e.SubjectId,
+                    Grades = e.Grades.Select(g => new GradeSimpleDto {
+                        Id = g.Id,
+                        EvaluationName = g.Evaluation.Name,
+                        StudentId = g.StudentId,
+                        StudentName = g.Student.Name,
+                        Value = g.Value
+                    }).ToList()
+                }).ToList(),
             });
         }
 

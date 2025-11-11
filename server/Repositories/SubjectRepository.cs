@@ -16,7 +16,7 @@ public class SubjectRepository : ISubjectRepository {
         return await _db.Subjects
             .Include(s => s.Professor).ThenInclude(p => p.User)
             .Include(s => s.Class).ThenInclude(c => c.User)
-            .Include(s => s.Grades).ThenInclude(g => g.Student)
+            .Include(s => s.Evaluations).ThenInclude(g => g.Grades).ThenInclude(g => g.Student)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
@@ -29,7 +29,7 @@ public class SubjectRepository : ISubjectRepository {
         Subject? subjectEntity = await _db.Subjects
             .Include(s => s.Professor).ThenInclude(p => p.User)
             .Include(s => s.Class).ThenInclude(c => c.User)
-            .Include(s => s.Grades).ThenInclude(g => g.Student)
+            .Include(s => s.Evaluations).ThenInclude(s => s.Grades).ThenInclude(g => g.Student)
             .FirstOrDefaultAsync(s => s.Id == subject.Id);
 
         return subjectEntity!;

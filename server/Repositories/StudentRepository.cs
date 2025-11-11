@@ -15,7 +15,7 @@ public class StudentRepository : IStudentRepository {
     public async Task<Student?> GetStudentById(int id) {
         return await _db.Students
             .Include(s => s.Classes).ThenInclude(c => c.User)
-            .Include(s => s.Grades).ThenInclude(g => g.Subject)
+            .Include(s => s.Grades).ThenInclude(g => g.Evaluation).ThenInclude(e => e.Subject)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
@@ -27,7 +27,7 @@ public class StudentRepository : IStudentRepository {
 
         return (await _db.Students
             .Include(s => s.Classes).ThenInclude(c => c.User)
-            .Include(s => s.Grades).ThenInclude(g => g.Subject)
+            .Include(s => s.Grades).ThenInclude(g => g.Evaluation).ThenInclude(g => g.Subject)
             .FirstOrDefaultAsync(s => s.Id == student.Id))!;
     }
 

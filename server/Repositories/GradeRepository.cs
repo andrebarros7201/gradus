@@ -13,7 +13,7 @@ public class GradeRepository : IGradeRepository {
     }
 
     public async Task<Grade?> GetGradeById(int id) {
-        return await _db.Grades.Include(g => g.Student).Include(g => g.Subject).FirstOrDefaultAsync(g => g.Id == id);
+        return await _db.Grades.Include(g => g.Student).Include(g => g.Evaluation).ThenInclude(g => g.Subject).FirstOrDefaultAsync(g => g.Id == id);
     }
 
     public async Task<Grade> CreateGrade(Grade grade) {
@@ -21,7 +21,7 @@ public class GradeRepository : IGradeRepository {
         await _db.SaveChangesAsync();
 
         // Load the subject navigation property
-        await _db.Entry(grade).Reference(g => g.Subject).LoadAsync();
+        await _db.Entry(grade).Reference(g => g.Evaluation).LoadAsync();
         await _db.Entry(grade).Reference(g => g.Student).LoadAsync();
 
         return grade;

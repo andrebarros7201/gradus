@@ -7,7 +7,7 @@ public class Subject {
     public Class Class { get; set; }
     public int ClassId { get; set; }
 
-    public List<Grade> Grades { get; set; } = [];
+    public List<Evaluation> Evaluations { get; set; } = [];
 
     public Professor Professor { get; set; }
     public int ProfessorId { get; set; }

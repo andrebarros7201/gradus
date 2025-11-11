@@ -29,7 +29,7 @@ public class GradeService : IGradeService {
         var newGrade = new Grade {
             Value = dto.Value,
             StudentId = dto.StudentId,
-            SubjectId = dto.SubjectId
+            EvaluationId = dto.EvaluationId
         };
 
         Grade createdGrade = await _gradeRepository.CreateGrade(newGrade);
@@ -39,7 +39,8 @@ public class GradeService : IGradeService {
             Value = createdGrade.Value,
             StudentId = createdGrade.StudentId,
             StudentName = createdGrade.Student.Name,
-            SubjectName = createdGrade.Subject.Name
+            EvaluationName = createdGrade.Evaluation.Name,
+            SubjectName = createdGrade.Evaluation.Subject.Name
         });
     }
 
@@ -69,7 +70,8 @@ public class GradeService : IGradeService {
             Value = grade.Value,
             StudentId = grade.StudentId,
             StudentName = grade.Student.Name,
-            SubjectName = grade.Subject.Name
+            EvaluationName = grade.Evaluation.Name,
+            SubjectName = grade.Evaluation.Subject.Name
         });
     }
 
