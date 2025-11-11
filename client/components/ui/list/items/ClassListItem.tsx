@@ -1,15 +1,21 @@
+'use client';
+
 import { DeleteUserButton } from '@/components/admin/userButton/deleteUserButton/DeleteUserButton';
 import classes from './listItem.module.scss';
 import { IClassSimple } from '@/types/IClassSimple';
 import { UpdateUserButton } from '@/components/admin/userButton/updateUserButton/UpdateUserButton';
 import { usePathname } from 'next/navigation';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
+import { Role } from '@/types/RoleEnum';
 
 type Props = {
   item: IClassSimple;
 };
 
 export const ClassListItem = ({ item }: Props) => {
+  const { user } = useSelector((state: RootState) => state.user);
   const pathname = usePathname();
 
   return (
@@ -33,8 +39,13 @@ export const ClassListItem = ({ item }: Props) => {
       <div className={classes['item__buttons']}>
         <p className={classes['item__label']}>Actions</p>
         <ButtonLink label={'Go to'} href={`${pathname}/${item.id}`} />
-        <UpdateUserButton item={item} type={'class'} />
-        <DeleteUserButton item={item} type={'class'} />
+        {/*Only render Update and Delete buttons if user is admin*/}
+        {user?.role === Role.Admin && (
+          <>
+            <UpdateUserButton item={item} type={'class'} />
+            <DeleteUserButton item={item} type={'class'} />
+          </>
+        )}
       </div>
     </div>
   );
