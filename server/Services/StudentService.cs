@@ -40,7 +40,6 @@ public class StudentService : IStudentService {
             Grades = student.Grades.Select(g => new GradeSimpleDto {
                 Id = g.Id,
                 EvaluationName = g.Evaluation.Name,
-                SubjectName = g.Evaluation.Subject.Name,
                 Value = g.Value
             }).ToList()
         });
@@ -89,7 +88,6 @@ public class StudentService : IStudentService {
             Grades = createdStudent.Grades.Select(g => new GradeSimpleDto {
                 Id = g.Id,
                 EvaluationName = g.Evaluation.Name,
-                SubjectName = g.Evaluation.Subject.Name,
                 Value = g.Value
             }).ToList()
         });
@@ -153,7 +151,6 @@ public class StudentService : IStudentService {
             Grades = targetStudent.Grades.Select(g => new GradeSimpleDto {
                 Id = g.Id,
                 EvaluationName = g.Evaluation.Name,
-                SubjectName = g.Evaluation.Subject.Name,
                 Value = g.Value
             }).ToList()
         });
