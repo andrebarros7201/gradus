@@ -23,6 +23,15 @@ public class EvaluationController : ControllerBase {
     }
 
     [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> CreateEvaluation([FromBody] EvaluationCreateDto dto) {
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<EvaluationDto> result = await _evaluationService.CreateEvaluation(int.Parse(currentUserId), dto);
+
+        return ServiceResult<EvaluationDto>.ReturnStatus(result);
+    }
+    [Authorize]
     [HttpDelete("{evaluationId:int}")]
     public async Task<IActionResult> DeleteEvaluationsById([FromRoute] int evaluationId) {
         string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

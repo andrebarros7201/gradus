@@ -16,8 +16,51 @@ public class EvaluationService : IEvaluationService {
     }
 
 
-    public Task<ServiceResult<EvaluationDto>> CreateEvaluation(int currentUserId, EvaluationCreateDto dto) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<EvaluationDto>> CreateEvaluation(int currentUserId, EvaluationCreateDto dto) {
+        // Find current user 
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
+
+        // Return 404 if null
+        if (currentUser == null) {
+            return ServiceResult<EvaluationDto>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+        }
+
+        // Only the subject's professor and admin can create 
+        if (currentUser.Role == Role.Class) {
+            return ServiceResult<EvaluationDto>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+        }
+
+        var subject = await _subjectRepository.GetSubjectById(dto.SubjectId);
+
+        if (subject == null) {
+            return ServiceResult<EvaluationDto>.Error(ServiceResultStatus.NotFound, "Subject not found");
+        }
+
+        if (currentUser.Professor != null && currentUser.Professor.Id != subject.ProfessorId) {
+            return ServiceResult<EvaluationDto>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
+        }
+
+        Evaluation newEvaluation = new Evaluation {
+            Date = dto.Date,
+            Name = dto.Name,
+            SubjectId = dto.SubjectId,
+            EvaluationType = dto.EvaluationType
+        };
+
+        Evaluation createdEvaluation = await _evaluationRepository.CreateEvaluation(newEvaluation);
+
+        return ServiceResult<EvaluationDto>.Success(new EvaluationDto {
+            Id = createdEvaluation.Id,
+            Date = createdEvaluation.Date,
+            Name = createdEvaluation.Name,
+            SubjectId = createdEvaluation.SubjectId,
+            Grades = createdEvaluation.Grades.Select(g => new GradeSimpleDto {
+                Id = g.Id,
+                Value = g.Value,
+                StudentId = g.StudentId,
+                StudentName = g.Student.Name
+            }).ToList()
+        });
     }
 
     public async Task<ServiceResult<bool>> DeleteEvaluationById(int currentUserId, int evaluationId) {
@@ -34,12 +77,12 @@ public class EvaluationService : IEvaluationService {
 
         // Return 404 if null
         if (currentUser == null) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized1");
+            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
         }
 
         // Only the Evaluation's professor and admin can delete
         if (currentUser.Role == Role.Class) {
-            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized2");
+            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
         }
 
         bool result;
@@ -47,7 +90,7 @@ public class EvaluationService : IEvaluationService {
         if (currentUser.Role == Role.Professor && currentUser.Professor != null) {
             // Not subject's professor
             if (currentUser.Professor.Id != evaluation.Subject.ProfessorId) {
-                return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized3");
+                return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
             }
 
             result = await _evaluationRepository.DeleteEvaluation(evaluation);

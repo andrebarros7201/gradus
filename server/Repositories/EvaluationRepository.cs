@@ -8,8 +8,15 @@ public class EvaluationRepository : IEvaluationRepository {
     public EvaluationRepository(AppDbContext db) {
         _db = db;
     }
-    public Task<Evaluation> CreateEvaluation(Evaluation evaluation) {
-        throw new NotImplementedException();
+    public async Task<Evaluation> CreateEvaluation(Evaluation evaluation) {
+        await _db.Evaluations.AddAsync(evaluation);
+        await _db.SaveChangesAsync();
+
+        // Load the evaluation navigation property
+        await _db.Entry(evaluation).Collection(e => e.Grades).LoadAsync();
+        await _db.Entry(evaluation).Reference(e => e.Subject).LoadAsync();
+
+        return evaluation;
     }
 
     public async Task<bool> DeleteEvaluation(Evaluation evaluation) {
