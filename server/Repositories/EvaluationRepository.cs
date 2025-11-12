@@ -1,4 +1,5 @@
 
+using Microsoft.EntityFrameworkCore;
 using Server.Data;
 
 public class EvaluationRepository : IEvaluationRepository {
@@ -7,7 +8,7 @@ public class EvaluationRepository : IEvaluationRepository {
     public EvaluationRepository(AppDbContext db) {
         _db = db;
     }
-    public Task<EvaluationDto> CreateEvaluation(Evaluation evaluation) {
+    public Task<Evaluation> CreateEvaluation(Evaluation evaluation) {
         throw new NotImplementedException();
     }
 
@@ -15,15 +16,11 @@ public class EvaluationRepository : IEvaluationRepository {
         throw new NotImplementedException();
     }
 
-    public Task<List<EvaluationDto>> GetEvaluationByClassId(int classId) {
-        throw new NotImplementedException();
+    public async Task<Evaluation?> GetEvaluationById(int evaluationId) {
+        return await _db.Evaluations.Include(e => e.Grades).FirstOrDefaultAsync(e => e.Id == evaluationId);
     }
 
-    public Task<EvaluationDto?> GetEvaluationById(int evaluationId) {
-        throw new NotImplementedException();
-    }
-
-    public Task<EvaluationDto> UpdateEvaluation(Evaluation evaluation) {
+    public Task<Evaluation> UpdateEvaluation(Evaluation evaluation) {
         throw new NotImplementedException();
     }
 }
