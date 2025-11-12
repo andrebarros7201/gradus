@@ -41,6 +41,9 @@ public class Program {
         builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
         builder.Services.AddScoped<ISubjectService, SubjectService>();
 
+        builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+        builder.Services.AddScoped<IEvaluationRepository, EvaluationRepository>();
+
         builder.Services.AddScoped<TokenService>();
 
         // JWT Authentication
