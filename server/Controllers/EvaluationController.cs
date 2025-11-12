@@ -21,4 +21,14 @@ public class EvaluationController : ControllerBase {
 
         return ServiceResult<EvaluationDto>.ReturnStatus(result);
     }
+
+    [Authorize]
+    [HttpDelete("{evaluationId:int}")]
+    public async Task<IActionResult> DeleteEvaluationsById([FromRoute] int evaluationId) {
+        string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        ServiceResult<bool> result = await _evaluationService.DeleteEvaluationById(int.Parse(currentUserId), evaluationId);
+
+        return ServiceResult<bool>.ReturnStatus(result);
+    }
 }

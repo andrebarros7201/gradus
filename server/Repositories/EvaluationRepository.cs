@@ -12,12 +12,14 @@ public class EvaluationRepository : IEvaluationRepository {
         throw new NotImplementedException();
     }
 
-    public Task<bool> DeleteEvaluation(int evaluationId) {
-        throw new NotImplementedException();
+    public async Task<bool> DeleteEvaluation(Evaluation evaluation) {
+        _db.Evaluations.Remove(evaluation);
+        await _db.SaveChangesAsync();
+        return true;
     }
 
     public async Task<Evaluation?> GetEvaluationById(int evaluationId) {
-        return await _db.Evaluations.Include(e => e.Grades).FirstOrDefaultAsync(e => e.Id == evaluationId);
+        return await _db.Evaluations.Include(e => e.Grades).ThenInclude(e => e.Student).Include(e => e.Subject).FirstOrDefaultAsync(e => e.Id == evaluationId);
     }
 
     public Task<Evaluation> UpdateEvaluation(Evaluation evaluation) {

@@ -20,8 +20,45 @@ public class EvaluationService : IEvaluationService {
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResult<EvaluationDto>> DeleteEvaluationById(int currentUserId, int evaluationId) {
-        throw new NotImplementedException();
+    public async Task<ServiceResult<bool>> DeleteEvaluationById(int currentUserId, int evaluationId) {
+        // Get evaluation
+        Evaluation? evaluation = await _evaluationRepository.GetEvaluationById(evaluationId);
+
+        // Return 404 if null
+        if (evaluation == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.NotFound, "Evaluation Not Found");
+        }
+
+        // Find current user 
+        User? currentUser = await _userRepository.GetUserById(currentUserId);
+
+        // Return 404 if null
+        if (currentUser == null) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized1");
+        }
+
+        // Only the Evaluation's professor and admin can delete
+        if (currentUser.Role == Role.Class) {
+            return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized2");
+        }
+
+        bool result;
+
+        if (currentUser.Role == Role.Professor && currentUser.Professor != null) {
+            // Not subject's professor
+            if (currentUser.Professor.Id != evaluation.Subject.ProfessorId) {
+                return ServiceResult<bool>.Error(ServiceResultStatus.Unauthorized, "Unauthorized3");
+            }
+
+            result = await _evaluationRepository.DeleteEvaluation(evaluation);
+
+            return ServiceResult<bool>.Success(result);
+        }
+
+        result = await _evaluationRepository.DeleteEvaluation(evaluation);
+
+        return ServiceResult<bool>.Success(result);
+
     }
 
     public async Task<ServiceResult<EvaluationDto>> GetEvaluationById(int currentUserId, int evaluationId) {
