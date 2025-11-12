@@ -41,18 +41,10 @@ public class EvaluationService : IEvaluationService {
             return ServiceResult<EvaluationDto>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
         }
 
-        // Find related subject
-        Subject? subject = await _subjectRepository.GetSubjectById(evaluation.SubjectId);
-
-        // Error if subject not found
-        if (subject == null) {
-            return ServiceResult<EvaluationDto>.Error(ServiceResultStatus.NotFound, "There was a problem");
-        }
-
         // Check current user role
         if (currentUser.Role == Role.Class || currentUser.Role == Role.Professor) {
             // Only Admins, Subject's Professor or Subject's Class can access the evaluation
-            if ((currentUser.Class!.Id != subject.Class.Id) || (currentUser.Professor!.Id != subject.ProfessorId)) {
+            if ((currentUser.Class!.Id != evaluation.Subject.ClassId) || (currentUser.Professor!.Id != evaluation.Subject.ProfessorId)) {
                 return ServiceResult<EvaluationDto>.Error(ServiceResultStatus.Unauthorized, "Unauthorized");
             }
         }
