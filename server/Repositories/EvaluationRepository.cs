@@ -29,7 +29,9 @@ public class EvaluationRepository : IEvaluationRepository {
         return await _db.Evaluations.Include(e => e.Grades).ThenInclude(e => e.Student).Include(e => e.Subject).FirstOrDefaultAsync(e => e.Id == evaluationId);
     }
 
-    public Task<Evaluation> UpdateEvaluation(Evaluation evaluation) {
-        throw new NotImplementedException();
+    public async Task<Evaluation> UpdateEvaluation(Evaluation evaluation) {
+        _db.Evaluations.Update(evaluation);
+        await _db.SaveChangesAsync();
+        return evaluation;
     }
 }
