@@ -6,9 +6,6 @@ public class GradeSimpleDto {
     public int Id { get; set; }
     public int Value { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string SubjectName { get; set; }
-
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int StudentId { get; set; }
 
