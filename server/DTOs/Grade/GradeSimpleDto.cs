@@ -18,4 +18,9 @@ public class GradeSimpleDto {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string EvaluationName { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public int SubjectId { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string SubjectName { get; set; }
 }

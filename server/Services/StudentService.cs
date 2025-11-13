@@ -41,6 +41,8 @@ public class StudentService : IStudentService {
                 Id = g.Id,
                 EvaluationName = g.Evaluation.Name,
                 EvaluationId = g.Evaluation.Id,
+                SubjectName = g.Evaluation.Subject.Name,
+                SubjectId = g.Evaluation.Subject.Id,
                 Value = g.Value
             }).ToList()
         });
@@ -90,6 +92,8 @@ public class StudentService : IStudentService {
                 Id = g.Id,
                 EvaluationName = g.Evaluation.Name,
                 EvaluationId = g.Evaluation.Id,
+                SubjectName = g.Evaluation.Subject.Name,
+                SubjectId = g.Evaluation.Subject.Id,
                 Value = g.Value
             }).ToList()
         });
@@ -154,6 +158,8 @@ public class StudentService : IStudentService {
                 Id = g.Id,
                 EvaluationName = g.Evaluation.Name,
                 EvaluationId = g.Evaluation.Id,
+                SubjectName = g.Evaluation.Subject.Name,
+                SubjectId = g.Evaluation.Subject.Id,
                 Value = g.Value
             }).ToList()
         });
