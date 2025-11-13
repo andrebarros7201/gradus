@@ -1,11 +1,11 @@
 import { IClassComplete } from '@/types/IClassComplete';
-import { ICurrentClass } from '@/types/ICurrentClass';
+import { ICurrentClassSlice } from '@/types/ICurrentClassSlice';
 import { INotification } from '@/types/INotificationSlice';
 import { IStudentComplete } from '@/types/IStudentComplete';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
-const initialState: ICurrentClass = {
+const initialState: ICurrentClassSlice = {
   currentClass: null,
   isLoading: false,
 };
