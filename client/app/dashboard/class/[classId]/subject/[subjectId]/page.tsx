@@ -1,16 +1,19 @@
 'use client';
 
+import { Page } from '@/components/page/Page';
+import { SubjectDetails } from '@/components/subject/subjectDetails/SubjectDetails';
 import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/currentSubject';
 import { setNotification } from '@/redux/slices/notificationSlice';
-import { RootDispatch } from '@/redux/store';
+import { RootDispatch, RootState } from '@/redux/store';
 import { INotification } from '@/types/INotificationSlice';
 import { use, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
   params: Promise<{ subjectId: string }>;
 };
 export default function SubjectPage({ params }: Props) {
+  const { currentSubject, isLoading } = useSelector((state: RootState) => state.currentSubject);
   const { subjectId } = use(params);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -27,5 +30,11 @@ export default function SubjectPage({ params }: Props) {
     };
   }, [dispatch, subjectId]);
 
-  return <h2>{subjectId}</h2>;
+  if (!isLoading && currentSubject) {
+    return (
+      <Page>
+        <SubjectDetails item={currentSubject} />
+      </Page>
+    );
+  }
 }
