@@ -40,6 +40,7 @@ public class GradeService : IGradeService {
             StudentId = createdGrade.StudentId,
             StudentName = createdGrade.Student.Name,
             EvaluationName = createdGrade.Evaluation.Name,
+            EvaluationId = createdGrade.Evaluation.Id
         });
     }
 
@@ -70,6 +71,7 @@ public class GradeService : IGradeService {
             StudentId = grade.StudentId,
             StudentName = grade.Student.Name,
             EvaluationName = grade.Evaluation.Name,
+            EvaluationId = grade.Evaluation.Id
         });
     }
 
