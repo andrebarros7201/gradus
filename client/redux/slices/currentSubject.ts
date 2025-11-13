@@ -9,9 +9,13 @@ const initialState: ICurrentSubjectSlice = {
 const currentSubjectSlice = createSlice({
   name: 'currentSubject',
   initialState,
-  reducers: {},
+  reducers: {
+    clearCurrentSubject: (state) => {
+      state.currentSubject = null;
+    },
+  },
   extraReducers: (builder) => builder,
 });
 
 export const currentSubjectReducer = currentSubjectSlice.reducer;
-export const {} = currentSubjectSlice.actions;
+export const { clearCurrentSubject } = currentSubjectSlice.actions;
