@@ -1,6 +1,7 @@
+import { ICurrentSubjectSlice } from '@/types/ICurrentSubjectSlice';
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+const initialState: ICurrentSubjectSlice = {
   currentSubject: null,
   isLoading: false,
 };
