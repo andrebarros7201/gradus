@@ -3,13 +3,15 @@ import { userReducer } from './slices/userSlice';
 import { notificationReducer } from './slices/notificationSlice';
 import { classReducer } from './slices/classSlice';
 import { currentClassReducer } from './slices/currentClassSlice';
+import { currentSubjectReducer } from './slices/currentSubject';
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     notification: notificationReducer,
     class: classReducer,
-    currentClass: currentClassReducer
+    currentClass: currentClassReducer,
+    currentSubject: currentSubjectReducer,
   },
 });
 
