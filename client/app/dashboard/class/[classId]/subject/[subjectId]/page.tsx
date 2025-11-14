@@ -2,7 +2,7 @@
 
 import { Page } from '@/components/page/Page';
 import { SubjectDetails } from '@/components/subject/subjectDetails/SubjectDetails';
-import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/currentSubject';
+import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { INotification } from '@/types/INotificationSlice';

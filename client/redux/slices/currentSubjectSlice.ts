@@ -31,6 +31,37 @@ export const fetchCurrentSubject = createAsyncThunk<
   }
 });
 
+export const updateCurrentSubject = createAsyncThunk<
+  { updatedSubject: ISubjectComplete; notification: INotification },
+  { subjectId: number; name: string; professorId: number },
+  { rejectValue: { notification: INotification } }
+>(
+  'currentSubject/updateCurrentSubject',
+  async ({ subjectId, name, professorId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${process.env.SERVER_URL}/api/subject/${subjectId}`,
+        { name, professorId },
+        {
+          withCredentials: true,
+        },
+      );
+      const { data } = response.data;
+      return {
+        updatedSubject: data,
+        notification: { type: 'success', message: 'Subject updated successfully' },
+      };
+    } catch (e) {
+      const error = e as AxiosError<{ message: string }>;
+      return rejectWithValue({
+        notification: {
+          type: 'error',
+          message: error.response?.data.message || 'Failed to update subject',
+        },
+      });
+    }
+  },
+);
 const currentSubjectSlice = createSlice({
   name: 'currentSubject',
   initialState,
@@ -41,6 +72,7 @@ const currentSubjectSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
+      // Fetch Current Subject
       .addCase(fetchCurrentSubject.pending, (state) => {
         state.isLoading = true;
       })
@@ -49,6 +81,18 @@ const currentSubjectSlice = createSlice({
         state.currentSubject = action.payload.currentSubject;
       })
       .addCase(fetchCurrentSubject.rejected, (state) => {
+        state.isLoading = false;
+        state.currentSubject = null;
+      })
+      // Update Current Subject
+      .addCase(updateCurrentSubject.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateCurrentSubject.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentSubject = action.payload.updatedSubject;
+      })
+      .addCase(updateCurrentSubject.rejected, (state) => {
         state.isLoading = false;
         state.currentSubject = null;
       }),
