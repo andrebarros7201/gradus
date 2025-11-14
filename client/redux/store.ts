@@ -4,6 +4,7 @@ import { notificationReducer } from './slices/notificationSlice';
 import { classReducer } from './slices/classSlice';
 import { currentClassReducer } from './slices/currentClassSlice';
 import { currentSubjectReducer } from './slices/currentSubject';
+import { professorReducer } from './slices/professorSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     class: classReducer,
     currentClass: currentClassReducer,
     currentSubject: currentSubjectReducer,
+    professorSlice : professorReducer
   },
 });
 
