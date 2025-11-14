@@ -18,7 +18,7 @@ interface IUserClass extends IBaseUser {
   class: IClassSimple;
 }
 
-interface IUserProfessor extends IBaseUser {
+export interface IUserProfessor extends IBaseUser {
   professor: IProfessor;
 }
 
