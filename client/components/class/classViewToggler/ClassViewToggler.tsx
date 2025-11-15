@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { CreateSubjectButton } from '@/components/admin/subjectButton/createSubjectButton/CreateSubjectButton';
 import { Role } from '@/types/RoleEnum';
+import { CreateStudentButton } from '@/components/admin/studentButton/createStudentButton/CreateStudentButton';
 
 type Props = {
   item: IClassComplete;
@@ -23,13 +24,16 @@ export const ClassViewToggler = ({ item }: Props) => {
 
   return (
     <main className={classes.view}>
-      <div className={classes['view__button-group']}>
-        <div className={classes['view__type']}>
+      <div className={classes['view__buttons']}>
+        <div className={classes['view__button-group']}>
           {views.map((item, index) => (
             <Button label={item.label} key={item.label} onClick={() => setIndex(index)} />
           ))}
         </div>
-        {user?.role === Role.Admin && <CreateSubjectButton />}
+        <div className={classes['view__button-group']}>
+          {user?.role === Role.Admin && <CreateSubjectButton />}
+          {user?.role === Role.Admin && <CreateStudentButton />}
+        </div>
       </div>
       <div className={classes['view__component']}>{views[index].component}</div>
     </main>
