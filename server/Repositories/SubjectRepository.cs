@@ -38,8 +38,14 @@ public class SubjectRepository : ISubjectRepository {
     public async Task<Subject> UpdateSubject(Subject subject) {
         _db.Subjects.Update(subject);
         await _db.SaveChangesAsync();
-        await _db.Entry(subject).ReloadAsync();
-        return subject;
+
+        Subject? subjectEntity = await _db.Subjects
+            .Include(s => s.Professor).ThenInclude(p => p.User)
+            .Include(s => s.Class).ThenInclude(c => c.User)
+            .Include(s => s.Evaluations).ThenInclude(s => s.Grades).ThenInclude(g => g.Student)
+            .FirstOrDefaultAsync(s => s.Id == subject.Id);
+
+        return subjectEntity!;
     }
 
     public async Task<bool> DeleteSubject(Subject subject) {
