@@ -4,7 +4,7 @@ import classes from './modal.module.scss';
 type Props = {
   children: ReactNode | ReactNode[];
   onClose: () => void;
-  title: string;
+  title?: string;
 };
 
 export const Modal = ({ children, onClose, title }: Props) => {
