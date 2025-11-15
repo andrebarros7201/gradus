@@ -2,6 +2,7 @@ import { IClassComplete } from '@/types/IClassComplete';
 import { ICurrentClassSlice } from '@/types/ICurrentClassSlice';
 import { INotification } from '@/types/INotificationSlice';
 import { IStudentComplete } from '@/types/IStudentComplete';
+import { ISubjectSimple } from '@/types/ISubjectSimple';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
@@ -86,6 +87,34 @@ export const deleteStudent = createAsyncThunk<
   }
 });
 
+// Create Subject
+export const createSubject = createAsyncThunk<
+  { subject: ISubjectSimple; notification: INotification },
+  { name: string; professorId: number; classId: number },
+  { rejectValue: { notification: INotification } }
+>('currentClass/createSubject', async ({ name, professorId, classId }, { rejectWithValue }) => {
+  try {
+    const response = await axios.post(
+      `${process.env.SERVER_URL}/api/subject`,
+      { name, professorId, classId },
+      { withCredentials: true },
+    );
+    const { data } = response.data;
+    return {
+      notification: { type: 'success', message: 'Subject created successfully' },
+      subject: { id: data.id, name: data.name, professor: data.professor },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to create subject',
+      },
+    });
+  }
+});
+
 const currentClassSlice = createSlice({
   name: 'currentClass',
   initialState,
@@ -122,6 +151,18 @@ const currentClassSlice = createSlice({
         state.currentClass!.students[studentIndex].name = student.name;
       })
       .addCase(updateStudent.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Create Subject
+      .addCase(createSubject.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createSubject.fulfilled, (state, action) => {
+        const { subject } = action.payload;
+        state.isLoading = false;
+        state.currentClass?.subjects.push(subject);
+      })
+      .addCase(createSubject.rejected, (state) => {
         state.isLoading = false;
       })
       // Delete Student
