@@ -1,5 +1,4 @@
 import classes from './listItem.module.scss';
-import { Button } from '../../button/Button';
 import { ISubjectSimple } from '@/types/ISubjectSimple';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
 import { usePathname } from 'next/navigation';
@@ -27,8 +26,6 @@ export const SubjectListItem = ({ item }: Props) => {
       </div>
       <div className={classes['item__buttons']}>
         <p className={classes['item__label']}>Actions</p>
-        <Button label={'Update'} variant="secondary" />
-        <Button label={'Delete'} variant="danger" />
         <ButtonLink label={'Go to'} href={`${pathname}/subject/${item.id}`} />
       </div>
     </div>
