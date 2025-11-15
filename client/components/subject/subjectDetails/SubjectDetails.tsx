@@ -1,8 +1,8 @@
 import classes from './subjectDetails.module.scss';
 import { ISubjectComplete } from '@/types/ISubjectComplete';
 import { ButtonLink } from '@/components/ui/buttonLink/ButtonLink';
-import { DeleteSubjectButton } from '@/components/admin/studentButton/subjectButton/deleteSubjectButton/DeleteSubjectButton';
-import { UpdateSubjectButton } from '@/components/admin/studentButton/subjectButton/updateSubjectButton/UpdateSubjectButton';
+import { DeleteSubjectButton } from '@/components/admin/subjectButton/deleteSubjectButton/DeleteSubjectButton';
+import { UpdateSubjectButton } from '@/components/admin/subjectButton/updateSubjectButton/UpdateSubjectButton';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { Role } from '@/types/RoleEnum';
