@@ -203,9 +203,6 @@ const currentClassSlice = createSlice({
         state.isLoading = false;
       })
       // Delete Student
-      .addCase(deleteStudent.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(deleteStudent.fulfilled, (state, action) => {
         state.isLoading = false;
         const { studentId } = action.payload;
