@@ -1,6 +1,7 @@
 import classes from './subjectDetails.module.scss';
 import { ISubjectComplete } from '@/types/ISubjectComplete';
 import { ButtonLink } from '@/components/ui/buttonLink/ButtonLink';
+import { DeleteSubjectButton } from '@/components/admin/studentButton/subjectButton/deleteSubjectButton/DeleteSubjectButton';
 import { UpdateSubjectButton } from '@/components/admin/studentButton/subjectButton/updateSubjectButton/UpdateSubjectButton';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
@@ -11,12 +12,13 @@ type Props = {
 };
 
 export const SubjectDetails = ({ item }: Props) => {
-  const {user} = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user);
   return (
     <main className={classes['subjectDetails']}>
       <div className={classes['subjectDetails__button']}>
         <ButtonLink label={'Go Back'} href={`/dashboard/class/${item.classId}`} />
         {user?.role === Role.Admin && <UpdateSubjectButton item={item} />}
+        {user?.role === Role.Admin && <DeleteSubjectButton item={item} />}
       </div>
       <div className={classes['subjectDetails__field']}>
         <p className={classes['subjectDetails__label']}>Name</p>

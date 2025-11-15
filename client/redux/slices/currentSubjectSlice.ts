@@ -62,6 +62,30 @@ export const updateCurrentSubject = createAsyncThunk<
     }
   },
 );
+
+export const deleteCurrentSubject = createAsyncThunk<
+  { notification: INotification },
+  { subjectId: number },
+  { rejectValue: { notification: INotification } }
+>('currentSubject/deleteCurrentSubject', async ({ subjectId }, { rejectWithValue }) => {
+  try {
+    await axios.delete(`${process.env.SERVER_URL}/api/subject/${subjectId}`, {
+      withCredentials: true,
+    });
+    return {
+      notification: { type: 'success', message: 'Subject deleted successfully' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to delete subject',
+      },
+    });
+  }
+});
+
 const currentSubjectSlice = createSlice({
   name: 'currentSubject',
   initialState,
@@ -95,6 +119,17 @@ const currentSubjectSlice = createSlice({
       .addCase(updateCurrentSubject.rejected, (state) => {
         state.isLoading = false;
         state.currentSubject = null;
+      })
+      // Delete Current Subject
+      .addCase(deleteCurrentSubject.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteCurrentSubject.fulfilled, (state) => {
+        state.isLoading = false;
+        state.currentSubject = null;
+      })
+      .addCase(deleteCurrentSubject.rejected, (state) => {
+        state.isLoading = false;
       }),
 });
 
