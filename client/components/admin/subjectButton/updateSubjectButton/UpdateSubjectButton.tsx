@@ -71,7 +71,7 @@ export const UpdateSubjectButton = ({ item }: Props) => {
               ref={nameRef}
               defaultValue={item.name}
             />
-            <ProfessorSelect ref={professorIdRef} item={item} />
+            <ProfessorSelect ref={professorIdRef} />
             <Button label={'Update'} type="submit" />
           </Form>
         </Modal>
