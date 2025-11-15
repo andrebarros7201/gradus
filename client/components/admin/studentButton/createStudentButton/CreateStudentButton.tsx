@@ -36,6 +36,7 @@ export const CreateStudentButton = () => {
         createStudent({ studentName: result.data.name, classId: currentClass!.id }),
       ).unwrap();
       dispatch(setNotification(response.notification));
+      setIsModalOpen(false);
     } catch (e) {
       const error = e as { notification: INotification };
       dispatch(setNotification(error.notification));
