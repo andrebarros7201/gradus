@@ -3,15 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Select } from '../select/Select';
 import { Ref, useEffect } from 'react';
 import { fetchAllProfessors } from '@/redux/slices/professorSlice';
-import { ISubjectComplete } from '@/types/ISubjectComplete';
 import { IUserProfessor } from '@/types/IUser';
 
 type Props = {
   ref: Ref<HTMLSelectElement>;
-  item: ISubjectComplete;
 };
 
-export const ProfessorSelect = ({ ref, item }: Props) => {
+export const ProfessorSelect = ({ ref }: Props) => {
   const { professorList, isLoading } = useSelector((state: RootState) => state.professorSlice);
   const dispatch = useDispatch<RootDispatch>();
 
