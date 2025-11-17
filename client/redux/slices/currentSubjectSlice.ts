@@ -1,4 +1,5 @@
 import { ICurrentSubjectSlice } from '@/types/ICurrentSubjectSlice';
+import { IEvaluation } from '@/types/IEvaluation';
 import { INotification } from '@/types/INotificationSlice';
 import { ISubjectComplete } from '@/types/ISubjectComplete';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -86,6 +87,38 @@ export const deleteCurrentSubject = createAsyncThunk<
   }
 });
 
+// Add Evaluation
+export const createEvaluation = createAsyncThunk<
+  { notification: INotification; evaluation: IEvaluation },
+  { subjectId: number; name: string; type: number; date: string },
+  { rejectValue: { notification: INotification } }
+>(
+  'currentSubject/createEvaluation',
+  async ({ subjectId, date, name, type }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.SERVER_URL}/api/evaluation`,
+        { name, date, evaluationType: type, subjectId },
+        {
+          withCredentials: true,
+        },
+      );
+      return {
+        evaluation: response.data.data,
+        notification: { type: 'success', message: 'Evaluation created successfully' },
+      };
+    } catch (e) {
+      const error = e as AxiosError<{ message: string }>;
+      return rejectWithValue({
+        notification: {
+          type: 'error',
+          message: error.response?.data.message || 'Failed to delete subject',
+        },
+      });
+    }
+  },
+);
+
 const currentSubjectSlice = createSlice({
   name: 'currentSubject',
   initialState,
@@ -119,6 +152,14 @@ const currentSubjectSlice = createSlice({
       .addCase(updateCurrentSubject.rejected, (state) => {
         state.isLoading = false;
         state.currentSubject = null;
+      })
+      // Create Evaluation
+      .addCase(createEvaluation.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentSubject!.evaluations.push(action.payload.evaluation);
+      })
+      .addCase(createEvaluation.rejected, (state) => {
+        state.isLoading = false;
       })
       // Delete Current Subject
       .addCase(deleteCurrentSubject.pending, (state) => {
