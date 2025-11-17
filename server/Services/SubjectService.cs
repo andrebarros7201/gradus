@@ -42,6 +42,7 @@ public class SubjectService : ISubjectService {
                     Id = e.Id,
                     Date = e.Date,
                     Name = e.Name,
+                    EvaluationType = e.EvaluationType,
                     SubjectId = e.SubjectId,
                     Grades = e.Grades.Select(g => new GradeSimpleDto {
                         Id = g.Id,
@@ -73,6 +74,7 @@ public class SubjectService : ISubjectService {
                     Id = e.Id,
                     Date = e.Date,
                     Name = e.Name,
+                    EvaluationType = e.EvaluationType,
                     SubjectId = e.SubjectId,
                     Grades = e.Grades.Select(g => new GradeSimpleDto {
                         Id = g.Id,
@@ -104,6 +106,7 @@ public class SubjectService : ISubjectService {
                     Id = e.Id,
                     Date = e.Date,
                     Name = e.Name,
+                    EvaluationType = e.EvaluationType,
                     SubjectId = e.SubjectId,
                     Grades = e.Grades.Select(g => new GradeSimpleDto {
                         Id = g.Id,

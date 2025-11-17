@@ -52,6 +52,7 @@ public class EvaluationService : IEvaluationService {
         return ServiceResult<EvaluationDto>.Success(new EvaluationDto {
             Id = createdEvaluation.Id,
             Date = createdEvaluation.Date,
+            EvaluationType = createdEvaluation.EvaluationType,
             Name = createdEvaluation.Name,
             SubjectId = createdEvaluation.SubjectId,
             Grades = createdEvaluation.Grades.Select(g => new GradeSimpleDto {
@@ -106,6 +107,7 @@ public class EvaluationService : IEvaluationService {
             Id = updatedEvaluation.Id,
             Date = updatedEvaluation.Date,
             Name = updatedEvaluation.Name,
+            EvaluationType = updatedEvaluation.EvaluationType,
             SubjectId = updatedEvaluation.SubjectId,
             Grades = updatedEvaluation.Grades.Select(g => new GradeSimpleDto {
                 Id = g.Id,
@@ -185,6 +187,7 @@ public class EvaluationService : IEvaluationService {
             Id = evaluation.Id,
             Date = evaluation.Date,
             Name = evaluation.Name,
+            EvaluationType = evaluation.EvaluationType,
             SubjectId = evaluation.SubjectId,
             Grades = evaluation.Grades.Select(g => new GradeSimpleDto {
                 Id = g.Id,
