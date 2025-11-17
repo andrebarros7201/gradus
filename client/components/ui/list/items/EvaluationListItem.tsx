@@ -19,7 +19,7 @@ export const EvaluationListItem = ({ item }: Props) => {
       </div>
       <div className={classes['item__field']}>
         <p className={classes['item__label']}>Date</p>
-        <p>{item.date}</p>
+        <p>{new Date(item.date).toLocaleDateString('PT')}</p>
       </div>
       <div className={classes['item__field']}>
         <p className={classes['item__label']}>Type</p>
