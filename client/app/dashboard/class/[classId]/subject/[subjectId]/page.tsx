@@ -1,7 +1,9 @@
 'use client';
 
+import { CreateEvaluationButton } from '@/components/evaluation/createEvaluationButton/CreateEvaluationButton';
 import { Page } from '@/components/page/Page';
 import { SubjectDetails } from '@/components/subject/subjectDetails/SubjectDetails';
+import { List } from '@/components/ui/list/List';
 import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
@@ -34,6 +36,8 @@ export default function SubjectPage({ params }: Props) {
     return (
       <Page>
         <SubjectDetails item={currentSubject} />
+        <CreateEvaluationButton />
+        <List list={currentSubject.evaluations} type='evaluation'/>
       </Page>
     );
   }
