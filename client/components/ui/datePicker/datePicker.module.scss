@@ -1,0 +1,19 @@
+@use '@/styles/colors';
+
+.input {
+  width: min(300px, 100%);
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.input__label {
+  flex: 1;
+}
+
+.input__picker {
+  padding: 0.25rem;
+  border: 1px solid colors.$primary;
+  border-radius: 0.25rem;
+}
