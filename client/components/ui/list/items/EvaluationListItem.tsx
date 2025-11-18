@@ -4,7 +4,7 @@ import { EvaluationType } from '@/types/EvaluationEnum';
 import { ToggleViewGradeButton } from '@/components/admin/evaluationButton/toggleViewGradeButton/ToggleViewGradeButton';
 import { useState } from 'react';
 import { List } from '../List';
-import { DeleteEvaluationButton } from '@/components/admin/evaluationButton/DeleteEvaluationButton/DeleteEvaluationButton';
+import { DeleteEvaluationButton } from '@/components/admin/evaluationButton/deleteEvaluationButton/DeleteEvaluationButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Role } from '@/types/RoleEnum';
