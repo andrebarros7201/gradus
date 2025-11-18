@@ -21,11 +21,6 @@ export default function ClassPage({ params }: Props) {
   // Fetch Current Class
   useEffect(() => {
     dispatch(fetchCurrentClass({ classId: Number(classId) }));
-
-    // Clear current class value on dismount
-    return () => {
-      dispatch(clearCurrentClass());
-    };
   }, [dispatch, classId]);
 
   if (!isLoading && currentClass) {
