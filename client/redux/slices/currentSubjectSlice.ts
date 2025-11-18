@@ -112,12 +112,37 @@ export const createEvaluation = createAsyncThunk<
       return rejectWithValue({
         notification: {
           type: 'error',
-          message: error.response?.data.message || 'Failed to delete subject',
+          message: error.response?.data.message || 'Failed to create evaluation',
         },
       });
     }
   },
 );
+
+// Delete Evaluation
+export const deleteEvaluation = createAsyncThunk<
+  { notification: INotification; evaluationId: number },
+  { evaluationId: number },
+  { rejectValue: { notification: INotification } }
+>('currentSubject/deleteEvaluation', async ({ evaluationId }, { rejectWithValue }) => {
+  try {
+    await axios.delete(`${process.env.SERVER_URL}/api/evaluation/${evaluationId}`, {
+      withCredentials: true,
+    });
+    return {
+      evaluationId,
+      notification: { type: 'success', message: 'Evaluation successfully deleted' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to delete evaluation',
+      },
+    });
+  }
+});
 
 const currentSubjectSlice = createSlice({
   name: 'currentSubject',
@@ -153,14 +178,6 @@ const currentSubjectSlice = createSlice({
         state.isLoading = false;
         state.currentSubject = null;
       })
-      // Create Evaluation
-      .addCase(createEvaluation.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.currentSubject!.evaluations.push(action.payload.evaluation);
-      })
-      .addCase(createEvaluation.rejected, (state) => {
-        state.isLoading = false;
-      })
       // Delete Current Subject
       .addCase(deleteCurrentSubject.pending, (state) => {
         state.isLoading = true;
@@ -170,6 +187,25 @@ const currentSubjectSlice = createSlice({
         state.currentSubject = null;
       })
       .addCase(deleteCurrentSubject.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Create Evaluation
+      .addCase(createEvaluation.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentSubject!.evaluations.push(action.payload.evaluation);
+      })
+      .addCase(createEvaluation.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Delete Evaluation
+      .addCase(deleteEvaluation.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const evaluationIndex = state.currentSubject!.evaluations.findIndex(
+          (e) => e.id === action.payload.evaluationId,
+        );
+        state.currentSubject!.evaluations.splice(evaluationIndex, 1);
+      })
+      .addCase(deleteEvaluation.rejected, (state) => {
         state.isLoading = false;
       }),
 });
