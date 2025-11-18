@@ -57,8 +57,8 @@ export const CreateSubjectButton = () => {
     <>
       <Button label="Create Subject" onClick={() => setIsModalOpen(true)} />
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <Form label="Create Subject" onSubmit={(e) => handleCreate(e)}>
+        <Modal title="Create Subject" onClose={() => setIsModalOpen(false)}>
+          <Form onSubmit={(e) => handleCreate(e)}>
             <Input label="Name" minValue={0} maxValue={100} type="text" ref={nameRef} />
             <ProfessorSelect ref={profRef} />
             <Button label="Create " type="submit" />
