@@ -8,13 +8,14 @@ import { DeleteEvaluationButton } from '@/components/admin/evaluationButton/dele
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Role } from '@/types/RoleEnum';
+import { UpdateEvaluationButton } from '@/components/admin/evaluationButton/updateEvaluationButton/UpdateEvaluationButton';
 
 type Props = {
   item: IEvaluation;
 };
 
 export const EvaluationListItem = ({ item }: Props) => {
-  const {user} = useSelector((state: RootState) => state.user)
+  const { user } = useSelector((state: RootState) => state.user);
   const [isListOpen, setIsListOpen] = useState(false);
   return (
     <div className={classes['wrapper']}>
@@ -37,11 +38,16 @@ export const EvaluationListItem = ({ item }: Props) => {
         </div>
         <div className={classes['item__buttons']}>
           <p className={classes['item__label']}>Actions</p>
+          {(user?.role === Role.Admin || user?.role === Role.Professor) && (
+            <UpdateEvaluationButton evaluation={item} />
+          )}
+          {(user?.role === Role.Admin || user?.role === Role.Professor) && (
+            <DeleteEvaluationButton evaluationId={item.id} />
+          )}
           <ToggleViewGradeButton
             label={isListOpen ? 'Close' : 'Open'}
             onClick={() => setIsListOpen((prev) => !prev)}
           />
-          {(user?.role === Role.Admin || user?.role === Role.Professor) &&<DeleteEvaluationButton evaluationId={item.id}/>}
         </div>
       </div>
       {isListOpen && <List list={item.grades} type="grade" />}
