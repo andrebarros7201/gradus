@@ -7,7 +7,7 @@ import { use, useEffect } from 'react';
 import { Page } from '@/components/page/Page';
 import { ClassDetails } from '@/components/class/classDetails/ClassDetails';
 import { ClassViewToggler } from '@/components/class/classViewToggler/ClassViewToggler';
-import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/currentClassSlice';
+import { fetchCurrentClass } from '@/redux/slices/currentClassSlice';
 
 type Props = {
   params: Promise<{ classId: string }>;
