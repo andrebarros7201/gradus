@@ -119,6 +119,37 @@ export const createEvaluation = createAsyncThunk<
   },
 );
 
+// Update Evaluation
+export const updateEvaluation = createAsyncThunk<
+  { notification: INotification; evaluation: IEvaluation },
+  { name: string; type: number; date: string; evaluationId: number; subjectId: number },
+  { rejectValue: { notification: INotification } }
+>(
+  'currentSubject/updateEvaluation',
+  async ({ date, name, type, evaluationId, subjectId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${process.env.SERVER_URL}/api/evaluation/${evaluationId}`,
+        { name, date, evaluationType: type, subjectId },
+        {
+          withCredentials: true,
+        },
+      );
+      return {
+        evaluation: response.data.data,
+        notification: { type: 'success', message: 'Evaluation updated successfully' },
+      };
+    } catch (e) {
+      const error = e as AxiosError<{ message: string }>;
+      return rejectWithValue({
+        notification: {
+          type: 'error',
+          message: error.response?.data.message || 'Failed to update evaluation',
+        },
+      });
+    }
+  },
+);
 // Delete Evaluation
 export const deleteEvaluation = createAsyncThunk<
   { notification: INotification; evaluationId: number },
@@ -195,6 +226,18 @@ const currentSubjectSlice = createSlice({
         state.currentSubject!.evaluations.push(action.payload.evaluation);
       })
       .addCase(createEvaluation.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Update Evaluation
+      .addCase(updateEvaluation.fulfilled, (state, action) => {
+        const { evaluation } = action.payload;
+        state.isLoading = false;
+        const evaluationIndex = state.currentSubject?.evaluations.findIndex(
+          (e) => e.id === evaluation.id,
+        );
+        state.currentSubject!.evaluations[evaluationIndex!] = evaluation;
+      })
+      .addCase(updateEvaluation.rejected, (state) => {
         state.isLoading = false;
       })
       // Delete Evaluation
