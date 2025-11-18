@@ -7,6 +7,8 @@ import { IStudentSimple } from '@/types/IStudentSimple';
 import { StudentListItem } from './items/StudentListItem';
 import { IEvaluation } from '@/types/IEvaluation';
 import { EvaluationListItem } from './items/EvaluationListItem';
+import { IGradeSimple } from '@/types/IGradeSimple';
+import { GradeListItem } from './items/GradeListItem';
 
 type Class = {
   type: 'class';
@@ -28,7 +30,12 @@ type Evaluation = {
   list: IEvaluation[];
 };
 
-type Props = Class | Subject | Student | Evaluation;
+type Grade = {
+  type: 'grade';
+  list: IGradeSimple[];
+};
+
+type Props = Class | Subject | Student | Evaluation | Grade;
 
 export const List = ({ type, list }: Props) => {
   // Get headers according to list type
@@ -41,7 +48,7 @@ export const List = ({ type, list }: Props) => {
       ? ['Id', 'Name', 'Actions']
       : type === 'evaluation'
       ? ['Id', 'Name', 'Date', 'Type', 'Action']
-      : [];
+      : ['Id', 'Student', 'Value', 'Action'];
 
   return (
     <div className={classes.list}>
@@ -55,7 +62,9 @@ export const List = ({ type, list }: Props) => {
       {type === 'class' && list.map((item) => <ClassListItem key={item.id} item={item} />)}
       {type === 'subject' && list.map((item) => <SubjectListItem key={item.id} item={item} />)}
       {type === 'student' && list.map((item) => <StudentListItem key={item.id} item={item} />)}
-      {type === 'evaluation' && list.map((item) => <EvaluationListItem key={item.id} item={item} />)}
+      {type === 'grade' && list.map(item => <GradeListItem key={item.id} grade={item}/> )}
+      {type === 'evaluation' &&
+        list.map((item) => <EvaluationListItem key={item.id} item={item} />)}
     </div>
   );
 };
