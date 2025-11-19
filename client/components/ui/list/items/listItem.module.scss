@@ -10,6 +10,7 @@
 }
 
 .item {
+  background-color: colors.$bg-card;
   width: 100%;
   height: 100%;
   display: flex;
@@ -52,7 +53,7 @@
   }
 }
 
-.item__list-wrapper{
+.item__list-wrapper {
   width: 100%;
   display: flex;
   flex-direction: column;
