@@ -1,5 +1,6 @@
 import { ICurrentSubjectSlice } from '@/types/ICurrentSubjectSlice';
 import { IEvaluation } from '@/types/IEvaluation';
+import { IGradeSimple } from '@/types/IGradeSimple';
 import { INotification } from '@/types/INotificationSlice';
 import { ISubjectComplete } from '@/types/ISubjectComplete';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -150,6 +151,7 @@ export const updateEvaluation = createAsyncThunk<
     }
   },
 );
+
 // Delete Evaluation
 export const deleteEvaluation = createAsyncThunk<
   { notification: INotification; evaluationId: number },
@@ -170,6 +172,36 @@ export const deleteEvaluation = createAsyncThunk<
       notification: {
         type: 'error',
         message: error.response?.data.message || 'Failed to delete evaluation',
+      },
+    });
+  }
+});
+
+// Create Grade
+export const createGrade = createAsyncThunk<
+  { notification: INotification; grade: IGradeSimple },
+  { evaluationId: number; value: number; studentId: number },
+  { rejectValue: { notification: INotification } }
+>('currentSubject/createGrade', async ({ evaluationId, value, studentId }, { rejectWithValue }) => {
+  try {
+    const response = await axios.post(
+      `${process.env.SERVER_URL}/api/grade/`,
+      { value, evaluationId, studentId },
+      {
+        withCredentials: true,
+      },
+    );
+    const { data } = response.data;
+    return {
+      grade: data,
+      notification: { type: 'success', message: 'Grade created successfully' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to create grade',
       },
     });
   }
@@ -249,6 +281,21 @@ const currentSubjectSlice = createSlice({
         state.currentSubject!.evaluations.splice(evaluationIndex, 1);
       })
       .addCase(deleteEvaluation.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Create Grade
+      .addCase(createGrade.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(createGrade.fulfilled, (state, action) => {
+        const { grade } = action.payload;
+        state.isLoading = false;
+        const evaluationIndex = state.currentSubject?.evaluations.findIndex(
+          (e) => e.id === grade.evaluationId,
+        );
+        state.currentSubject!.evaluations[evaluationIndex!].grades.push(grade);
+      })
+      .addCase(createGrade.rejected, (state) => {
         state.isLoading = false;
       }),
 });

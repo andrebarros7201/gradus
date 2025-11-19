@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Role } from '@/types/RoleEnum';
 import { UpdateEvaluationButton } from '@/components/admin/evaluationButton/updateEvaluationButton/UpdateEvaluationButton';
+import { CreateGradeButton } from '@/components/admin/gradeButton/CreateGradeButton';
 
 type Props = {
   item: IEvaluation;
@@ -50,7 +51,16 @@ export const EvaluationListItem = ({ item }: Props) => {
           />
         </div>
       </div>
-      {isListOpen && <List list={item.grades} type="grade" />}
+      <div className={classes['item__list-wrapper']}>
+        {isListOpen && (
+          <>
+            {(user?.role === Role.Admin || user?.role === Role.Professor) && (
+              <CreateGradeButton evaluationId={item.id} />
+            )}
+            <List list={item.grades} type="grade" />
+          </>
+        )}
+      </div>
     </div>
   );
 };
