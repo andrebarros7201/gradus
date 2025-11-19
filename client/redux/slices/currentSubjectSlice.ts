@@ -207,6 +207,36 @@ export const createGrade = createAsyncThunk<
   }
 });
 
+// Update Grade
+export const updateGrade = createAsyncThunk<
+  { notification: INotification; grade: IGradeSimple },
+  { value: number; gradeId: number },
+  { rejectValue: { notification: INotification } }
+>('currentSubject/updateGrade', async ({ value, gradeId }, { rejectWithValue }) => {
+  try {
+    const response = await axios.patch(
+      `${process.env.SERVER_URL}/api/grade/${gradeId}`,
+      { value },
+      {
+        withCredentials: true,
+      },
+    );
+    const { data } = response.data;
+    return {
+      grade: data,
+      notification: { type: 'success', message: 'Grade Updated successfully' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to create grade',
+      },
+    });
+  }
+});
+
 const currentSubjectSlice = createSlice({
   name: 'currentSubject',
   initialState,
@@ -296,6 +326,30 @@ const currentSubjectSlice = createSlice({
         state.currentSubject!.evaluations[evaluationIndex!].grades.push(grade);
       })
       .addCase(createGrade.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Update Grade
+      .addCase(updateGrade.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateGrade.fulfilled, (state, action) => {
+        const { grade } = action.payload;
+        state.isLoading = false;
+
+        // Find Evaluation Index
+        const evaluationIndex = state.currentSubject?.evaluations.findIndex(
+          (e) => e.id === grade.evaluationId,
+        );
+
+        // Find Grade Index
+        const gradeIndex = state.currentSubject?.evaluations[evaluationIndex!].grades.findIndex(
+          (g) => g.id === grade.id,
+        );
+
+        // Replace
+        state.currentSubject!.evaluations[evaluationIndex!].grades[gradeIndex!] = grade;
+      })
+      .addCase(updateGrade.rejected, (state) => {
         state.isLoading = false;
       }),
 });
