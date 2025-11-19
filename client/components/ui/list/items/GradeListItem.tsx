@@ -4,6 +4,7 @@ import { IGradeSimple } from '@/types/IGradeSimple';
 import { RootState } from '@/redux/store';
 import { Role } from '@/types/RoleEnum';
 import { UpdateGradeButton } from '@/components/admin/gradeButton/updateGradeButton/UpdateGradeButton';
+import { DeleteGradeButton } from '@/components/admin/gradeButton/deleteGradeButton/DeleteGradeButton';
 
 type Props = {
   grade: IGradeSimple;
@@ -25,12 +26,13 @@ export const GradeListItem = ({ grade }: Props) => {
         <p className={classes['item__label']}>Date</p>
         <p>{grade.value}</p>
       </div>
-      <div className={classes['item__buttons']}>
-        <p className={classes['item__label']}>Actions</p>
-        {(user?.role === Role.Admin || user?.role === Role.Professor) && (
+      {(user?.role === Role.Admin || user?.role === Role.Professor) && (
+        <div className={classes['item__buttons']}>
+          <p className={classes['item__label']}>Actions</p>
           <UpdateGradeButton grade={grade} />
-        )}
-      </div>
+          <DeleteGradeButton grade={grade} />
+        </div>
+      )}
     </div>
   );
 };

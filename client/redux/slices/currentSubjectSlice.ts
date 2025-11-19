@@ -231,7 +231,33 @@ export const updateGrade = createAsyncThunk<
     return rejectWithValue({
       notification: {
         type: 'error',
-        message: error.response?.data.message || 'Failed to create grade',
+        message: error.response?.data.message || 'Failed to update grade',
+      },
+    });
+  }
+});
+
+// Delete Grade
+export const deleteGrade = createAsyncThunk<
+  { notification: INotification; gradeId: number; evaluationId: number },
+  { gradeId: number; evaluationId: number },
+  { rejectValue: { notification: INotification } }
+>('currentSubject/deleteGrade', async ({ gradeId, evaluationId }, { rejectWithValue }) => {
+  try {
+    await axios.delete(`${process.env.SERVER_URL}/api/grade/${gradeId}`, {
+      withCredentials: true,
+    });
+    return {
+      gradeId,
+      evaluationId,
+      notification: { type: 'success', message: 'Grade deleted successfully' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to delete grade',
       },
     });
   }
@@ -350,6 +376,30 @@ const currentSubjectSlice = createSlice({
         state.currentSubject!.evaluations[evaluationIndex!].grades[gradeIndex!] = grade;
       })
       .addCase(updateGrade.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Delete Grade
+      .addCase(deleteGrade.pending, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(deleteGrade.fulfilled, (state, action) => {
+        const { gradeId, evaluationId } = action.payload;
+        state.isLoading = false;
+
+        // Find Evaluation Index
+        const evaluationIndex = state.currentSubject?.evaluations.findIndex(
+          (e) => e.id === evaluationId,
+        );
+
+        // Find Grade Index
+        const gradeIndex = state.currentSubject?.evaluations[evaluationIndex!].grades.findIndex(
+          (g) => g.id === gradeId,
+        );
+
+        // Remove
+        state.currentSubject!.evaluations[evaluationIndex!].grades.splice(gradeIndex!, 1);
+      })
+      .addCase(deleteGrade.rejected, (state) => {
         state.isLoading = false;
       }),
 });
