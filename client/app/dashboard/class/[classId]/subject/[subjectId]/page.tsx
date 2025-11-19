@@ -4,6 +4,7 @@ import { CreateEvaluationButton } from '@/components/evaluation/createEvaluation
 import { Page } from '@/components/page/Page';
 import { SubjectDetails } from '@/components/subject/subjectDetails/SubjectDetails';
 import { List } from '@/components/ui/list/List';
+import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/currentClassSlice';
 import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
@@ -12,16 +13,17 @@ import { use, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 type Props = {
-  params: Promise<{ subjectId: string }>;
+  params: Promise<{ subjectId: string; classId: string }>;
 };
 export default function SubjectPage({ params }: Props) {
   const { currentSubject, isLoading } = useSelector((state: RootState) => state.currentSubject);
-  const { subjectId } = use(params);
+  const { subjectId, classId } = use(params);
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {
     try {
       dispatch(fetchCurrentSubject({ subjectId: Number.parseInt(subjectId) }));
+      dispatch(fetchCurrentClass({ classId: Number(classId) }));
     } catch (e) {
       const error = e as { notification: INotification };
       dispatch(setNotification(error.notification));
@@ -29,15 +31,16 @@ export default function SubjectPage({ params }: Props) {
 
     return () => {
       dispatch(clearCurrentSubject());
+      dispatch(clearCurrentClass());
     };
-  }, [dispatch, subjectId]);
+  }, [classId, dispatch, subjectId]);
 
   if (!isLoading && currentSubject) {
     return (
       <Page>
         <SubjectDetails item={currentSubject} />
         <CreateEvaluationButton />
-        <List list={currentSubject.evaluations} type='evaluation'/>
+        <List list={currentSubject.evaluations} type="evaluation" />
       </Page>
     );
   }
