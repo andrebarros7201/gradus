@@ -7,6 +7,7 @@ import axios, { AxiosError } from 'axios';
 import { RootDispatch } from '../store';
 import { setStudentList } from './studentSlice';
 import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
+import { setSubjectList } from './subjectSlice';
 
 const initialState: IClassSlice = {
   isLoading: false,
@@ -49,6 +50,7 @@ export const fetchCurrentClass = createAsyncThunk<
     });
     const { data } = response.data;
     dispatch(setStudentList({ studentList: data.students }));
+    dispatch(setSubjectList({ subjectList: data.subjects }));
     return { class: data };
   } catch (e) {
     const error = e as AxiosError<{ message: string }>;
