@@ -1,10 +1,9 @@
 import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { ISubjectComplete } from '@/types/interfaces/ISubjectComplete';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { ICurrentSubjectSlice } from '@/types/slices/ICurrentSubjectSlice';
-import { IEvaluation } from '@/types/interfaces/IEvaluation';
 import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
 import { RootDispatch } from '../store';
 import { addSubject } from './classSlice';
@@ -221,6 +220,9 @@ const subjectSlice = createSlice({
   name: 'currentSubject',
   initialState,
   reducers: {
+    setSubjectList: (state, action: PayloadAction<{ subjectList: ISubjectSimple[] }>) => {
+      state.subjectList = action.payload.subjectList;
+    },
     clearCurrentSubject: (state) => {
       state.currentSubject = null;
     },
@@ -339,4 +341,4 @@ const subjectSlice = createSlice({
 });
 
 export const subjectReducer = subjectSlice.reducer;
-export const { clearCurrentSubject } = subjectSlice.actions;
+export const { setSubjectList, clearCurrentSubject } = subjectSlice.actions;
