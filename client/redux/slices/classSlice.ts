@@ -1,8 +1,12 @@
+import { IClassComplete } from '@/types/interfaces/IClassComplete';
 import { IClassSimple } from '@/types/interfaces/IClassSimple';
 import { IClassSlice } from '@/types/slices/IClassSlice';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
+import { RootDispatch } from '../store';
+import { setStudentList } from './studentSlice';
+import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
 
 const initialState: IClassSlice = {
   isLoading: false,
@@ -28,6 +32,30 @@ export const fetchAllClasses = createAsyncThunk<
       notification: {
         type: 'error',
         message: error.response?.data.message ?? 'Failed to load classes',
+      },
+    });
+  }
+});
+
+// Fetch current class
+export const fetchCurrentClass = createAsyncThunk<
+  { class: IClassComplete },
+  { classId: number },
+  { rejectValue: { notification: INotification }; dispatch: RootDispatch }
+>('class/fetchCurrentClass', async ({ classId }, { rejectWithValue, dispatch }) => {
+  try {
+    const response = await axios.get(`${process.env.SERVER_URL}/api/class/${classId}`, {
+      withCredentials: true,
+    });
+    const { data } = response.data;
+    dispatch(setStudentList({ studentList: data.students }));
+    return { class: data };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message ?? 'Failed to load class',
       },
     });
   }
@@ -66,6 +94,17 @@ const classSlice = createSlice({
 
       state.classes.splice(indexClass, 1);
     },
+    addSubject: (state, action: PayloadAction<{ newSubject: ISubjectSimple }>) => {
+      state.currentClass?.subjects.push(action.payload.newSubject);
+    },
+    removeSubject: (state, action: PayloadAction<{ subjectId: number }>) => {
+      const { subjectId } = action.payload;
+      const subjectIndex = state.currentClass!.subjects.findIndex((s) => s.id === subjectId);
+
+      // Don't change if index equals -1
+      if (subjectId === -1) return;
+      state.currentClass?.subjects.splice(subjectIndex, 1);
+    },
   },
   extraReducers: (builder) =>
     builder
@@ -80,8 +119,20 @@ const classSlice = createSlice({
       .addCase(fetchAllClasses.rejected, (state) => {
         state.isLoading = false;
         state.classes = [];
+      })
+      // Fetch Class
+      .addCase(fetchCurrentClass.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchCurrentClass.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentClass = action.payload.class;
+      })
+      .addCase(fetchCurrentClass.rejected, (state) => {
+        state.isLoading = false;
+        state.currentClass = null;
       }),
 });
 
 export const classReducer = classSlice.reducer;
-export const { updateClass, removeClass } = classSlice.actions;
+export const { addSubject, removeSubject, updateClass, removeClass } = classSlice.actions;
