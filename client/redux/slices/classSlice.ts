@@ -65,6 +65,9 @@ const classSlice = createSlice({
   name: 'classSlice',
   initialState,
   reducers: {
+    clearCurrentClass: (state) => {
+      state.currentClass = null;
+    },
     updateClass: (
       state,
       action: PayloadAction<{
@@ -135,4 +138,5 @@ const classSlice = createSlice({
 });
 
 export const classReducer = classSlice.reducer;
-export const { addSubject, removeSubject, updateClass, removeClass } = classSlice.actions;
+export const { addSubject, removeSubject, clearCurrentClass, updateClass, removeClass } =
+  classSlice.actions;

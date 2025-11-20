@@ -4,13 +4,13 @@ import { CreateEvaluationButton } from '@/components/evaluation/createEvaluation
 import { Page } from '@/components/page/Page';
 import { SubjectDetails } from '@/components/subject/subjectDetails/SubjectDetails';
 import { List } from '@/components/ui/list/List';
-import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/currentClassSlice';
 import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/subjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { use, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/classSlice';
 
 type Props = {
   params: Promise<{ subjectId: string; classId: string }>;
