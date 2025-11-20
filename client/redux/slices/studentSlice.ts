@@ -11,6 +11,7 @@ const initialState: IStudentSlice = {
   isLoading: false,
 };
 
+// Fetch current student
 export const fetchCurrentStudent = createAsyncThunk<
   { student: IStudentComplete },
   { studentId: number },
@@ -33,6 +34,59 @@ export const fetchCurrentStudent = createAsyncThunk<
   }
 });
 
+// Update student
+export const updateStudent = createAsyncThunk<
+  { student: IStudentComplete; notification: INotification },
+  { studentId: number; studentName: string },
+  { rejectValue: { notification: INotification } }
+>('currentClass/updateStudent', async ({ studentId, studentName }, { rejectWithValue }) => {
+  try {
+    const response = await axios.patch(
+      `${process.env.SERVER_URL}/api/student/${studentId}`,
+      { name: studentName },
+      { withCredentials: true },
+    );
+    const { data } = response.data;
+    return {
+      notification: { type: 'success', message: 'Student updated successfully' },
+      student: data,
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to update student',
+      },
+    });
+  }
+});
+
+// Delete Student
+export const deleteStudent = createAsyncThunk<
+  { studentId: number; notification: INotification },
+  { studentId: number },
+  { rejectValue: { notification: INotification } }
+>('currentClass/deleteStudent', async ({ studentId }, { rejectWithValue }) => {
+  try {
+    await axios.delete(`${process.env.SERVER_URL}/api/student/${studentId}`, {
+      withCredentials: true,
+    });
+    return {
+      notification: { type: 'success', message: 'Student deleted successfully' },
+      studentId,
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to delete student',
+      },
+    });
+  }
+});
+
 const currentStudentSlice = createSlice({
   name: 'currentStudent',
   initialState,
@@ -46,6 +100,7 @@ const currentStudentSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
+      // Fetch current student
       .addCase(fetchCurrentStudent.pending, (state) => {
         state.isLoading = true;
       })
@@ -56,8 +111,37 @@ const currentStudentSlice = createSlice({
       .addCase(fetchCurrentStudent.rejected, (state) => {
         state.isLoading = false;
         state.currentStudent = null;
+      })
+      // Update student
+      .addCase(updateStudent.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateStudent.fulfilled, (state, action) => {
+        const { student } = action.payload;
+        state.isLoading = false;
+        const studentIndex = state.studentList.findIndex((s) => s.id === student.id);
+
+        if (studentIndex === -1) return; // Student not found
+
+        state.studentList[studentIndex].name = student.name;
+      })
+      .addCase(updateStudent.rejected, (state) => {
+        state.isLoading = false;
+      })
+      // Delete Student
+      .addCase(deleteStudent.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { studentId } = action.payload;
+        const studentIndex = state.studentList.findIndex((s) => s.id === studentId);
+
+        if (studentIndex === -1) return; // Student not found
+
+        state.studentList.splice(studentIndex, 1);
+      })
+      .addCase(deleteStudent.rejected, (state) => {
+        state.isLoading = false;
       }),
 });
 
 export const studentReducer = currentStudentSlice.reducer;
-export const {} = currentStudentSlice.actions;
+export const { setStudentList, clearStudentList } = currentStudentSlice.actions;
