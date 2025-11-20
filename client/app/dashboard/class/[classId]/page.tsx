@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function ClassPage({ params }: Props) {
-  const { currentClass, isLoading } = useSelector((state: RootState) => state.currentClass);
+  const { currentClass, isLoading } = useSelector((state: RootState) => state.class);
   const { classId } = use(params);
   const dispatch = useDispatch<RootDispatch>();
 
