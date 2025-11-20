@@ -18,13 +18,12 @@ type Props = {
 export default function SubjectPage({ params }: Props) {
   const { currentSubject, isLoading } = useSelector((state: RootState) => state.subject);
   const { evaluationList } = useSelector((state: RootState) => state.evaluation);
-  const { subjectId, classId } = use(params);
+  const { subjectId } = use(params);
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {
     try {
       dispatch(fetchCurrentSubject({ subjectId: Number.parseInt(subjectId) }));
-      dispatch(fetchCurrentClass({ classId: Number(classId) }));
     } catch (e) {
       const error = e as { notification: INotification };
       dispatch(setNotification(error.notification));
@@ -32,10 +31,21 @@ export default function SubjectPage({ params }: Props) {
 
     return () => {
       dispatch(clearCurrentSubject());
+    };
+  }, [dispatch, subjectId]);
+
+  useEffect(() => {
+    try {
+      dispatch(fetchCurrentClass({ classId: currentSubject!.classId }));
+    } catch (e) {
+      const error = e as { notification: INotification };
+      dispatch(setNotification(error.notification));
+    }
+
+    return () => {
       dispatch(clearCurrentClass());
     };
-  }, [classId, dispatch, subjectId]);
-
+  }, [currentSubject, dispatch]);
   if (!isLoading && currentSubject) {
     return (
       <Page>
