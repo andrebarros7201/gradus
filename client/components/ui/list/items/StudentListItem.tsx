@@ -23,7 +23,7 @@ export const StudentListItem = ({ item }: Props) => {
         <p className={classes['item__label']}>Actions</p>
         <UpdateStudentButton item={item} />
         <DeleteStudentButton id={item.id} />
-        <ButtonLink label={'Go to'} href={`/student/${item.id}`} />
+        <ButtonLink label={'Go to'} href={`/dashboard/student/${item.id}`} />
       </div>
     </div>
   );
