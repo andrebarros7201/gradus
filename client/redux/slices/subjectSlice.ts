@@ -5,9 +5,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { ICurrentSubjectSlice } from '@/types/slices/ICurrentSubjectSlice';
 import { IEvaluation } from '@/types/interfaces/IEvaluation';
+import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
+import { RootDispatch } from '../store';
+import { addSubject } from './classSlice';
 
 const initialState: ICurrentSubjectSlice = {
   currentSubject: null,
+  subjectList: [],
   isLoading: false,
 };
 
@@ -33,7 +37,45 @@ export const fetchCurrentSubject = createAsyncThunk<
   }
 });
 
-export const updateCurrentSubject = createAsyncThunk<
+// Create Subject
+export const createSubject = createAsyncThunk<
+  { subject: ISubjectSimple; notification: INotification },
+  { name: string; professorId: number; classId: number },
+  { rejectValue: { notification: INotification }; dispatch: RootDispatch }
+>(
+  'currentClass/createSubject',
+  async ({ name, professorId, classId }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await axios.post(
+        `${process.env.SERVER_URL}/api/subject`,
+        { name, professorId, classId },
+        { withCredentials: true },
+      );
+      const { data } = response.data;
+
+      // Add Subject in classSlice
+      dispatch(
+        addSubject({ newSubject: { id: data.id, name: data.name, professor: data.professor } }),
+      );
+
+      return {
+        notification: { type: 'success', message: 'Subject created successfully' },
+        subject: { id: data.id, name: data.name, professor: data.professor },
+      };
+    } catch (e) {
+      const error = e as AxiosError<{ message: string }>;
+      return rejectWithValue({
+        notification: {
+          type: 'error',
+          message: error.response?.data.message || 'Failed to create subject',
+        },
+      });
+    }
+  },
+);
+
+// Update Subject
+export const updateSubject = createAsyncThunk<
   { updatedSubject: ISubjectComplete; notification: INotification },
   { subjectId: number; name: string; professorId: number },
   { rejectValue: { notification: INotification } }
@@ -65,7 +107,8 @@ export const updateCurrentSubject = createAsyncThunk<
   },
 );
 
-export const deleteCurrentSubject = createAsyncThunk<
+// Delete Subject
+export const deleteSubject = createAsyncThunk<
   { notification: INotification },
   { subjectId: number },
   { rejectValue: { notification: INotification } }
@@ -263,7 +306,7 @@ export const deleteGrade = createAsyncThunk<
   }
 });
 
-const currentSubjectSlice = createSlice({
+const subjectSlice = createSlice({
   name: 'currentSubject',
   initialState,
   reducers: {
@@ -286,26 +329,26 @@ const currentSubjectSlice = createSlice({
         state.currentSubject = null;
       })
       // Update Current Subject
-      .addCase(updateCurrentSubject.pending, (state) => {
+      .addCase(updateSubject.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(updateCurrentSubject.fulfilled, (state, action) => {
+      .addCase(updateSubject.fulfilled, (state, action) => {
         state.isLoading = false;
         state.currentSubject = action.payload.updatedSubject;
       })
-      .addCase(updateCurrentSubject.rejected, (state) => {
+      .addCase(updateSubject.rejected, (state) => {
         state.isLoading = false;
         state.currentSubject = null;
       })
       // Delete Current Subject
-      .addCase(deleteCurrentSubject.pending, (state) => {
+      .addCase(deleteSubject.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteCurrentSubject.fulfilled, (state) => {
+      .addCase(deleteSubject.fulfilled, (state) => {
         state.isLoading = false;
         state.currentSubject = null;
       })
-      .addCase(deleteCurrentSubject.rejected, (state) => {
+      .addCase(deleteSubject.rejected, (state) => {
         state.isLoading = false;
       })
       // Create Evaluation
@@ -404,5 +447,5 @@ const currentSubjectSlice = createSlice({
       }),
 });
 
-export const currentSubjectReducer = currentSubjectSlice.reducer;
-export const { clearCurrentSubject } = currentSubjectSlice.actions;
+export const currentSubjectReducer = subjectSlice.reducer;
+export const { clearCurrentSubject } = subjectSlice.actions;
