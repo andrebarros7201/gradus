@@ -136,7 +136,7 @@ export const createGrade = createAsyncThunk<
   { notification: INotification; grade: IGradeSimple },
   { evaluationId: number; value: number; studentId: number },
   { rejectValue: { notification: INotification } }
->('currentSubject/createGrade', async ({ evaluationId, value, studentId }, { rejectWithValue }) => {
+>('subject/createGrade', async ({ evaluationId, value, studentId }, { rejectWithValue }) => {
   try {
     const response = await axios.post(
       `${process.env.SERVER_URL}/api/grade/`,
@@ -166,7 +166,7 @@ export const updateGrade = createAsyncThunk<
   { notification: INotification; grade: IGradeSimple },
   { value: number; gradeId: number },
   { rejectValue: { notification: INotification } }
->('currentSubject/updateGrade', async ({ value, gradeId }, { rejectWithValue }) => {
+>('subject/updateGrade', async ({ value, gradeId }, { rejectWithValue }) => {
   try {
     const response = await axios.patch(
       `${process.env.SERVER_URL}/api/grade/${gradeId}`,
@@ -196,7 +196,7 @@ export const deleteGrade = createAsyncThunk<
   { notification: INotification; gradeId: number; evaluationId: number },
   { gradeId: number; evaluationId: number },
   { rejectValue: { notification: INotification } }
->('currentSubject/deleteGrade', async ({ gradeId, evaluationId }, { rejectWithValue }) => {
+>('subject/deleteGrade', async ({ gradeId, evaluationId }, { rejectWithValue }) => {
   try {
     await axios.delete(`${process.env.SERVER_URL}/api/grade/${gradeId}`, {
       withCredentials: true,
@@ -247,7 +247,7 @@ const subjectSlice = createSlice({
         state.isLoading = false;
         state.subjectList.push(action.payload.subject);
       })
-      .addCase(fetchCurrentSubject.rejected, (state) => {
+      .addCase(createSubject.rejected, (state) => {
         state.isLoading = false;
       })
       // Update Current Subject
