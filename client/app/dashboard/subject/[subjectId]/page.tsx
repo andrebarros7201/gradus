@@ -4,12 +4,12 @@ import { CreateEvaluationButton } from '@/components/evaluation/createEvaluation
 import { Page } from '@/components/page/Page';
 import { SubjectDetails } from '@/components/subject/subjectDetails/SubjectDetails';
 import { List } from '@/components/ui/list/List';
-import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/subjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { use, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/subjectSlice';
 import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/classSlice';
 
 type Props = {
@@ -17,6 +17,7 @@ type Props = {
 };
 export default function SubjectPage({ params }: Props) {
   const { currentSubject, isLoading } = useSelector((state: RootState) => state.subject);
+  const { evaluationList } = useSelector((state: RootState) => state.evaluation);
   const { subjectId, classId } = use(params);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -40,7 +41,7 @@ export default function SubjectPage({ params }: Props) {
       <Page>
         <SubjectDetails item={currentSubject} />
         <CreateEvaluationButton />
-        <List list={currentSubject.evaluations} type="evaluation" />
+        <List list={evaluationList} type="evaluation" />
       </Page>
     );
   }
