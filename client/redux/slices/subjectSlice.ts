@@ -447,5 +447,5 @@ const subjectSlice = createSlice({
       }),
 });
 
-export const currentSubjectReducer = subjectSlice.reducer;
+export const subjectReducer = subjectSlice.reducer;
 export const { clearCurrentSubject } = subjectSlice.actions;
