@@ -6,6 +6,7 @@ import { currentClassReducer } from './slices/currentClassSlice';
 import { subjectReducer } from './slices/subjectSlice';
 import { professorReducer } from './slices/professorSlice';
 import { studentReducer } from './slices/studentSlice';
+import { evaluationReducer } from './slices/evaluationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     subject: subjectReducer,
     professorSlice: professorReducer,
     student: studentReducer,
+    evaluation: evaluationReducer,
   },
 });
 
