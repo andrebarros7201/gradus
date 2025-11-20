@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button/Button';
-import { deleteStudent } from '@/redux/slices/currentClassSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
+import { deleteStudent } from '@/redux/slices/studentSlice';
 import { RootDispatch } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { useDispatch } from 'react-redux';

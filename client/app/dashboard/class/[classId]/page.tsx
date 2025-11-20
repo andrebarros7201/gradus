@@ -7,7 +7,7 @@ import { use, useEffect } from 'react';
 import { Page } from '@/components/page/Page';
 import { ClassDetails } from '@/components/class/classDetails/ClassDetails';
 import { ClassViewToggler } from '@/components/class/classViewToggler/ClassViewToggler';
-import { fetchCurrentClass } from '@/redux/slices/currentClassSlice';
+import { fetchCurrentClass } from '@/redux/slices/classSlice';
 
 type Props = {
   params: Promise<{ classId: string }>;
@@ -26,8 +26,8 @@ export default function ClassPage({ params }: Props) {
   if (!isLoading && currentClass) {
     return (
       <Page>
-        <ClassDetails item={currentClass} />
-        <ClassViewToggler item={currentClass} />
+        <ClassDetails  />
+        <ClassViewToggler />
       </Page>
     );
   }

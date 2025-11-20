@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button/Button';
-import { deleteGrade } from '@/redux/slices/currentSubjectSlice';
+import { deleteGrade } from '@/redux/slices/subjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { IGradeSimple } from '@/types/interfaces/IGradeSimple';

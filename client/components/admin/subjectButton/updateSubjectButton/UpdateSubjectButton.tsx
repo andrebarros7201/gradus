@@ -3,7 +3,7 @@ import { Form } from '@/components/ui/form/Form';
 import { Input } from '@/components/ui/input/Input';
 import { Modal } from '@/components/ui/modal/Modal';
 import { ProfessorSelect } from '@/components/ui/professorSelect/ProfessorSelect';
-import { updateCurrentSubject } from '@/redux/slices/currentSubjectSlice';
+import { updateSubject } from '@/redux/slices/subjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
@@ -43,7 +43,7 @@ export const UpdateSubjectButton = ({ item }: Props) => {
       }
 
       const response = await dispatch(
-        updateCurrentSubject({
+        updateSubject({
           subjectId: item.id,
           name: result.data.name,
           professorId: result.data.professorId,

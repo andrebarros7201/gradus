@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button/Button';
 import { Form } from '@/components/ui/form/Form';
 import { Input } from '@/components/ui/input/Input';
 import { Modal } from '@/components/ui/modal/Modal';
-import { updateStudent } from '@/redux/slices/currentClassSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
@@ -10,6 +9,7 @@ import { IStudentSimple } from '@/types/interfaces/IStudentSimple';
 import { FormEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as z from 'zod';
+import { updateStudent } from '@/redux/slices/studentSlice';
 
 type Props = {
   item: IStudentSimple;

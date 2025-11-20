@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Form } from '@/components/ui/form/Form';
 import { GradeValueSelect } from '@/components/ui/gradeValueSelect/GradeValueSelect';
 import { Modal } from '@/components/ui/modal/Modal';
-import { updateGrade } from '@/redux/slices/currentSubjectSlice';
+import { updateGrade } from '@/redux/slices/subjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { IGradeSimple } from '@/types/interfaces/IGradeSimple';

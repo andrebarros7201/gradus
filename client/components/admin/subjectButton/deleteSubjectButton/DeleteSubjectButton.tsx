@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button/Button';
-import { deleteCurrentSubject } from '@/redux/slices/currentSubjectSlice';
+import { deleteSubject } from '@/redux/slices/subjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
@@ -17,7 +17,7 @@ export const DeleteSubjectButton = ({ item }: Props) => {
 
   async function handleDelete() {
     try {
-      const response = await dispatch(deleteCurrentSubject({ subjectId: item.id })).unwrap();
+      const response = await dispatch(deleteSubject({ subjectId: item.id })).unwrap();
       dispatch(setNotification(response.notification));
       router.replace(`/dashboard/class/${item.classId}`);
     } catch (e) {

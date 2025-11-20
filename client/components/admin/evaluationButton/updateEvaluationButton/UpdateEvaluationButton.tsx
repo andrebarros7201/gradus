@@ -4,7 +4,7 @@ import { EvaluationTypeSelect } from '@/components/ui/evaluationTypeSelect/Evalu
 import { Form } from '@/components/ui/form/Form';
 import { Input } from '@/components/ui/input/Input';
 import { Modal } from '@/components/ui/modal/Modal';
-import { updateEvaluation } from '@/redux/slices/currentSubjectSlice';
+import { updateEvaluation } from '@/redux/slices/subjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { IEvaluation } from '@/types/IEvaluation';
