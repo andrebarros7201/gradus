@@ -4,10 +4,10 @@ import { EvaluationTypeSelect } from '@/components/ui/evaluationTypeSelect/Evalu
 import { Form } from '@/components/ui/form/Form';
 import { Input } from '@/components/ui/input/Input';
 import { Modal } from '@/components/ui/modal/Modal';
-import { updateEvaluation } from '@/redux/slices/subjectSlice';
+import { updateEvaluation } from '@/redux/slices/evaluationSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
-import { IEvaluation } from '@/types/IEvaluation';
+import { IEvaluation } from '@/types/interfaces/IEvaluation';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';

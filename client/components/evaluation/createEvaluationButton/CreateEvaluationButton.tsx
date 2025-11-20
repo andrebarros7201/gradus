@@ -4,7 +4,7 @@ import { EvaluationTypeSelect } from '@/components/ui/evaluationTypeSelect/Evalu
 import { Form } from '@/components/ui/form/Form';
 import { Input } from '@/components/ui/input/Input';
 import { Modal } from '@/components/ui/modal/Modal';
-import { createEvaluation } from '@/redux/slices/subjectSlice';
+import { createEvaluation } from '@/redux/slices/evaluationSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as z from 'zod';
 
 export const CreateEvaluationButton = () => {
-  const { currentSubject } = useSelector((state: RootState) => state.currentSubject);
+  const { currentSubject } = useSelector((state: RootState) => state.subject);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch<RootDispatch>();
 

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button/Button';
-import { deleteEvaluation } from '@/redux/slices/subjectSlice';
+import { deleteEvaluation } from '@/redux/slices/evaluationSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
