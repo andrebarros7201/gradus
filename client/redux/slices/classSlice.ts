@@ -1,6 +1,6 @@
-import { IClassSimple } from '@/types/IClassSimple';
-import { IClassSlice } from '@/types/IClassSlice';
-import { INotification } from '@/types/INotificationSlice';
+import { IClassSimple } from '@/types/interfaces/IClassSimple';
+import { IClassSlice } from '@/types/slices/IClassSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 

@@ -1,4 +1,4 @@
-import { INotification, INotificationSlice } from '@/types/INotificationSlice';
+import { INotification, INotificationSlice } from '@/types/slices/INotificationSlice';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: INotificationSlice = {

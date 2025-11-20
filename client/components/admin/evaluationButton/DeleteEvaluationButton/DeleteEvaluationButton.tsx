@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button/Button';
 import { deleteEvaluation } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { useDispatch } from 'react-redux';
 
 type Props = {

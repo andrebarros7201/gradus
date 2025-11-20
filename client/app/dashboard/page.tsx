@@ -4,7 +4,7 @@ import { AdminDashboard } from '@/components/admin/dashboard/AdminDashboard';
 import { Page } from '@/components/page/Page';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

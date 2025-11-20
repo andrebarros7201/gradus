@@ -1,9 +1,9 @@
-import { IStudentSlice } from '@/types/IStudentSlice';
-import { INotification } from '@/types/INotificationSlice';
-import { IStudentComplete } from '@/types/IStudentComplete';
+import { IStudentSlice } from '@/types/slices/IStudentSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
+import { IStudentComplete } from '@/types/interfaces/IStudentComplete';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-import { IStudentSimple } from '@/types/IStudentSimple';
+import { IStudentSimple } from '@/types/interfaces/IStudentSimple';
 
 const initialState: IStudentSlice = {
   currentStudent: null,
@@ -40,9 +40,9 @@ const currentStudentSlice = createSlice({
     setStudentList: (state, action: PayloadAction<{ studentList: IStudentSimple[] }>) => {
       state.studentList = action.payload.studentList;
     },
-    clearStudentList :(state) => {
-      state.studentList = []
-    }
+    clearStudentList: (state) => {
+      state.studentList = [];
+    },
   },
   extraReducers: (builder) =>
     builder

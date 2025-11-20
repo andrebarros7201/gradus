@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import { RootDispatch } from '@/redux/store';
 import { userLogin } from '@/redux/slices/userSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import * as z from 'zod';
 
 export default function LoginPage() {

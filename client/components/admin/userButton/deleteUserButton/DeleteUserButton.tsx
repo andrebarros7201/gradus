@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button/Button';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { deleteUser } from '@/redux/slices/userSlice';
 import { RootDispatch } from '@/redux/store';
-import { IClassSimple } from '@/types/IClassSimple';
-import { INotification } from '@/types/INotificationSlice';
+import { IClassSimple } from '@/types/interfaces/IClassSimple';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { useDispatch } from 'react-redux';
 
 type ClassProps = {

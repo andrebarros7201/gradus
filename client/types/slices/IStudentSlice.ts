@@ -1,5 +1,5 @@
-import { IStudentComplete } from './IStudentComplete';
-import { IStudentSimple } from './IStudentSimple';
+import { IStudentComplete } from '../interfaces/IStudentComplete';
+import { IStudentSimple } from '../interfaces/IStudentSimple';
 
 export interface IStudentSlice {
   isLoading: boolean;

@@ -1,8 +1,8 @@
-import { IClassComplete } from '@/types/IClassComplete';
+import { IClassComplete } from '@/types/interfaces/IClassComplete';
 import { ICurrentClassSlice } from '@/types/ICurrentClassSlice';
-import { INotification } from '@/types/INotificationSlice';
-import { IStudentComplete } from '@/types/IStudentComplete';
-import { ISubjectSimple } from '@/types/ISubjectSimple';
+import { INotification } from '@/types/slices/INotificationSlice';
+import { IStudentComplete } from '@/types/interfaces/IStudentComplete';
+import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 

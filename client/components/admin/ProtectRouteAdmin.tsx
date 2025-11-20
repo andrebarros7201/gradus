@@ -1,6 +1,6 @@
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

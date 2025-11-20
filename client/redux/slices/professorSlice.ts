@@ -1,6 +1,6 @@
-import { INotification } from '@/types/INotificationSlice';
-import { IProfessorSlice } from '@/types/IProfessorSlice';
-import { IUserProfessor } from '@/types/IUser';
+import { INotification } from '@/types/slices/INotificationSlice';
+import { IProfessorSlice } from '@/types/slices/IProfessorSlice';
+import { IUserProfessor } from '@/types/interfaces/IUser';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 

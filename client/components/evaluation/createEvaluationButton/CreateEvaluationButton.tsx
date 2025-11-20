@@ -7,7 +7,7 @@ import { Modal } from '@/components/ui/modal/Modal';
 import { createEvaluation } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as z from 'zod';

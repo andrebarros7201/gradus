@@ -1,4 +1,4 @@
-import { IClassComplete } from './IClassComplete';
+import { IClassComplete } from "../interfaces/IClassComplete";
 
 export interface ICurrentClassSlice {
   isLoading: boolean;

@@ -1,10 +1,10 @@
-import { ICurrentSubjectSlice } from '@/types/ICurrentSubjectSlice';
-import { IEvaluation } from '@/types/IEvaluation';
-import { IGradeSimple } from '@/types/IGradeSimple';
-import { INotification } from '@/types/INotificationSlice';
-import { ISubjectComplete } from '@/types/ISubjectComplete';
+import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
+import { INotification } from '@/types/slices/INotificationSlice';
+import { ISubjectComplete } from '@/types/interfaces/ISubjectComplete';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
+import { ICurrentSubjectSlice } from '@/types/slices/ICurrentSubjectSlice';
+import { IEvaluation } from '@/types/interfaces/IEvaluation';
 
 const initialState: ICurrentSubjectSlice = {
   currentSubject: null,

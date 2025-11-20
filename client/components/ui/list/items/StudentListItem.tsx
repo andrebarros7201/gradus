@@ -1,5 +1,5 @@
 import classes from './listItem.module.scss';
-import { IStudentSimple } from '@/types/IStudentSimple';
+import { IStudentSimple } from '@/types/interfaces/IStudentSimple';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
 import { UpdateStudentButton } from '@/components/admin/studentButton/updateStudentButton/UpdateStudentButton';
 import { DeleteStudentButton } from '@/components/admin/studentButton/deleteStudentButton/DeleteStudentButton';

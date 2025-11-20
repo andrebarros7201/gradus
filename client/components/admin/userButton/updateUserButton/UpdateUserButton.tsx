@@ -4,18 +4,18 @@ import { Button } from '@/components/ui/button/Button';
 import { Modal } from '@/components/ui/modal/Modal';
 import { Form } from '@/components/ui/form/Form';
 import { Input } from '@/components/ui/input/Input';
-import { IClassSimple } from '@/types/IClassSimple';
+import { IClassSimple } from '@/types/interfaces/IClassSimple';
 import { SchoolYearSelect } from '@/components/ui/schoolYearSelect/SchoolYearSelect';
 import * as z from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootDispatch, RootState } from '@/redux/store';
 import { setNotification } from '@/redux/slices/notificationSlice';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { updateUser } from '@/redux/slices/userSlice';
 import { IsActiveSelect } from '@/components/ui/isActiveSelect/IsActiveSelect';
-import { IClassComplete } from '@/types/IClassComplete';
+import { IClassComplete } from '@/types/interfaces/IClassComplete';
 import { useSelectedLayoutSegments } from 'next/navigation';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 
 type ClassProps = {
   type: 'class';

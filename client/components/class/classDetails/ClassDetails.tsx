@@ -1,11 +1,11 @@
 'use client';
 import classes from './classDetails.module.scss';
 import { ButtonLink } from '@/components/ui/buttonLink/ButtonLink';
-import { IClassComplete } from '@/types/IClassComplete';
+import { IClassComplete } from '@/types/interfaces/IClassComplete';
 import { UpdateUserButton } from '@/components/admin/userButton/updateUserButton/UpdateUserButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 import { DeleteUserButton } from '@/components/admin/userButton/deleteUserButton/DeleteUserButton';
 
 type Props = {

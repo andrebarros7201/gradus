@@ -2,13 +2,13 @@
 
 import { DeleteUserButton } from '@/components/admin/userButton/deleteUserButton/DeleteUserButton';
 import classes from './listItem.module.scss';
-import { IClassSimple } from '@/types/IClassSimple';
 import { UpdateUserButton } from '@/components/admin/userButton/updateUserButton/UpdateUserButton';
 import { usePathname } from 'next/navigation';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
+import { IClassSimple } from '@/types/interfaces/IClassSimple';
 
 type Props = {
   item: IClassSimple;

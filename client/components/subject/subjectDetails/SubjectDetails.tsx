@@ -1,11 +1,11 @@
 import classes from './subjectDetails.module.scss';
-import { ISubjectComplete } from '@/types/ISubjectComplete';
+import { ISubjectComplete } from '@/types/interfaces/ISubjectComplete';
 import { ButtonLink } from '@/components/ui/buttonLink/ButtonLink';
 import { DeleteSubjectButton } from '@/components/admin/subjectButton/deleteSubjectButton/DeleteSubjectButton';
 import { UpdateSubjectButton } from '@/components/admin/subjectButton/updateSubjectButton/UpdateSubjectButton';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 
 type Props = {
   item: ISubjectComplete;

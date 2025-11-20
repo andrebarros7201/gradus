@@ -1,4 +1,4 @@
-import { IUserProfessor } from './IUser';
+import { IUserProfessor } from '../interfaces/IUser';
 
 export interface IProfessorSlice {
   professorList: IUserProfessor[] | null;

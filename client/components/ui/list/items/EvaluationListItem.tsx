@@ -1,15 +1,15 @@
 import classes from './listItem.module.scss';
-import { IEvaluation } from '@/types/IEvaluation';
-import { EvaluationType } from '@/types/EvaluationEnum';
+import { EvaluationType } from '@/types/enums/EvaluationEnum';
 import { ToggleViewGradeButton } from '@/components/admin/evaluationButton/toggleViewGradeButton/ToggleViewGradeButton';
 import { useState } from 'react';
 import { List } from '../List';
 import { DeleteEvaluationButton } from '@/components/admin/evaluationButton/deleteEvaluationButton/DeleteEvaluationButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 import { UpdateEvaluationButton } from '@/components/admin/evaluationButton/updateEvaluationButton/UpdateEvaluationButton';
 import { CreateGradeButton } from '@/components/admin/gradeButton/CreateGradeButton';
+import { IEvaluation } from '@/types/interfaces/IEvaluation';
 
 type Props = {
   item: IEvaluation;

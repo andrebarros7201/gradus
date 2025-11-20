@@ -6,7 +6,7 @@ import { ProfessorSelect } from '@/components/ui/professorSelect/ProfessorSelect
 import { createSubject } from '@/redux/slices/currentClassSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { FormEvent, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as z from 'zod';

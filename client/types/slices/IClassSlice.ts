@@ -1,5 +1,5 @@
-import { IClassComplete } from './IClassComplete';
-import { IClassSimple } from './IClassSimple';
+import { IClassComplete } from '../interfaces/IClassComplete';
+import { IClassSimple } from '../interfaces/IClassSimple';
 
 export interface IClassSlice {
   isLoading: boolean;

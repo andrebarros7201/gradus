@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import classes from './header.module.scss';
 import { RootState } from '@/redux/store';
 import { HeaderItem } from './headerItem/HeaderItem';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 import { HeaderAuthItems } from './headerItem/authHeaderItems/HeaderAuthItems';
 
 export const Header = () => {

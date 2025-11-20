@@ -8,7 +8,7 @@ import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/currentClas
 import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { use, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 

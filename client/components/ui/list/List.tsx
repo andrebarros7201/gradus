@@ -1,14 +1,14 @@
 import classes from './list.module.scss';
-import { IClassSimple } from '@/types/IClassSimple';
-import { ISubjectSimple } from '@/types/ISubjectSimple';
+import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
 import { ClassListItem } from './items/ClassListItem';
 import { SubjectListItem } from './items/SubjectListItem';
-import { IStudentSimple } from '@/types/IStudentSimple';
+import { IStudentSimple } from '@/types/interfaces/IStudentSimple';
 import { StudentListItem } from './items/StudentListItem';
-import { IEvaluation } from '@/types/IEvaluation';
 import { EvaluationListItem } from './items/EvaluationListItem';
-import { IGradeSimple } from '@/types/IGradeSimple';
+import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
 import { GradeListItem } from './items/GradeListItem';
+import { IClassSimple } from '@/types/interfaces/IClassSimple';
+import { IEvaluation } from '@/types/interfaces/IEvaluation';
 
 type Class = {
   type: 'class';
@@ -62,7 +62,7 @@ export const List = ({ type, list }: Props) => {
       {type === 'class' && list.map((item) => <ClassListItem key={item.id} item={item} />)}
       {type === 'subject' && list.map((item) => <SubjectListItem key={item.id} item={item} />)}
       {type === 'student' && list.map((item) => <StudentListItem key={item.id} item={item} />)}
-      {type === 'grade' && list.map(item => <GradeListItem key={item.id} grade={item}/> )}
+      {type === 'grade' && list.map((item) => <GradeListItem key={item.id} grade={item} />)}
       {type === 'evaluation' &&
         list.map((item) => <EvaluationListItem key={item.id} item={item} />)}
     </div>

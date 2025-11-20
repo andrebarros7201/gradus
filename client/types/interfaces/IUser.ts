@@ -1,7 +1,7 @@
 import { IAdmin } from './IAdmin';
-import { IClassSimple } from './IClassSimple';
 import { IProfessor } from './IProfessor';
-import { Role } from './RoleEnum';
+import { Role } from '../enums/RoleEnum';
+import { IClassSimple } from './IClassSimple';
 
 interface IBaseUser {
   id: number;

@@ -1,4 +1,4 @@
-import { ISubjectSimple } from "./ISubjectSimple";
+import { ISubjectSimple } from '../interfaces/ISubjectSimple';
 
 export interface IProfessor {
   id: number;

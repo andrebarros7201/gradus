@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Select } from '../select/Select';
 import { Ref, useEffect } from 'react';
 import { fetchAllProfessors } from '@/redux/slices/professorSlice';
-import { IUserProfessor } from '@/types/IUser';
+import { IUserProfessor } from '@/types/interfaces/IUser';
 
 type Props = {
   ref: Ref<HTMLSelectElement>;

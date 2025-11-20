@@ -9,7 +9,7 @@ import { RootDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { userRegister } from '@/redux/slices/userSlice';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import * as z from 'zod';
 import { RoleSelect } from '@/components/ui/roleSelect/RoleSelect';
 import { SchoolYearSelect } from '@/components/ui/schoolYearSelect/SchoolYearSelect';

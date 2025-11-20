@@ -1,5 +1,5 @@
 import classes from './listItem.module.scss';
-import { ISubjectSimple } from '@/types/ISubjectSimple';
+import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
 
 type Props = {
@@ -7,7 +7,6 @@ type Props = {
 };
 
 export const SubjectListItem = ({ item }: Props) => {
-
   return (
     <div className={classes['item']}>
       <div className={classes['item__field']}>

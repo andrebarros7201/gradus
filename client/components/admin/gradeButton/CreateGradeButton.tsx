@@ -6,7 +6,7 @@ import { StudentSelect } from '@/components/ui/studentSelect/StudentSelect';
 import { createGrade } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { FormEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 

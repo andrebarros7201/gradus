@@ -1,7 +1,7 @@
-import { INotification } from '@/types/INotificationSlice';
-import { IUser } from '@/types/IUser';
-import { IUserSlice } from '@/types/IUserSlice';
-import { Role } from '@/types/RoleEnum';
+import { INotification } from '@/types/slices/INotificationSlice';
+import { IUser } from '@/types/interfaces/IUser';
+import { IUserSlice } from '@/types/slices/IUserSlice';
+import { Role } from '@/types/enums/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { removeClass, updateClass } from './classSlice';

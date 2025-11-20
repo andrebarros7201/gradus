@@ -6,8 +6,8 @@ import { ProfessorSelect } from '@/components/ui/professorSelect/ProfessorSelect
 import { updateCurrentSubject } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
-import { INotification } from '@/types/INotificationSlice';
-import { ISubjectComplete } from '@/types/ISubjectComplete';
+import { INotification } from '@/types/slices/INotificationSlice';
+import { ISubjectComplete } from '@/types/interfaces/ISubjectComplete';
 import { FormEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as z from 'zod';

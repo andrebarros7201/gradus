@@ -8,7 +8,7 @@ import { updateEvaluation } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { IEvaluation } from '@/types/IEvaluation';
-import { INotification } from '@/types/INotificationSlice';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as z from 'zod';
@@ -61,7 +61,7 @@ export const UpdateEvaluationButton = ({ evaluation }: Props) => {
 
       const { notification } = response;
       dispatch(setNotification(notification));
-      setIsModalOpen(() => false)
+      setIsModalOpen(() => false);
     } catch (e) {
       const error = e as { notification: INotification };
       dispatch(setNotification(error.notification));

@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button/Button';
 import classes from './classViewToggler.module.scss';
 import { List } from '@/components/ui/list/List';
-import { IClassComplete } from '@/types/IClassComplete';
+import { IClassComplete } from '@/types/interfaces/IClassComplete';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { CreateSubjectButton } from '@/components/admin/subjectButton/createSubjectButton/CreateSubjectButton';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 import { CreateStudentButton } from '@/components/admin/studentButton/createStudentButton/CreateStudentButton';
 
 type Props = {

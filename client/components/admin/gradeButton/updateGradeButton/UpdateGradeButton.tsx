@@ -5,8 +5,8 @@ import { Modal } from '@/components/ui/modal/Modal';
 import { updateGrade } from '@/redux/slices/currentSubjectSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
-import { IGradeSimple } from '@/types/IGradeSimple';
-import { INotification } from '@/types/INotificationSlice';
+import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
+import { INotification } from '@/types/slices/INotificationSlice';
 import { FormEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 

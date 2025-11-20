@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import classes from './listItem.module.scss';
-import { IGradeSimple } from '@/types/IGradeSimple';
+import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
 import { RootState } from '@/redux/store';
-import { Role } from '@/types/RoleEnum';
+import { Role } from '@/types/enums/RoleEnum';
 import { UpdateGradeButton } from '@/components/admin/gradeButton/updateGradeButton/UpdateGradeButton';
 import { DeleteGradeButton } from '@/components/admin/gradeButton/deleteGradeButton/DeleteGradeButton';
 
