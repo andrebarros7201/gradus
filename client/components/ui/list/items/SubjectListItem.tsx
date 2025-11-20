@@ -1,14 +1,12 @@
 import classes from './listItem.module.scss';
 import { ISubjectSimple } from '@/types/ISubjectSimple';
 import { ButtonLink } from '../../buttonLink/ButtonLink';
-import { usePathname } from 'next/navigation';
 
 type Props = {
   item: ISubjectSimple;
 };
 
 export const SubjectListItem = ({ item }: Props) => {
-  const pathname = usePathname();
 
   return (
     <div className={classes['item']}>
@@ -26,7 +24,7 @@ export const SubjectListItem = ({ item }: Props) => {
       </div>
       <div className={classes['item__buttons']}>
         <p className={classes['item__label']}>Actions</p>
-        <ButtonLink label={'Go to'} href={`${pathname}/subject/${item.id}`} />
+        <ButtonLink label={'Go to'} href={`/dashboard/subject/${item.id}`} />
       </div>
     </div>
   );
