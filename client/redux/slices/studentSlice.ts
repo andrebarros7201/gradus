@@ -1,8 +1,9 @@
 import { IStudentSlice } from '@/types/IStudentSlice';
 import { INotification } from '@/types/INotificationSlice';
 import { IStudentComplete } from '@/types/IStudentComplete';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
+import { IStudentSimple } from '@/types/IStudentSimple';
 
 const initialState: IStudentSlice = {
   currentStudent: null,
@@ -35,7 +36,14 @@ export const fetchCurrentStudent = createAsyncThunk<
 const currentStudentSlice = createSlice({
   name: 'currentStudent',
   initialState,
-  reducers: {},
+  reducers: {
+    setStudentList: (state, action: PayloadAction<{ studentList: IStudentSimple[] }>) => {
+      state.studentList = action.payload.studentList;
+    },
+    clearStudentList :(state) => {
+      state.studentList = []
+    }
+  },
   extraReducers: (builder) =>
     builder
       .addCase(fetchCurrentStudent.pending, (state) => {
