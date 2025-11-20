@@ -8,6 +8,7 @@ import { IEvaluation } from '@/types/interfaces/IEvaluation';
 import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
 import { RootDispatch } from '../store';
 import { addSubject } from './classSlice';
+import { setEvaluations } from './evaluationSlice';
 
 const initialState: ICurrentSubjectSlice = {
   currentSubject: null,
@@ -18,13 +19,15 @@ const initialState: ICurrentSubjectSlice = {
 export const fetchCurrentSubject = createAsyncThunk<
   { currentSubject: ISubjectComplete },
   { subjectId: number },
-  { rejectValue: { notification: INotification } }
->('currentSubject/fetchCurrentSubject', async ({ subjectId }, { rejectWithValue }) => {
+  { rejectValue: { notification: INotification }; dispatch: RootDispatch }
+>('subject/fetchCurrentSubject', async ({ subjectId }, { rejectWithValue, dispatch }) => {
   try {
     const response = await axios.get(`${process.env.SERVER_URL}/api/subject/${subjectId}`, {
       withCredentials: true,
     });
     const { data } = response.data;
+
+    dispatch(setEvaluations({ evaluations: data.evaluations }));
     return { currentSubject: data };
   } catch (e) {
     const error = e as AxiosError<{ message: string }>;
@@ -43,7 +46,7 @@ export const createSubject = createAsyncThunk<
   { name: string; professorId: number; classId: number },
   { rejectValue: { notification: INotification }; dispatch: RootDispatch }
 >(
-  'currentClass/createSubject',
+  'subject/createSubject',
   async ({ name, professorId, classId }, { rejectWithValue, dispatch }) => {
     try {
       const response = await axios.post(
@@ -79,40 +82,37 @@ export const updateSubject = createAsyncThunk<
   { updatedSubject: ISubjectComplete; notification: INotification },
   { subjectId: number; name: string; professorId: number },
   { rejectValue: { notification: INotification } }
->(
-  'currentSubject/updateCurrentSubject',
-  async ({ subjectId, name, professorId }, { rejectWithValue }) => {
-    try {
-      const response = await axios.patch(
-        `${process.env.SERVER_URL}/api/subject/${subjectId}`,
-        { name, professorId },
-        {
-          withCredentials: true,
-        },
-      );
-      const { data } = response.data;
-      return {
-        updatedSubject: data,
-        notification: { type: 'success', message: 'Subject updated successfully' },
-      };
-    } catch (e) {
-      const error = e as AxiosError<{ message: string }>;
-      return rejectWithValue({
-        notification: {
-          type: 'error',
-          message: error.response?.data.message || 'Failed to update subject',
-        },
-      });
-    }
-  },
-);
+>('subject/updateCurrentSubject', async ({ subjectId, name, professorId }, { rejectWithValue }) => {
+  try {
+    const response = await axios.patch(
+      `${process.env.SERVER_URL}/api/subject/${subjectId}`,
+      { name, professorId },
+      {
+        withCredentials: true,
+      },
+    );
+    const { data } = response.data;
+    return {
+      updatedSubject: data,
+      notification: { type: 'success', message: 'Subject updated successfully' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to update subject',
+      },
+    });
+  }
+});
 
 // Delete Subject
 export const deleteSubject = createAsyncThunk<
   { notification: INotification },
   { subjectId: number },
   { rejectValue: { notification: INotification } }
->('currentSubject/deleteCurrentSubject', async ({ subjectId }, { rejectWithValue }) => {
+>('subject/deleteCurrentSubject', async ({ subjectId }, { rejectWithValue }) => {
   try {
     await axios.delete(`${process.env.SERVER_URL}/api/subject/${subjectId}`, {
       withCredentials: true,
@@ -126,95 +126,6 @@ export const deleteSubject = createAsyncThunk<
       notification: {
         type: 'error',
         message: error.response?.data.message || 'Failed to delete subject',
-      },
-    });
-  }
-});
-
-// Add Evaluation
-export const createEvaluation = createAsyncThunk<
-  { notification: INotification; evaluation: IEvaluation },
-  { subjectId: number; name: string; type: number; date: string },
-  { rejectValue: { notification: INotification } }
->(
-  'currentSubject/createEvaluation',
-  async ({ subjectId, date, name, type }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        `${process.env.SERVER_URL}/api/evaluation`,
-        { name, date, evaluationType: type, subjectId },
-        {
-          withCredentials: true,
-        },
-      );
-      return {
-        evaluation: response.data.data,
-        notification: { type: 'success', message: 'Evaluation created successfully' },
-      };
-    } catch (e) {
-      const error = e as AxiosError<{ message: string }>;
-      return rejectWithValue({
-        notification: {
-          type: 'error',
-          message: error.response?.data.message || 'Failed to create evaluation',
-        },
-      });
-    }
-  },
-);
-
-// Update Evaluation
-export const updateEvaluation = createAsyncThunk<
-  { notification: INotification; evaluation: IEvaluation },
-  { name: string; type: number; date: string; evaluationId: number; subjectId: number },
-  { rejectValue: { notification: INotification } }
->(
-  'currentSubject/updateEvaluation',
-  async ({ date, name, type, evaluationId, subjectId }, { rejectWithValue }) => {
-    try {
-      const response = await axios.patch(
-        `${process.env.SERVER_URL}/api/evaluation/${evaluationId}`,
-        { name, date, evaluationType: type, subjectId },
-        {
-          withCredentials: true,
-        },
-      );
-      return {
-        evaluation: response.data.data,
-        notification: { type: 'success', message: 'Evaluation updated successfully' },
-      };
-    } catch (e) {
-      const error = e as AxiosError<{ message: string }>;
-      return rejectWithValue({
-        notification: {
-          type: 'error',
-          message: error.response?.data.message || 'Failed to update evaluation',
-        },
-      });
-    }
-  },
-);
-
-// Delete Evaluation
-export const deleteEvaluation = createAsyncThunk<
-  { notification: INotification; evaluationId: number },
-  { evaluationId: number },
-  { rejectValue: { notification: INotification } }
->('currentSubject/deleteEvaluation', async ({ evaluationId }, { rejectWithValue }) => {
-  try {
-    await axios.delete(`${process.env.SERVER_URL}/api/evaluation/${evaluationId}`, {
-      withCredentials: true,
-    });
-    return {
-      evaluationId,
-      notification: { type: 'success', message: 'Evaluation successfully deleted' },
-    };
-  } catch (e) {
-    const error = e as AxiosError<{ message: string }>;
-    return rejectWithValue({
-      notification: {
-        type: 'error',
-        message: error.response?.data.message || 'Failed to delete evaluation',
       },
     });
   }
@@ -328,6 +239,17 @@ const subjectSlice = createSlice({
         state.isLoading = false;
         state.currentSubject = null;
       })
+      // Create Subject
+      .addCase(createSubject.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createSubject.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.subjectList.push(action.payload.subject);
+      })
+      .addCase(fetchCurrentSubject.rejected, (state) => {
+        state.isLoading = false;
+      })
       // Update Current Subject
       .addCase(updateSubject.pending, (state) => {
         state.isLoading = true;
@@ -349,37 +271,6 @@ const subjectSlice = createSlice({
         state.currentSubject = null;
       })
       .addCase(deleteSubject.rejected, (state) => {
-        state.isLoading = false;
-      })
-      // Create Evaluation
-      .addCase(createEvaluation.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.currentSubject!.evaluations.push(action.payload.evaluation);
-      })
-      .addCase(createEvaluation.rejected, (state) => {
-        state.isLoading = false;
-      })
-      // Update Evaluation
-      .addCase(updateEvaluation.fulfilled, (state, action) => {
-        const { evaluation } = action.payload;
-        state.isLoading = false;
-        const evaluationIndex = state.currentSubject?.evaluations.findIndex(
-          (e) => e.id === evaluation.id,
-        );
-        state.currentSubject!.evaluations[evaluationIndex!] = evaluation;
-      })
-      .addCase(updateEvaluation.rejected, (state) => {
-        state.isLoading = false;
-      })
-      // Delete Evaluation
-      .addCase(deleteEvaluation.fulfilled, (state, action) => {
-        state.isLoading = false;
-        const evaluationIndex = state.currentSubject!.evaluations.findIndex(
-          (e) => e.id === action.payload.evaluationId,
-        );
-        state.currentSubject!.evaluations.splice(evaluationIndex, 1);
-      })
-      .addCase(deleteEvaluation.rejected, (state) => {
         state.isLoading = false;
       })
       // Create Grade
