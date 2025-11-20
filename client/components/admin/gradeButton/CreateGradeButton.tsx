@@ -3,7 +3,7 @@ import { Form } from '@/components/ui/form/Form';
 import { GradeValueSelect } from '@/components/ui/gradeValueSelect/GradeValueSelect';
 import { Modal } from '@/components/ui/modal/Modal';
 import { StudentSelect } from '@/components/ui/studentSelect/StudentSelect';
-import { createGrade } from '@/redux/slices/subjectSlice';
+import { createGrade } from '@/redux/slices/evaluationSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
