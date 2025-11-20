@@ -14,7 +14,6 @@ import { INotification } from '@/types/slices/INotificationSlice';
 import { updateUser } from '@/redux/slices/userSlice';
 import { IsActiveSelect } from '@/components/ui/isActiveSelect/IsActiveSelect';
 import { IClassComplete } from '@/types/interfaces/IClassComplete';
-import { useSelectedLayoutSegments } from 'next/navigation';
 import { Role } from '@/types/enums/RoleEnum';
 
 type ClassProps = {
