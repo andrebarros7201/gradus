@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const ProfessorSelect = ({ ref }: Props) => {
-  const { professorList, isLoading } = useSelector((state: RootState) => state.professorSlice);
+  const { professorList, isLoading } = useSelector((state: RootState) => state.professor);
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {

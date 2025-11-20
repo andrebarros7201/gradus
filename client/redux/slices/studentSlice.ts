@@ -1,11 +1,12 @@
-import { ICurrentStudentSlice } from '@/types/ICurrentStudentSlice';
+import { IStudentSlice } from '@/types/IStudentSlice';
 import { INotification } from '@/types/INotificationSlice';
 import { IStudentComplete } from '@/types/IStudentComplete';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
-const initialState: ICurrentStudentSlice = {
+const initialState: IStudentSlice = {
   currentStudent: null,
+  studentList: [],
   isLoading: false,
 };
 
@@ -50,5 +51,5 @@ const currentStudentSlice = createSlice({
       }),
 });
 
-export const currentStudentReducer = currentStudentSlice.reducer;
+export const studentReducer = currentStudentSlice.reducer;
 export const {} = currentStudentSlice.actions;

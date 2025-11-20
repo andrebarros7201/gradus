@@ -1,7 +1,7 @@
 'use client';
 
 import { Page } from '@/components/page/Page';
-import { fetchCurrentStudent } from '@/redux/slices/currentStudentSlice';
+import { fetchCurrentStudent } from '@/redux/slices/studentSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { use, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function StudentPage({ params }: Props) {
-  const { currentStudent, isLoading } = useSelector((state: RootState) => state.currentStudent);
+  const { currentStudent, isLoading } = useSelector((state: RootState) => state.student);
   const dispatch = useDispatch<RootDispatch>();
   const { studentId } = use(params);
 
