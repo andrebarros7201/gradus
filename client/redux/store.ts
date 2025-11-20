@@ -13,7 +13,7 @@ export const store = configureStore({
     notification: notificationReducer,
     class: classReducer,
     subject: subjectReducer,
-    professorSlice: professorReducer,
+    professor: professorReducer,
     student: studentReducer,
     evaluation: evaluationReducer,
   },
