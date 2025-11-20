@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button/Button';
 import { Form } from '@/components/ui/form/Form';
 import { Input } from '@/components/ui/input/Input';
 import { Modal } from '@/components/ui/modal/Modal';
-import { createStudent } from '@/redux/slices/currentClassSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
+import { createStudent } from '@/redux/slices/studentSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { FormEvent, useRef, useState } from 'react';
@@ -12,7 +12,7 @@ import * as z from 'zod';
 
 export const CreateStudentButton = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { currentClass } = useSelector((state: RootState) => state.currentClass);
+  const { currentClass } = useSelector((state: RootState) => state.class);
   const dispatch = useDispatch<RootDispatch>();
   const nameRef = useRef<HTMLInputElement>(null);
 

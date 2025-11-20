@@ -16,7 +16,7 @@ export const fetchCurrentStudent = createAsyncThunk<
   { student: IStudentComplete },
   { studentId: number },
   { rejectValue: { notification: INotification } }
->('currentStudent/fetchCurrentStudent', async ({ studentId }, { rejectWithValue }) => {
+>('student/fetchCurrentStudent', async ({ studentId }, { rejectWithValue }) => {
   try {
     const response = await axios.get(`${process.env.SERVER_URL}/api/student/${studentId}`, {
       withCredentials: true,
@@ -34,12 +34,40 @@ export const fetchCurrentStudent = createAsyncThunk<
   }
 });
 
+// Create Student
+export const createStudent = createAsyncThunk<
+  { student: IStudentComplete; notification: INotification },
+  { studentName: string; classId: number },
+  { rejectValue: { notification: INotification } }
+>('student/createStudent', async ({ studentName, classId }, { rejectWithValue }) => {
+  try {
+    const response = await axios.post(
+      `${process.env.SERVER_URL}/api/student`,
+      { name: studentName, classId },
+      { withCredentials: true },
+    );
+    const { data } = response.data;
+    return {
+      notification: { type: 'success', message: 'Student created successfully' },
+      student: data,
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to create student',
+      },
+    });
+  }
+});
+
 // Update student
 export const updateStudent = createAsyncThunk<
   { student: IStudentComplete; notification: INotification },
   { studentId: number; studentName: string },
   { rejectValue: { notification: INotification } }
->('currentClass/updateStudent', async ({ studentId, studentName }, { rejectWithValue }) => {
+>('student/updateStudent', async ({ studentId, studentName }, { rejectWithValue }) => {
   try {
     const response = await axios.patch(
       `${process.env.SERVER_URL}/api/student/${studentId}`,
@@ -67,7 +95,7 @@ export const deleteStudent = createAsyncThunk<
   { studentId: number; notification: INotification },
   { studentId: number },
   { rejectValue: { notification: INotification } }
->('currentClass/deleteStudent', async ({ studentId }, { rejectWithValue }) => {
+>('student/deleteStudent', async ({ studentId }, { rejectWithValue }) => {
   try {
     await axios.delete(`${process.env.SERVER_URL}/api/student/${studentId}`, {
       withCredentials: true,
@@ -111,6 +139,18 @@ const currentStudentSlice = createSlice({
       .addCase(fetchCurrentStudent.rejected, (state) => {
         state.isLoading = false;
         state.currentStudent = null;
+      })
+      // Create student
+      .addCase(createStudent.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createStudent.fulfilled, (state, action) => {
+        const { student } = action.payload;
+        state.isLoading = false;
+        state.studentList.push(student);
+      })
+      .addCase(createStudent.rejected, (state) => {
+        state.isLoading = false;
       })
       // Update student
       .addCase(updateStudent.pending, (state) => {
