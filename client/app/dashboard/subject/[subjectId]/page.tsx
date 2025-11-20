@@ -16,7 +16,7 @@ type Props = {
   params: Promise<{ subjectId: string; classId: string }>;
 };
 export default function SubjectPage({ params }: Props) {
-  const { currentSubject, isLoading } = useSelector((state: RootState) => state.currentSubject);
+  const { currentSubject, isLoading } = useSelector((state: RootState) => state.subject);
   const { subjectId, classId } = use(params);
   const dispatch = useDispatch<RootDispatch>();
 
