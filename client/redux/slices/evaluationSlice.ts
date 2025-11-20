@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
 const initialState: IEvaluationSlice = {
-  evaluations: [],
+  evaluationList: [],
 };
 
 // Add Evaluation
@@ -98,29 +98,29 @@ const evaluationSlice = createSlice({
   initialState,
   reducers: {
     setEvaluations: (state, action: PayloadAction<{ evaluations: IEvaluation[] }>) => {
-      state.evaluations = action.payload.evaluations;
+      state.evaluationList = action.payload.evaluations;
     },
   },
   extraReducers: (builder) =>
     builder
       // Add Evaluation
       .addCase(createEvaluation.fulfilled, (state, action) => {
-        state.evaluations.push(action.payload.evaluation);
+        state.evaluationList.push(action.payload.evaluation);
       })
       // .addCase(createEvaluation.rejected, (state) => {})
       // Update Evaluation
       .addCase(updateEvaluation.fulfilled, (state, action) => {
         const { evaluation } = action.payload;
-        const evaluationIndex = state.evaluations.findIndex((e) => e.id === evaluation.id);
-        state.evaluations[evaluationIndex!] = evaluation;
+        const evaluationIndex = state.evaluationList.findIndex((e) => e.id === evaluation.id);
+        state.evaluationList[evaluationIndex!] = evaluation;
       })
       // .addCase(updateEvaluation.rejected, (state) => {})
       // Delete Evaluation
       .addCase(deleteEvaluation.fulfilled, (state, action) => {
-        const evaluationIndex = state.evaluations.findIndex(
+        const evaluationIndex = state.evaluationList.findIndex(
           (e) => e.id === action.payload.evaluationId,
         );
-        state.evaluations.splice(evaluationIndex, 1);
+        state.evaluationList.splice(evaluationIndex, 1);
       }),
   // .addCase(deleteEvaluation.rejected, (state) => {}),
 });
