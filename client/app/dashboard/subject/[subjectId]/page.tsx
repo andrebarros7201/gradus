@@ -11,16 +11,19 @@ import { use, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentSubject, fetchCurrentSubject } from '@/redux/slices/subjectSlice';
 import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/classSlice';
+import { Role } from '@/types/enums/RoleEnum';
 
 type Props = {
   params: Promise<{ subjectId: string; classId: string }>;
 };
 export default function SubjectPage({ params }: Props) {
+  const { user } = useSelector((state: RootState) => state.user);
   const { currentSubject, isLoading } = useSelector((state: RootState) => state.subject);
   const { evaluationList } = useSelector((state: RootState) => state.evaluation);
   const { subjectId } = use(params);
   const dispatch = useDispatch<RootDispatch>();
 
+  // Fetch current subject on render
   useEffect(() => {
     try {
       dispatch(fetchCurrentSubject({ subjectId: Number.parseInt(subjectId) }));
@@ -34,6 +37,7 @@ export default function SubjectPage({ params }: Props) {
     };
   }, [dispatch, subjectId]);
 
+  // Fetch current class on render
   useEffect(() => {
     try {
       dispatch(fetchCurrentClass({ classId: currentSubject!.classId }));
@@ -50,7 +54,8 @@ export default function SubjectPage({ params }: Props) {
     return (
       <Page needAuth={true}>
         <SubjectDetails item={currentSubject} />
-        <CreateEvaluationButton />
+        {/* Only Professors and Admins can create evaluations */}
+        {(user?.role === Role.Admin || user?.role === Role.Professor) && <CreateEvaluationButton />}
         <List list={evaluationList} type="evaluation" />
       </Page>
     );
