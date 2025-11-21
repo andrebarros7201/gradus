@@ -16,6 +16,13 @@ public class GradeRepository : IGradeRepository {
         return await _db.Grades.Include(g => g.Student).Include(g => g.Evaluation).ThenInclude(g => g.Subject).FirstOrDefaultAsync(g => g.Id == id);
     }
 
+    public async Task<Grade?> GetGradeByStudentIdAndSubjectId(int studentId, int evaluationId) {
+        return await _db.Grades
+        .Include(g => g.Student)
+        .Include(g => g.Evaluation).ThenInclude(e => e.Subject)
+        .FirstOrDefaultAsync(g => g.EvaluationId == evaluationId && g.StudentId == studentId);
+    }
+
     public async Task<Grade> CreateGrade(Grade grade) {
         await _db.Grades.AddAsync(grade);
         await _db.SaveChangesAsync();

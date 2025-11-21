@@ -64,6 +64,11 @@ public class AppDbContext : DbContext {
             .HasForeignKey(g => g.StudentId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // Ensures Unique combination between Evaluation and Student
+        modelBuilder.Entity<Grade>()
+        .HasIndex(g => new { g.EvaluationId, g.StudentId })
+        .IsUnique();
+
         // Grade - Subject
         modelBuilder.Entity<Grade>()
             .HasOne(g => g.Evaluation)

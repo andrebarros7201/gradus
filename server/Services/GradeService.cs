@@ -15,6 +15,7 @@ public class GradeService : IGradeService {
         _userRepository = userRepository;
     }
 
+    // TODO check if there is already a grade with same studentId and evaluationId
     public async Task<ServiceResult<GradeSimpleDto>> CreateGrade(int currentUserId, GradeCreateDto dto) {
         User? user = await _userRepository.GetUserById(currentUserId);
 
@@ -24,6 +25,12 @@ public class GradeService : IGradeService {
 
         if (user.Role == Role.Class) {
             return ServiceResult<GradeSimpleDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to create a grade");
+        }
+
+        Grade? existingGrade = await _gradeRepository.GetGradeByStudentIdAndSubjectId(dto.StudentId, dto.EvaluationId);
+
+        if(existingGrade != null) {
+            return ServiceResult<GradeSimpleDto>.Error(ServiceResultStatus.Conflict, "This student already has a grade");
         }
 
         var newGrade = new Grade {
