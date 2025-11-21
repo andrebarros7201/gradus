@@ -25,8 +25,8 @@ export default function ClassPage({ params }: Props) {
 
   if (!isLoading && currentClass) {
     return (
-      <Page>
-        <ClassDetails  />
+      <Page needAuth={true}>
+        <ClassDetails />
         <ClassViewToggler />
       </Page>
     );

@@ -21,7 +21,7 @@ export default function StudentPage({ params }: Props) {
 
   if (!isLoading && currentStudent) {
     return (
-      <Page>
+      <Page needAuth={true}>
         <h2>{currentStudent.name}</h2>
       </Page>
     );

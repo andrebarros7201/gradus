@@ -48,7 +48,7 @@ export default function SubjectPage({ params }: Props) {
   }, [currentSubject, dispatch]);
   if (!isLoading && currentSubject) {
     return (
-      <Page>
+      <Page needAuth={true}>
         <SubjectDetails item={currentSubject} />
         <CreateEvaluationButton />
         <List list={evaluationList} type="evaluation" />
