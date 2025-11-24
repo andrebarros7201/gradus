@@ -122,35 +122,45 @@ public class AppDbContext : DbContext {
             });
 
         // Class
-        modelBuilder.Entity<Class>().HasData(
-            new Class {
-                Id = 1,
-                UserId = 3,
-                SchoolYear = "2025/26"
-            }
-        );
 
-        modelBuilder.Entity<User>().HasData(
-            new User {
-                Id = 3,
-                Name = "Class",
-                Username = "class",
-                Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
-                Role = Role.Class,
-                CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Local).AddTicks(2206)
-            });
+        for (int i = 1; i <= 100; i++) {
+            modelBuilder.Entity<Class>().HasData(
+                new Class {
+                    Id = i,
+                    UserId = i + 2,
+                    SchoolYear = "2025/26"
+                }
+            );
+
+            modelBuilder.Entity<User>().HasData(
+                new User {
+                    Id = i + 2,
+                    Name = $"Class{i}",
+                    Username = $"class{i}",
+                    Password = "$2a$11$8MiuxgN5KWdwBZ5F9SKc1OfnoozFj4nFfu0taWBByRvGTHE.ZzHdG",
+                    Role = Role.Class,
+                    CreatedAt = new DateTime(2025, 10, 15, 11, 47, 40, 964, DateTimeKind.Local).AddTicks(2206)
+                });
+
+        }
 
         // Students
-        modelBuilder.Entity<Student>().HasData(
-            new Student { Id = 1, Name = "Andre" },
-            new Student { Id = 2, Name = "Ines" }
-        );
+        // Iterate over all created classes
+        for (int i = 0; i < 100; i++) {
 
-        // Link Students and Classes
-        modelBuilder.Entity("ClassStudent").HasData(
-            new { StudentsId = 1, ClassesId = 1 },
-            new { StudentsId = 2, ClassesId = 1 }
-        );
+            // Create 10 students per class
+            for (int k = 0; k < 10; k++) {
+
+                modelBuilder.Entity<Student>().HasData(
+                    new Student { Id = i * 10 + k + 1, Name = $"Student{k}" }
+                );
+
+                // Link Students and Classes
+                modelBuilder.Entity("ClassStudent").HasData(
+                    new { StudentsId = i * 10 + k + 1, ClassesId = i + 1 }
+                );
+            }
+        }
 
         // Subjects
         modelBuilder.Entity<Subject>().HasData(
