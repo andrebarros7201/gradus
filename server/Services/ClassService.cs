@@ -21,7 +21,7 @@ public class ClassService : IClassService {
         List<Class> classes = await _classRepository.GetAllClasses();
 
         // Number of pages needed
-        int numberOfPages = (int)Math.Ceiling((decimal)classes.Count() / 10);
+        int numberOfPages = (int)Math.Ceiling((decimal)classCount / 10);
 
         // 10 is the number of classes per page
         IEnumerable<Class> currentPage = classes.Skip((page - 1) * 10).Take(10);
@@ -33,7 +33,7 @@ public class ClassService : IClassService {
             IsActive = c.IsActive,
             Name = c.User.Name,
             SchoolYear = c.SchoolYear
-        }).ToList(), classCount);
+        }).ToList(), numberOfPages);
     }
 
     public async Task<ServiceResult<ClassCompleteDto?>> GetClassById(int id) {

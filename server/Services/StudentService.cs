@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Server.DTOs.Class;
 using Server.DTOs.Grade;
 using Server.DTOs.Student;
@@ -24,14 +25,18 @@ public class StudentService : IStudentService {
 
         IEnumerable<Student> students = await _studentRepository.GetAllStudents();
 
+        // Number of pages needed
+        int numberOfPages = (int)Math.Ceiling((decimal)studentCount / 10);
+
         // 10 is the number of students per page
         IEnumerable<Student> currentPage = students.Skip((page - 1) * 10).Take(10);
+
 
         return ServiceResult<List<StudentSimpleDto>>.Success(currentPage.Select(s => new StudentSimpleDto {
             Id = s.Id,
             Name = s.Name,
             ClassName = s.Classes.Where(c => c.IsActive).Select(c => c.User.Name).FirstOrDefault()!
-        }).ToList(), studentCount);
+        }).ToList(), numberOfPages);
     }
 
 

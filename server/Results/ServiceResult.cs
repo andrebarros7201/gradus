@@ -5,14 +5,14 @@ namespace Server.Results;
 public class ServiceResult<T> {
     public ServiceResultStatus Status { get; set; }
     public T? Data { get; set; }
-    public int? Count { get; set; }
+    public int? NumberPages { get; set; }
     public string? Message { get; set; }
 
     public static ServiceResult<T> Success(T data, int? count = null) {
         return new ServiceResult<T> {
             Status = ServiceResultStatus.Success,
             Data = data,
-            Count = count
+            NumberPages = count
         };
     }
 
@@ -26,8 +26,8 @@ public class ServiceResult<T> {
     public static IActionResult ReturnStatus(ServiceResult<T> result) {
         return result.Status switch {
             ServiceResultStatus.Success =>
-                result.Count != null
-                    ? new OkObjectResult(new { data = result.Data, count = result.Count })
+                result.NumberPages != null
+                    ? new OkObjectResult(new { data = result.Data, numberPages = result.NumberPages })
                     : new OkObjectResult(new { data = result.Data }),
 
             ServiceResultStatus.BadRequest => new BadRequestObjectResult(new { message = result.Message }),
