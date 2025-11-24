@@ -15,9 +15,18 @@ public class ClassService : IClassService {
         _classRepository = classRepository;
     }
 
-    public async Task<ServiceResult<List<ClassSimpleDto>>> GetAllClasses() {
+    public async Task<ServiceResult<List<ClassSimpleDto>>> GetAllClasses(int page) {
+        int classCount = await _classRepository.GetClassCount();
+
         List<Class> classes = await _classRepository.GetAllClasses();
-        return ServiceResult<List<ClassSimpleDto>>.Success(classes.Select(c => new ClassSimpleDto {
+
+        // Number of pages needed
+        int numberOfPages = (int)Math.Ceiling((decimal)classes.Count() / 10);
+
+        // 10 is the number of classes per page
+        IEnumerable<Class> currentPage = classes.Skip((page - 1) * 10).Take(10);
+
+        return ServiceResult<List<ClassSimpleDto>>.Success(currentPage.Select(c => new ClassSimpleDto {
             Id = c.Id,
             UserId = c.User.Id,
             Username = c.User.Username,

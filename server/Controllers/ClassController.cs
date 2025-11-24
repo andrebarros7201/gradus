@@ -16,8 +16,8 @@ public class ClassController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllClasses() {
-        ServiceResult<List<ClassSimpleDto>> result = await _classService.GetAllClasses();
+    public async Task<IActionResult> GetAllClasses(int page = 1) {
+        ServiceResult<List<ClassSimpleDto>> result = await _classService.GetAllClasses(page);
 
         return ServiceResult<List<ClassSimpleDto>>.ReturnStatus(result);
     }

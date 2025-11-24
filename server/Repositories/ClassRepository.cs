@@ -1,3 +1,4 @@
+using System.Diagnostics.Metrics;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Interfaces.Repositories;
@@ -10,6 +11,10 @@ public class ClassRepository : IClassRepository {
 
     public ClassRepository(AppDbContext db) {
         _db = db;
+    }
+
+    public async Task<int> GetClassCount() {
+        return await _db.Classes.CountAsync();
     }
 
     public async Task<Class?> GetClassById(int id) {
