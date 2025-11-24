@@ -11,6 +11,13 @@ public class StudentRepository : IStudentRepository {
     public StudentRepository(AppDbContext db) {
         _db = db;
     }
+    public async Task<int> GetAllStudentsCount() {
+        return await _db.Students.CountAsync();
+    }
+
+    public async Task<List<Student>> GetAllStudents() {
+        return await _db.Students.Include(s => s.Classes).ToListAsync();
+    }
 
     public async Task<Student?> GetStudentById(int id) {
         return await _db.Students
