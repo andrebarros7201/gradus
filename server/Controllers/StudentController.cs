@@ -17,6 +17,14 @@ public class StudentController : ControllerBase {
     }
 
     [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> GetAllStudents(int page = 1) {
+        ServiceResult<List<StudentSimpleDto>> result = await _studentService.GetAllStudents(page);
+
+        return ServiceResult<List<StudentSimpleDto>>.ReturnStatus(result);
+    }
+
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> RegisterStudent([FromBody] StudentRegisterDto dto) {
         // Validate Model
