@@ -24,7 +24,10 @@ public class StudentService : IStudentService {
 
         IEnumerable<Student> students = await _studentRepository.GetAllStudents();
 
-        return ServiceResult<List<StudentSimpleDto>>.Success(students.Skip((page - 1) * 10).Take(10).Select(s => new StudentSimpleDto {
+        // 10 is the number of students per page
+        IEnumerable<Student> currentPage = students.Skip((page - 1) * 10).Take(10);
+
+        return ServiceResult<List<StudentSimpleDto>>.Success(currentPage.Select(s => new StudentSimpleDto {
             Id = s.Id,
             Name = s.Name,
             ClassName = s.Classes.Where(c => c.IsActive).Select(c => c.User.Name).FirstOrDefault()!
