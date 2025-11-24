@@ -33,7 +33,7 @@ public class ClassService : IClassService {
             IsActive = c.IsActive,
             Name = c.User.Name,
             SchoolYear = c.SchoolYear
-        }).ToList());
+        }).ToList(), classCount);
     }
 
     public async Task<ServiceResult<ClassCompleteDto?>> GetClassById(int id) {

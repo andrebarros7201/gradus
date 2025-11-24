@@ -31,7 +31,7 @@ public class StudentService : IStudentService {
             Id = s.Id,
             Name = s.Name,
             ClassName = s.Classes.Where(c => c.IsActive).Select(c => c.User.Name).FirstOrDefault()!
-        }).ToList());
+        }).ToList(), studentCount);
     }
 
 
