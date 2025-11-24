@@ -8,5 +8,5 @@ public class StudentSimpleDto {
     public string Name { get; set; } = String.Empty;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string ClassName = String.Empty;
+    public string ClassName { get; set; } = String.Empty;
 }
