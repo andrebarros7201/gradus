@@ -19,6 +19,19 @@ public class StudentService : IStudentService {
         _classRepository = classRepository;
     }
 
+    public async Task<ServiceResult<List<StudentSimpleDto>>> GetAllStudents(int page) {
+        int studentCount = await _studentRepository.GetAllStudentsCount();
+
+        IEnumerable<Student> students = await _studentRepository.GetAllStudents();
+
+        return ServiceResult<List<StudentSimpleDto>>.Success(students.Skip((page - 1) * 10).Take(10).Select(s => new StudentSimpleDto {
+            Id = s.Id,
+            Name = s.Name,
+            ClassName = s.Classes.Where(c => c.IsActive).Select(c => c.User.Name).FirstOrDefault()!
+        }).ToList());
+    }
+
+
     public async Task<ServiceResult<StudentCompleteDto>> FetchStudentById(int id) {
         Student? student = await _studentRepository.GetStudentById(id);
 
