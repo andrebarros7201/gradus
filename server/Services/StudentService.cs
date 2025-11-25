@@ -21,22 +21,15 @@ public class StudentService : IStudentService {
     }
 
     public async Task<ServiceResult<List<StudentSimpleDto>>> GetAllStudents(int page) {
-        int studentCount = await _studentRepository.GetAllStudentsCount();
+        (List<Student>? studentList, int numberStudents) = await _studentRepository.GetAllStudents(page);
 
-        IEnumerable<Student> students = await _studentRepository.GetAllStudents();
+        int numberPages = (int)Math.Ceiling((decimal)numberStudents / 10);
 
-        // Number of pages needed
-        int numberOfPages = (int)Math.Ceiling((decimal)studentCount / 10);
-
-        // 10 is the number of students per page
-        IEnumerable<Student> currentPage = students.Skip((page - 1) * 10).Take(10);
-
-
-        return ServiceResult<List<StudentSimpleDto>>.Success(currentPage.Select(s => new StudentSimpleDto {
+        return ServiceResult<List<StudentSimpleDto>>.Success(studentList.Select(s => new StudentSimpleDto {
             Id = s.Id,
             Name = s.Name,
             ClassName = s.Classes.Where(c => c.IsActive).Select(c => c.User.Name).FirstOrDefault()!
-        }).ToList(), numberOfPages);
+        }).ToList(), numberPages);
     }
 
 

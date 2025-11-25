@@ -11,12 +11,15 @@ public class StudentRepository : IStudentRepository {
     public StudentRepository(AppDbContext db) {
         _db = db;
     }
-    public async Task<int> GetAllStudentsCount() {
-        return await _db.Students.CountAsync();
-    }
 
-    public async Task<List<Student>> GetAllStudents() {
-        return await _db.Students.Include(s => s.Classes).ThenInclude(c => c.User).ToListAsync();
+    public async Task<(List<Student>, int numberPages)> GetAllStudents(int page) {
+        IQueryable<Student> query = _db.Students.AsQueryable();
+
+        int numberStudents = await query.CountAsync();
+
+        List<Student> studentList = await query.Skip((page - 1) * 10).Take(10).ToListAsync();
+
+        return (studentList, numberStudents);
     }
 
     public async Task<Student?> GetStudentById(int id) {
