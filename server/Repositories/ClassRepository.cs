@@ -13,10 +13,6 @@ public class ClassRepository : IClassRepository {
         _db = db;
     }
 
-    public async Task<int> GetClassCount() {
-        return await _db.Classes.CountAsync();
-    }
-
     public async Task<Class?> GetClassById(int id) {
         return await _db.Classes
             .Include(c => c.Students)
@@ -25,11 +21,13 @@ public class ClassRepository : IClassRepository {
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task<List<Class>> GetAllClasses() {
-        return await _db.Classes
-            .Include(c => c.Students)
-            .Include(c => c.Subjects)
-            .Include(c => c.User)
-            .ToListAsync();
+    public async Task<(List<Class>, int classCount)> GetAllClasses(int page) {
+        IQueryable<Class> query = _db.Classes.AsQueryable();
+
+        int classCount = await query.CountAsync();
+
+        List<Class> classList = await query.Skip((page - 1) * 10).Take(10).ToListAsync();
+
+        return (classList, classCount);
     }
 }
