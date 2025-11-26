@@ -26,7 +26,7 @@ public class ClassRepository : IClassRepository {
 
         int classCount = await query.CountAsync();
 
-        List<Class> classList = await query.Skip((page - 1) * 10).Take(10).ToListAsync();
+        List<Class> classList = await query.Include(c => c.User).Skip((page - 1) * 10).Take(10).ToListAsync();
 
         return (classList, classCount);
     }
