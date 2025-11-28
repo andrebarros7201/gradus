@@ -11,22 +11,23 @@ import { setSubjectList } from './subjectSlice';
 
 const initialState: IClassSlice = {
   isLoading: false,
+  pages: null,
   classes: [],
   currentClass: null,
 };
 
 // Fetch All Classes
 export const fetchAllClasses = createAsyncThunk<
-  { classes: IClassSimple[] },
-  void,
+  { classes: IClassSimple[]; numberPages: number },
+  { page: number },
   { rejectValue: { notification: INotification } }
->('class/fetchAllClasses', async (_, { rejectWithValue }) => {
+>('class/fetchAllClasses', async ({ page }, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${process.env.SERVER_URL}/api/class`, {
+    const response = await axios.get(`${process.env.SERVER_URL}/api/class?page=${page}`, {
       withCredentials: true,
     });
-    const { data } = response.data;
-    return { classes: data };
+    const { data: classes, numberPages } = response.data;
+    return { classes, numberPages };
   } catch (e) {
     const error = e as AxiosError<{ message: string }>;
     return rejectWithValue({
@@ -120,10 +121,12 @@ const classSlice = createSlice({
       .addCase(fetchAllClasses.fulfilled, (state, action) => {
         state.isLoading = true;
         state.classes = action.payload.classes;
+        state.pages = action.payload.numberPages;
       })
       .addCase(fetchAllClasses.rejected, (state) => {
         state.isLoading = false;
         state.classes = [];
+        state.pages = null;
       })
       // Fetch Class
       .addCase(fetchCurrentClass.pending, (state) => {
