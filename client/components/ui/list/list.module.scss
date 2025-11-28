@@ -8,6 +8,11 @@
   align-items: center;
   gap: 1rem;
 
+  @include mixins.responds-to(md) {
+    max-height: 600px;
+    overflow: scroll;
+  }
+
   &__header {
     display: none;
     width: 100%;
