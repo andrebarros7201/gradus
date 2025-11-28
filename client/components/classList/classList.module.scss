@@ -1,3 +1,5 @@
+@use '@/styles/mixins';
+
 .list {
   width: 100%;
   display: flex;
@@ -12,6 +14,17 @@
     > p {
       width: 100%;
       text-align: center;
+    }
+  }
+
+  &__footer {
+    visibility: hidden;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    @include mixins.responds-to(sm) {
+      visibility: visible;
     }
   }
 }
