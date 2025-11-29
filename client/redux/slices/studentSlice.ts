@@ -9,7 +9,31 @@ const initialState: IStudentSlice = {
   currentStudent: null,
   studentList: [],
   isLoading: false,
+  pages: null,
 };
+
+// Fetch All Students
+export const fetchAllStudents = createAsyncThunk<
+  { students: IStudentSimple[]; numberPages: number },
+  { page: number },
+  { rejectValue: { notification: INotification } }
+>('student/fetchAllStudents', async ({ page }, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(`${process.env.SERVER_URL}/api/student?page=${page}`, {
+      withCredentials: true,
+    });
+    const { data: students, numberPages } = response.data;
+    return { students, numberPages };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message ?? 'Failed to load students',
+      },
+    });
+  }
+});
 
 // Fetch current student
 export const fetchCurrentStudent = createAsyncThunk<
@@ -128,6 +152,20 @@ const currentStudentSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
+      // Fetch All Students
+      .addCase(fetchAllStudents.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAllStudents.fulfilled, (state, action) => {
+        state.isLoading = true;
+        state.studentList = action.payload.students;
+        state.pages = action.payload.numberPages;
+      })
+      .addCase(fetchAllStudents.rejected, (state) => {
+        state.isLoading = false;
+        state.studentList = [];
+        state.pages = null;
+      })
       // Fetch current student
       .addCase(fetchCurrentStudent.pending, (state) => {
         state.isLoading = true;
