@@ -12,8 +12,7 @@ export const AdminDashboard = () => {
       <h3>Welcome back, {user?.name}</h3>
       <div className={classes['dashboard__cards']}>
         <Card label={'Classes'} description={'Manage classes'} href={'/dashboard/class'} />
-        <Card label={'Classes'} description={'Manage classes'} href={'/dashboard/class'} />
-        <Card label={'Classes'} description={'Manage classes'} href={'/dashboard/class'} />
+        <Card label={'Students'} description={'Manage Students'} href={'/dashboard/student'} />
       </div>
     </main>
   );
