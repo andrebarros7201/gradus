@@ -1,3 +1,5 @@
+'use client';
+
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { Role } from '@/types/enums/RoleEnum';
