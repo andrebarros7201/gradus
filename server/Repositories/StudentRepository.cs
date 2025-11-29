@@ -17,7 +17,11 @@ public class StudentRepository : IStudentRepository {
 
         int numberStudents = await query.CountAsync();
 
-        List<Student> studentList = await query.Skip((page - 1) * 10).Take(10).ToListAsync();
+        List<Student> studentList = await query
+        .Include(s => s.Classes).ThenInclude(c => c.User)
+        .Skip((page - 1) * 10)
+        .Take(10)
+        .ToListAsync();
 
         return (studentList, numberStudents);
     }
