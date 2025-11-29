@@ -45,7 +45,7 @@ export const List = ({ type, list }: Props) => {
       : type === 'subject'
       ? ['Id', 'Name', 'Professor', 'Actions']
       : type === 'student'
-      ? ['Id', 'Name', 'Actions']
+      ? ['Id', 'Name', 'Class', 'Actions']
       : type === 'evaluation'
       ? ['Id', 'Name', 'Date', 'Type', 'Action']
       : ['Id', 'Student', 'Value', 'Action'];
@@ -53,11 +53,16 @@ export const List = ({ type, list }: Props) => {
   return (
     <div className={classes.list}>
       <div className={classes['list__header']}>
-        {headers.map((header) => (
-          <p key={header} className={classes['list__header-item']}>
-            {header}
-          </p>
-        ))}
+        {headers.map((header) => {
+          if (header === 'Class' && type === 'student' && list[0].className === null) {
+            return;
+          }
+          return (
+            <p key={header} className={classes['list__header-item']}>
+              {header}
+            </p>
+          );
+        })}
       </div>
       {type === 'class' && list.map((item) => <ClassListItem key={item.id} item={item} />)}
       {type === 'subject' && list.map((item) => <SubjectListItem key={item.id} item={item} />)}

@@ -19,6 +19,12 @@ export const StudentListItem = ({ item }: Props) => {
         <p className={classes['item__label']}>Name</p>
         <p>{item.name}</p>
       </div>
+      {item.className && (
+        <div className={classes['item__field']}>
+          <p className={classes['item__label']}>Class</p>
+          <p>{item.className}</p>
+        </div>
+      )}
       <div className={classes['item__buttons']}>
         <p className={classes['item__label']}>Actions</p>
         <UpdateStudentButton item={item} />
