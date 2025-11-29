@@ -18,13 +18,8 @@
   }
 
   &__footer {
-    visibility: hidden;
     width: 100%;
     display: flex;
     justify-content: space-between;
-
-    @include mixins.responds-to(sm) {
-      visibility: visible;
-    }
   }
 }
