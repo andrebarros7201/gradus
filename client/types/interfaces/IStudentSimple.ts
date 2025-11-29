@@ -1,4 +1,5 @@
-export interface IStudentSimple{
-    id: number,
-    name: string
+export interface IStudentSimple {
+  id: number;
+  name: string;
+  className?: string;
 }
