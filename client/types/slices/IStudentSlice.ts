@@ -5,4 +5,5 @@ export interface IStudentSlice {
   isLoading: boolean;
   currentStudent: IStudentComplete | null;
   studentList: IStudentSimple[];
+  pages: number | null;
 }
