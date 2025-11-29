@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, useEffect } from 'react';
 import classes from './page.module.scss';
 import { RootDispatch, RootState } from '@/redux/store';
