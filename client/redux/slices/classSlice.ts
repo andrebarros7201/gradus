@@ -8,6 +8,7 @@ import { RootDispatch } from '../store';
 import { setStudentList } from './studentSlice';
 import { ISubjectSimple } from '@/types/interfaces/ISubjectSimple';
 import { setSubjectList } from './subjectSlice';
+import { IStudentSimple } from '@/types/interfaces/IStudentSimple';
 
 const initialState: IClassSlice = {
   isLoading: false,
@@ -50,7 +51,15 @@ export const fetchCurrentClass = createAsyncThunk<
       withCredentials: true,
     });
     const { data } = response.data;
-    dispatch(setStudentList({ studentList: data.students }));
+
+    // Create a clean student list
+    const studentList: IStudentSimple[] = data.students.map((s: IStudentSimple) => ({
+      id: s.id,
+      name: s.name,
+      className: null,
+    }));
+
+    dispatch(setStudentList({ studentList }));
     dispatch(setSubjectList({ subjectList: data.subjects }));
     return { class: data };
   } catch (e) {
