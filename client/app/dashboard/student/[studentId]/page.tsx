@@ -1,6 +1,7 @@
 'use client';
 
 import { Page } from '@/components/page/Page';
+import { StudentDetails } from '@/components/student/studentDetails/StudentDetails';
 import { fetchCurrentStudent } from '@/redux/slices/studentSlice';
 import { RootDispatch, RootState } from '@/redux/store';
 import { use, useEffect } from 'react';
@@ -22,7 +23,7 @@ export default function StudentPage({ params }: Props) {
   if (!isLoading && currentStudent) {
     return (
       <Page needAuth={true}>
-        <h2>{currentStudent.name}</h2>
+        <StudentDetails student={currentStudent} />
       </Page>
     );
   }
