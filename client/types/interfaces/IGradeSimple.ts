@@ -5,4 +5,6 @@ export interface IGradeSimple {
   studentName: string;
   evaluationId: number;
   evaluationName: string;
+  subjectName: string;
+  subjectId: number;
 }
