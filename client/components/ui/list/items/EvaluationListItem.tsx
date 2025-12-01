@@ -57,7 +57,7 @@ export const EvaluationListItem = ({ item }: Props) => {
             {(user?.role === Role.Admin || user?.role === Role.Professor) && (
               <CreateGradeButton evaluationId={item.id} />
             )}
-            <List list={item.grades} type="grade" />
+            <List list={item.grades} type="gradeClass" />
           </>
         )}
       </div>
