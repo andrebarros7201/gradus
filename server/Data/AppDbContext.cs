@@ -122,7 +122,6 @@ public class AppDbContext : DbContext {
             });
 
         // Class
-
         for (int i = 1; i <= 100; i++) {
             modelBuilder.Entity<Class>().HasData(
                 new Class {
@@ -144,49 +143,52 @@ public class AppDbContext : DbContext {
 
         }
 
-        // Students
+        // Students and Subjects
         // Iterate over all created classes
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i <= 100; i++) {
 
             // Create 10 students per class
-            for (int k = 0; k < 10; k++) {
+            for (int k = 1; k <= 10; k++) {
+
+                int studentId = (i - 1) * 10 + k;
 
                 modelBuilder.Entity<Student>().HasData(
-                    new Student { Id = i * 10 + k + 1, Name = $"Student{k}" }
+                    new Student { Id = studentId, Name = $"Student{studentId}" }
                 );
 
-                // Link Students and Classes
+                // Link Student and Class
                 modelBuilder.Entity("ClassStudent").HasData(
-                    new { StudentsId = i * 10 + k + 1, ClassesId = i + 1 }
+                    new { StudentsId = studentId, ClassesId = i }
+                );
+            }
+
+            // Subject List
+            List<string> subjects = ["Math", "English", "History", "Computer Science"];
+
+            for (int k = 1; k <= subjects.Count; k++) {
+
+                int subjectId = i * subjects.Count + k;
+
+                // Subjects
+                modelBuilder.Entity<Subject>().HasData(
+                    new Subject {
+                        Id = subjectId,
+                        Name = subjects[k - 1], // 0 indexed
+                        ProfessorId = 1,
+                        ClassId = i
+                    });
+
+                // Evaluation
+                modelBuilder.Entity<Evaluation>().HasData(
+                    new Evaluation {
+                        Id = subjectId,
+                        Name = "Exam",
+                        Date = new DateOnly(2025, 02, 02),
+                        EvaluationType = EvaluationType.Exam,
+                        SubjectId = subjectId
+                    }
                 );
             }
         }
-
-        // Subjects
-        modelBuilder.Entity<Subject>().HasData(
-            new Subject {
-                Id = 1,
-                Name = "Math",
-                ProfessorId = 1,
-                ClassId = 1
-            });
-
-        // Evaluation
-        modelBuilder.Entity<Evaluation>().HasData(
-            new Evaluation {
-                Id = 1,
-                Name = "Exam",
-                Date = new DateOnly(2025, 02, 02),
-                EvaluationType = EvaluationType.Exam,
-                SubjectId = 1
-            }
-        );
-
-        // Grades
-        modelBuilder.Entity<Grade>().HasData(
-            new Grade { Id = 1, Value = 10, EvaluationId = 1, StudentId = 1 },
-            new Grade { Id = 2, Value = 8, EvaluationId = 1, StudentId = 2 }
-        );
-
     }
 }
