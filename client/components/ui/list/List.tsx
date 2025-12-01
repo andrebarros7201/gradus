@@ -54,7 +54,7 @@ export const List = ({ type, list }: Props) => {
     <div className={classes.list}>
       <div className={classes['list__header']}>
         {headers.map((header) => {
-          if (header === 'Class' && type === 'student' && list[0].className === null) {
+          if (header === 'Class' && type === 'student' && list[0]?.className === null) {
             return;
           }
           return (
