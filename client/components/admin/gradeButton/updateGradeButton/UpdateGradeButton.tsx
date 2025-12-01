@@ -2,19 +2,21 @@ import { Button } from '@/components/ui/button/Button';
 import { Form } from '@/components/ui/form/Form';
 import { GradeValueSelect } from '@/components/ui/gradeValueSelect/GradeValueSelect';
 import { Modal } from '@/components/ui/modal/Modal';
-import { updateGrade } from '@/redux/slices/evaluationSlice';
+import { updateGrade as updateGradeEvaluation } from '@/redux/slices/evaluationSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { RootDispatch } from '@/redux/store';
 import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
 import { INotification } from '@/types/slices/INotificationSlice';
 import { FormEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { updateGrade as updateGradeStudent } from '@/redux/slices/studentSlice';
 
 type Props = {
   grade: IGradeSimple;
+  fromStudent?: boolean;
 };
 
-export const UpdateGradeButton = ({ grade }: Props) => {
+export const UpdateGradeButton = ({ grade, fromStudent = false }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch<RootDispatch>();
   const gradeValueRef = useRef<HTMLSelectElement>(null);
@@ -23,10 +25,18 @@ export const UpdateGradeButton = ({ grade }: Props) => {
     e.preventDefault();
 
     const gradeValue = gradeValueRef.current?.value;
+
     try {
-      const response = await dispatch(
-        updateGrade({ gradeId: grade.id, value: Number(gradeValue) }),
-      ).unwrap();
+      let response;
+      if (fromStudent) {
+        response = await dispatch(
+          updateGradeStudent({ gradeId: grade.id, value: Number(gradeValue) }),
+        ).unwrap();
+      } else {
+        response = await dispatch(
+          updateGradeEvaluation({ gradeId: grade.id, value: Number(gradeValue) }),
+        ).unwrap();
+      }
       const { notification } = response;
       dispatch(setNotification(notification));
       setIsModalOpen(() => false);
