@@ -4,6 +4,7 @@ import { IStudentComplete } from '@/types/interfaces/IStudentComplete';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { IStudentSimple } from '@/types/interfaces/IStudentSimple';
+import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
 
 const initialState: IStudentSlice = {
   currentStudent: null,
@@ -139,6 +140,61 @@ export const deleteStudent = createAsyncThunk<
   }
 });
 
+// Update Grade
+export const updateGrade = createAsyncThunk<
+  { notification: INotification; grade: IGradeSimple },
+  { value: number; gradeId: number },
+  { rejectValue: { notification: INotification } }
+>('student/updateGrade', async ({ value, gradeId }, { rejectWithValue }) => {
+  try {
+    const response = await axios.patch(
+      `${process.env.SERVER_URL}/api/grade/${gradeId}`,
+      { value },
+      {
+        withCredentials: true,
+      },
+    );
+    const { data } = response.data;
+    return {
+      grade: data,
+      notification: { type: 'success', message: 'Grade Updated successfully' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to update grade',
+      },
+    });
+  }
+});
+
+// Delete Grade
+export const deleteGrade = createAsyncThunk<
+  { notification: INotification; gradeId: number },
+  { gradeId: number },
+  { rejectValue: { notification: INotification } }
+>('student/deleteGrade', async ({ gradeId }, { rejectWithValue }) => {
+  try {
+    await axios.delete(`${process.env.SERVER_URL}/api/grade/${gradeId}`, {
+      withCredentials: true,
+    });
+    return {
+      gradeId,
+      notification: { type: 'success', message: 'Grade deleted successfully' },
+    };
+  } catch (e) {
+    const error = e as AxiosError<{ message: string }>;
+    return rejectWithValue({
+      notification: {
+        type: 'error',
+        message: error.response?.data.message || 'Failed to delete grade',
+      },
+    });
+  }
+});
+
 const currentStudentSlice = createSlice({
   name: 'currentStudent',
   initialState,
@@ -218,7 +274,31 @@ const currentStudentSlice = createSlice({
       })
       .addCase(deleteStudent.rejected, (state) => {
         state.isLoading = false;
-      }),
+      })
+      // Update Grade
+      .addCase(updateGrade.pending, (state) => {})
+      .addCase(updateGrade.fulfilled, (state, action) => {
+        const { grade } = action.payload;
+
+        // Find Grade Index
+        const gradeIndex = state.currentStudent?.grades.findIndex((g) => g.id === grade.id);
+
+        // Replace
+        state.currentStudent!.grades[gradeIndex!].value = grade.value;
+      })
+      .addCase(updateGrade.rejected, (state) => {})
+      // Delete Grade
+      .addCase(deleteGrade.pending, (state) => {})
+      .addCase(deleteGrade.fulfilled, (state, action) => {
+        const { gradeId } = action.payload;
+
+        // Find Grade Index
+        const gradeIndex = state.currentStudent!.grades.findIndex((g) => g.id === gradeId);
+
+        // Remove
+        state.currentStudent!.grades.splice(gradeIndex!, 1);
+      })
+      .addCase(deleteGrade.rejected, (state) => {}),
 });
 
 export const studentReducer = currentStudentSlice.reducer;
