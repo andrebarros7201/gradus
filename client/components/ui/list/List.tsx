@@ -6,9 +6,10 @@ import { IStudentSimple } from '@/types/interfaces/IStudentSimple';
 import { StudentListItem } from './items/StudentListItem';
 import { EvaluationListItem } from './items/EvaluationListItem';
 import { IGradeSimple } from '@/types/interfaces/IGradeSimple';
-import { GradeListItem } from './items/GradeListItem';
+import { GradeClassListItem } from './items/GradeClassListItem';
 import { IClassSimple } from '@/types/interfaces/IClassSimple';
 import { IEvaluation } from '@/types/interfaces/IEvaluation';
+import { GradeStudentListItem } from './items/GradeStudentListItem';
 
 type Class = {
   type: 'class';
@@ -30,12 +31,17 @@ type Evaluation = {
   list: IEvaluation[];
 };
 
-type Grade = {
-  type: 'grade';
+type GradeClass = {
+  type: 'gradeClass';
   list: IGradeSimple[];
 };
 
-type Props = Class | Subject | Student | Evaluation | Grade;
+type GradeStudent = {
+  type: 'gradeStudent';
+  list: IGradeSimple[];
+};
+
+type Props = Class | Subject | Student | Evaluation | GradeClass | GradeStudent;
 
 export const List = ({ type, list }: Props) => {
   // Get headers according to list type
@@ -48,7 +54,9 @@ export const List = ({ type, list }: Props) => {
       ? ['Id', 'Name', 'Class', 'Actions']
       : type === 'evaluation'
       ? ['Id', 'Name', 'Date', 'Type', 'Action']
-      : ['Id', 'Student', 'Value', 'Action'];
+      : type === 'gradeClass'
+      ? ['Id', 'Student', 'Value', 'Action']
+      : ['Id', 'Subject', 'Value', 'Action'];
 
   return (
     <div className={classes.list}>
@@ -67,7 +75,10 @@ export const List = ({ type, list }: Props) => {
       {type === 'class' && list.map((item) => <ClassListItem key={item.id} item={item} />)}
       {type === 'subject' && list.map((item) => <SubjectListItem key={item.id} item={item} />)}
       {type === 'student' && list.map((item) => <StudentListItem key={item.id} item={item} />)}
-      {type === 'grade' && list.map((item) => <GradeListItem key={item.id} grade={item} />)}
+      {type === 'gradeClass' &&
+        list.map((item) => <GradeClassListItem key={item.id} grade={item} />)}
+      {type === 'gradeStudent' &&
+        list.map((item) => <GradeStudentListItem key={item.id} grade={item} />)}
       {type === 'evaluation' &&
         list.map((item) => <EvaluationListItem key={item.id} item={item} />)}
     </div>
