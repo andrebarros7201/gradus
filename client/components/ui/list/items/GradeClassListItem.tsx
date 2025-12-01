@@ -10,7 +10,7 @@ type Props = {
   grade: IGradeSimple;
 };
 
-export const GradeListItem = ({ grade }: Props) => {
+export const GradeClassListItem = ({ grade }: Props) => {
   const { user } = useSelector((state: RootState) => state.user);
   return (
     <div className={classes['item']}>
