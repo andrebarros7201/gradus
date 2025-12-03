@@ -8,6 +8,7 @@ import { Role } from '@/types/enums/RoleEnum';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ProfessorDashboard } from '@/components/professor/professorDashboard/ProfessorDashboard';
 
 export default function Dashboard() {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
@@ -25,5 +26,11 @@ export default function Dashboard() {
     return null;
   }
 
-  return <Page>{user.role === Role.Admin ? <AdminDashboard /> : null}</Page>;
+  return (
+    <Page>
+      {/* Display different dashboards based on user role */}
+      {user.role === Role.Admin && <AdminDashboard />}
+      {user.role === Role.Professor && <ProfessorDashboard />}
+    </Page>
+  );
 }
