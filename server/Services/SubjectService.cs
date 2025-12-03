@@ -91,7 +91,7 @@ public class SubjectService : ISubjectService {
         // Professor
         if (currentUser.Role == Role.Professor) {
             // Professor does not have this subject
-            if (subject.ProfessorId != currentUser.Id) {
+            if (subject.ProfessorId != currentUser.Professor.Id) {
                 return ServiceResult<SubjectCompleteDto>.Error(ServiceResultStatus.Forbidden, "You are not authorized to access this subject");
             }
 
