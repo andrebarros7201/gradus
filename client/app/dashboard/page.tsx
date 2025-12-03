@@ -11,26 +11,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ProfessorDashboard } from '@/components/professor/professorDashboard/ProfessorDashboard';
 
 export default function Dashboard() {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { user, isAuthenticated, isLoading } = useSelector((state: RootState) => state.user);
   const router = useRouter();
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {
-    if (!isAuthenticated || !user) {
+    if ((!isAuthenticated || !user) && !isLoading) {
       dispatch(setNotification({ type: 'error', message: 'Unauthorized' }));
       router.replace('/login');
     }
-  }, [dispatch, isAuthenticated, router, user]);
+  }, [dispatch, isAuthenticated, isLoading, router, user]);
 
-  if (!isAuthenticated || !user) {
+  if ((!isAuthenticated || !user) && !isLoading) {
     return null;
   }
 
-  return (
-    <Page>
-      {/* Display different dashboards based on user role */}
-      {user.role === Role.Admin && <AdminDashboard />}
-      {user.role === Role.Professor && <ProfessorDashboard />}
-    </Page>
-  );
+  if (user && isAuthenticated && !isLoading) {
+    return (
+      <Page>
+        {/* Display different dashboards based on user role */}
+        {user.role === Role.Admin && <AdminDashboard />}
+        {user.role === Role.Professor && <ProfessorDashboard />}
+      </Page>
+    );
+  }
 }
