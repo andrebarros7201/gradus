@@ -1,4 +1,3 @@
-using Server.DTOs;
 using Server.DTOs.Admin;
 using Server.DTOs.Class;
 using Server.DTOs.Professor;
@@ -48,7 +47,8 @@ public class UserService : IUserService {
                     SchoolYear = user.Class.SchoolYear,
                     IsActive = user.Class.IsActive,
                     Students = user.Class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
-                    Subjects = user.Class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name }).ToList()
+                    Subjects = user.Class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name })
+                        .ToList()
                 }
             }),
             Role.Professor => ServiceResult<UserDto>.Success(new UserDto {
@@ -58,7 +58,12 @@ public class UserService : IUserService {
                 Name = user.Name,
                 Professor = new ProfessorDto {
                     Id = user.Professor!.Id,
-                    Subjects = user.Professor.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name }).ToList()
+                    Subjects = user.Professor.Subjects.Select(s => new SubjectSimpleDto {
+                            Id = s.Id,
+                            Name = s.Name,
+                            Class = s.Class.User.Name
+                        })
+                        .ToList()
                 }
             }),
             _ => ServiceResult<UserDto>.Error(ServiceResultStatus.NotFound, "User not found")
@@ -176,44 +181,50 @@ public class UserService : IUserService {
         targetUser.Name = dto.Name;
         targetUser.Username = dto.Username;
         targetUser.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-        if (targetUser.Role == Role.Class && targetUser.Class != null) targetUser.Class.SchoolYear = dto.SchoolYear!; // Update School Year if Role is Class
-        if (targetUser.Role == Role.Class && targetUser.Class != null) targetUser.Class.IsActive = dto.IsActive ?? targetUser.Class.IsActive; // Update isActive property if Role is Class if not null
+        if (targetUser.Role == Role.Class && targetUser.Class != null) {
+            targetUser.Class.SchoolYear = dto.SchoolYear!; // Update School Year if Role is Class
+        }
+
+        if (targetUser.Role == Role.Class && targetUser.Class != null) {
+            targetUser.Class.IsActive = dto.IsActive ?? targetUser.Class.IsActive; // Update isActive property if Role is Class if not null
+        }
 
         // Update the user in the database
         await _userRepository.Update(targetUser);
 
         // Return the updated user based on the role
         return ServiceResult<UserDto>.Success(new UserDto {
-            Id = targetUser.Id,
-            Name = targetUser.Name,
-            Username = targetUser.Username,
-            Role = targetUser.Role,
-            Class = targetUser.Role switch {
-                Role.Class => new ClassCompleteDto {
-                    Id = targetUser.Class!.Id,
-                    UserId = targetUser.Class.User.Id,
-                    Name = targetUser.Class.User.Name,
-                    Username = targetUser.Class.User.Username,
-                    SchoolYear = targetUser.Class.SchoolYear,
-                    IsActive = targetUser.Class.IsActive,
-                    Students = targetUser.Class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
-                    Subjects = targetUser.Class.Subjects.Select(s => new SubjectSimpleDto { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name }).ToList()
+                Id = targetUser.Id,
+                Name = targetUser.Name,
+                Username = targetUser.Username,
+                Role = targetUser.Role,
+                Class = targetUser.Role switch {
+                    Role.Class => new ClassCompleteDto {
+                        Id = targetUser.Class!.Id,
+                        UserId = targetUser.Class.User.Id,
+                        Name = targetUser.Class.User.Name,
+                        Username = targetUser.Class.User.Username,
+                        SchoolYear = targetUser.Class.SchoolYear,
+                        IsActive = targetUser.Class.IsActive,
+                        Students = targetUser.Class.Students.Select(s => new StudentSimpleDto { Id = s.Id, Name = s.Name }).ToList(),
+                        Subjects = targetUser.Class.Subjects.Select(s => new SubjectSimpleDto
+                            { Id = s.Id, Name = s.Name, Professor = s.Professor.User.Name }).ToList()
+                    },
+                    _ => null
                 },
-                _ => null
-            },
-            Admin = targetUser.Role switch {
-                Role.Admin => new AdminDto {
-                    Id = targetUser.Admin!.Id
+                Admin = targetUser.Role switch {
+                    Role.Admin => new AdminDto {
+                        Id = targetUser.Admin!.Id
+                    },
+                    _ => null
                 },
-                _ => null
-            },
-            Professor = targetUser.Role switch {
-                Role.Professor => new ProfessorDto {
-                    Id = targetUser.Professor!.Id
-                },
-                _ => null
+                Professor = targetUser.Role switch {
+                    Role.Professor => new ProfessorDto {
+                        Id = targetUser.Professor!.Id
+                    },
+                    _ => null
+                }
             }
-        }
         );
     }
 }
