@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Input } from '@/components/ui/input/Input';
 import { useDispatch } from 'react-redux';
 import { RootDispatch } from '@/redux/store';
+import { useRouter } from 'next/navigation';
 import { userLogin } from '@/redux/slices/userSlice';
 import { setNotification } from '@/redux/slices/notificationSlice';
 import { INotification } from '@/types/slices/INotificationSlice';
@@ -15,6 +16,7 @@ import * as z from 'zod';
 
 export default function LoginPage() {
   const dispatch = useDispatch<RootDispatch>();
+  const router = useRouter();
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -58,6 +60,7 @@ export default function LoginPage() {
 
       const { notification } = response;
       dispatch(setNotification(notification));
+      router.replace('/dashboard');
     } catch (err) {
       if (err instanceof z.ZodError) {
       }
