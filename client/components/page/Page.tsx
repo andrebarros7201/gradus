@@ -12,7 +12,7 @@ type Props = {
   needAuth?: boolean;
 };
 
-export const Page = ({ children, needAuth }: Props) => {
+export const Page = ({ children, needAuth = true }: Props) => {
   const { isAuthenticated, isLoading } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<RootDispatch>();
   const router = useRouter();
@@ -20,7 +20,7 @@ export const Page = ({ children, needAuth }: Props) => {
   useEffect(() => {
     if (needAuth && !isAuthenticated && !isLoading) {
       router.replace('/login');
-      dispatch(setNotification({ type: 'error', message: 'Unauthorized' }));
+      dispatch(setNotification({ type: 'error', message: 'User is not authenticated' }));
     }
   }, [dispatch, isAuthenticated, isLoading, needAuth, router]);
 
