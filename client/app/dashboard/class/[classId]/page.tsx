@@ -7,7 +7,9 @@ import { use, useEffect } from 'react';
 import { Page } from '@/components/page/Page';
 import { ClassDetails } from '@/components/class/classDetails/ClassDetails';
 import { ClassViewToggler } from '@/components/class/classViewToggler/ClassViewToggler';
-import { fetchCurrentClass } from '@/redux/slices/classSlice';
+import { clearCurrentClass, fetchCurrentClass } from '@/redux/slices/classSlice';
+import { clearSubjectList } from '@/redux/slices/subjectSlice';
+import { clearStudentList } from '@/redux/slices/studentSlice';
 
 type Props = {
   params: Promise<{ classId: string }>;
@@ -21,6 +23,12 @@ export default function ClassPage({ params }: Props) {
   // Fetch Current Class
   useEffect(() => {
     dispatch(fetchCurrentClass({ classId: Number(classId) }));
+
+    return () => {
+      dispatch(clearCurrentClass());
+      dispatch(clearSubjectList());
+      dispatch(clearStudentList());
+    };
   }, [dispatch, classId]);
 
   if (!isLoading && currentClass) {
