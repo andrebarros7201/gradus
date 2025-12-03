@@ -8,5 +8,9 @@ public class SubjectSimpleDto {
 
     // Not useful when fetching a professor's subjects'
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public string Class { get; set; }
+    
+    // Not useful when fetching a professor's subjects'
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string Professor { get; set; }
 }
