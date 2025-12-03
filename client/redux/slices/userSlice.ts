@@ -5,6 +5,8 @@ import { Role } from '@/types/enums/RoleEnum';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { removeClass, updateClass } from './classSlice';
+import { RootDispatch } from '@/redux/store';
+import { setSubjectList } from '@/redux/slices/subjectSlice';
 
 // Initial State Values
 const initialState: IUserSlice = {
@@ -57,8 +59,8 @@ export const userRegister = createAsyncThunk<
 export const userLogin = createAsyncThunk<
   { user: IUser; notification: INotification },
   { username: string; password: string },
-  { rejectValue: { notification: INotification } }
->('user/loginUser', async ({ username, password }, { rejectWithValue }) => {
+  { rejectValue: { notification: INotification }; dispatch: RootDispatch }
+>('user/loginUser', async ({ username, password }, { rejectWithValue, dispatch }) => {
   try {
     const response = await axios.post(
       `${process.env.SERVER_URL}/api/auth/login`,
@@ -81,6 +83,11 @@ export const userLogin = createAsyncThunk<
       ...(user.role === Role.Professor ? { professor: user.professor } : {}),
     } as IUser;
 
+    // Set subject list from professor's subject list
+    if (user.role === Role.Professor) {
+      dispatch(setSubjectList({ subjectList: user.professor.subjects }));
+    }
+
     return { user: cleanUser, notification: { type: 'success', message: 'Login successful' } };
   } catch (e) {
     const error = e as AxiosError<{ message: string }>;
@@ -97,13 +104,18 @@ export const userLogin = createAsyncThunk<
 export const fetchUser = createAsyncThunk<
   { user: IUser },
   void,
-  { rejectValue: { notification: INotification } }
->('user/fetchUser', async (_, { rejectWithValue }) => {
+  { rejectValue: { notification: INotification }; dispatch: RootDispatch }
+>('user/fetchUser', async (_, { rejectWithValue, dispatch }) => {
   try {
     const response = await axios.get(`${process.env.SERVER_URL}/api/user/me`, {
       withCredentials: true,
     });
     const { data } = response.data;
+
+    // Set subject list from professor's subject list
+    if (data.role === Role.Professor) {
+      dispatch(setSubjectList({ subjectList: data.professor.subjects }));
+    }
     return { user: data };
   } catch (e) {
     const error = e as AxiosError<{ message: string }>;
